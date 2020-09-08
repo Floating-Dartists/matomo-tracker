@@ -1,4 +1,4 @@
-# dart-matomo
+# matomo
 
 A Dart Client for Matomo. This is completely written in Dart and works cross-platform.
 
@@ -6,7 +6,7 @@ A Dart Client for Matomo. This is completely written in Dart and works cross-pla
 
 ```
 dependencies:
-    dart-matomo: ^0.0.1
+    matomo: ^0.0.2
 ```
 
 As early as possible in your application you need to configure the Matomo Tracker to pass the URL endpoint of your instance and your Site ID.
