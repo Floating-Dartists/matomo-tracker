@@ -95,7 +95,7 @@ class MatomoTracker {
   Queue<_Event> _queue = Queue();
   Timer _timer;
 
-  initialize({int siteId, String url}) async {
+  initialize({int siteId, String url, String visitorId}) async {
     this.siteId = siteId;
     this.url = url;
 
@@ -139,11 +139,13 @@ class MatomoTracker {
         firstVisit: firstVisit, lastVisit: lastVisit, visitCount: visitCount);
 
     // Initialize Visitor
-    var visitorId = Uuid().v4().toString();
-    if (_prefs.containsKey(kVisitorId)) {
-      visitorId = _prefs.getString(kVisitorId);
-    } else {
-      _prefs.setString(kVisitorId, visitorId);
+    if (visitorId == null) {
+      visitorId = Uuid().v4().toString();
+      if (_prefs.containsKey(kVisitorId)) {
+        visitorId = _prefs.getString(kVisitorId);
+      } else {
+        _prefs.setString(kVisitorId, visitorId);
+      }
     }
     visitor = _Visitor(id: visitorId, forcedId: null, userId: visitorId);
 
