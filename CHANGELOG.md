@@ -1,3 +1,7 @@
+## [0.0.3] - 2020/11/08
+
+* Configurable VisitorId.
+
 ## [0.0.2] - 2020/09/07
 
 * Fixing documentation.
