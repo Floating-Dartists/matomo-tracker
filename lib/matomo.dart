@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_user_agent/flutter_user_agent.dart';
 import 'package:http/http.dart' as http;
@@ -11,6 +12,7 @@ import 'package:logging/logging.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:universal_html/prefer_universal/html.dart' as html;
 
 abstract class TraceableStatelessWidget extends StatelessWidget {
   final String name;
@@ -102,8 +104,12 @@ class MatomoTracker {
     _dispatcher = _MatomoDispatcher(url);
 
     // User agent
-    await FlutterUserAgent.init();
-    userAgent = FlutterUserAgent.webViewUserAgent;
+    if (kIsWeb) {
+      userAgent = html.window.navigator.userAgent;
+    } else {
+      await FlutterUserAgent.init();
+      userAgent = FlutterUserAgent.webViewUserAgent;
+    }
 
     // Screen Resolution
     width = window.physicalSize.width.toInt();
