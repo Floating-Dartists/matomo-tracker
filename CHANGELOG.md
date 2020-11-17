@@ -1,3 +1,7 @@
+## [0.0.4] - 2020/11/17
+
+* Add support for web user agent.
+
 ## [0.0.3] - 2020/11/08
 
 * Configurable VisitorId.
