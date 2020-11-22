@@ -367,7 +367,10 @@ class _MatomoDispatcher {
       url = '$url$key=$value&';
     }
     event.tracker.log.fine(' -> $url');
-    http.post(url, headers: headers).then((http.Response response) {
+    http
+        .post(url, headers: headers)
+        .catchError((e) => event.tracker.log.fine(' <- ${e.toString()}'))
+        .then((http.Response response) {
       final int statusCode = response.statusCode;
       event.tracker.log.fine(' <- $statusCode');
       if (statusCode != 200) {}
