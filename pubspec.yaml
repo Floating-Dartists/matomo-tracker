@@ -12,8 +12,7 @@ dependencies:
     sdk: flutter
   flutter_user_agent: ^1.2.1
   http: ^0.12.0+2
-  intl: ^0.16.1
-  intl_translation: ^0.17.10+1
+  intl: any
   uuid: ^2.0.4
   package_info: ^0.4.0+13
   shared_preferences: ^0.5.4+5
