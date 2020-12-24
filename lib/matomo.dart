@@ -155,8 +155,12 @@ class MatomoTracker {
     }
     visitor = _Visitor(id: visitorId, forcedId: null, userId: visitorId);
 
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    contentBase = 'https://${packageInfo.packageName}';
+    if (kIsWeb) {
+      contentBase = html.window.location.href;
+    } else {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      contentBase = 'https://${packageInfo?.packageName}';
+    }
 
     if (_prefs.containsKey(kOptOut)) {
       _optout = _prefs.getBool(kOptOut);
