@@ -1,3 +1,7 @@
+## [0.0.5] - 2020/12/29
+
+* Fix web compatibility
+
 ## [0.0.4] - 2020/11/17
 
 * Add support for web user agent.
