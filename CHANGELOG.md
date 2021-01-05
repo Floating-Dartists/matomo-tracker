@@ -1,6 +1,10 @@
+## [0.0.6] - 2021/01/05
+
+* Do not set User-Agent on the web as it doesn't now work on certain browsers.
+
 ## [0.0.5] - 2020/12/29
 
-* Fix web compatibility
+* Fix web compatibility.
 
 ## [0.0.4] - 2020/11/17
 
