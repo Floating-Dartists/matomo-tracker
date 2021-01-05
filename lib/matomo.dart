@@ -361,7 +361,7 @@ class _MatomoDispatcher {
 
   void send(_Event event) {
     var headers = {
-      'User-Agent': event.tracker.userAgent,
+      if (!kIsWeb) 'User-Agent': event.tracker.userAgent,
     };
 
     var map = event.toMap();
