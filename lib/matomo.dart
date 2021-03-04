@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_user_agent/flutter_user_agent.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +17,7 @@ abstract class TraceableStatelessWidget extends StatelessWidget {
   final String name;
   final String title;
 
-  TraceableStatelessWidget(
+  const TraceableStatelessWidget(
       {this.name = '', this.title = 'WidgetCreated', Key key})
       : super(key: key);
 
@@ -35,7 +34,7 @@ abstract class TraceableStatefulWidget extends StatefulWidget {
   final String name;
   final String title;
 
-  TraceableStatefulWidget(
+  const TraceableStatefulWidget(
       {this.name = '', this.title = 'WidgetCreated', Key key})
       : super(key: key);
 
@@ -52,7 +51,7 @@ abstract class TraceableInheritedWidget extends InheritedWidget {
   final String name;
   final String title;
 
-  TraceableInheritedWidget(
+  const TraceableInheritedWidget(
       {this.name = '', this.title = 'WidgetCreated', Key key, Widget child})
       : super(key: key, child: child);
 
@@ -97,7 +96,8 @@ class MatomoTracker {
   Queue<_Event> _queue = Queue();
   Timer _timer;
 
-  initialize({int siteId, String url, String visitorId}) async {
+  initialize(
+      {@required int siteId, @required String url, String visitorId}) async {
     this.siteId = siteId;
     this.url = url;
 
@@ -324,9 +324,9 @@ class _Event {
     final locale = window.locale;
     map['lang'] = locale.toString();
 
-    map['h'] = DateFormat.H().format(_date);
-    map['m'] = DateFormat.m().format(_date);
-    map['s'] = DateFormat.s().format(_date);
+    map['h'] = _date.hour.toString();
+    map['m'] = _date.minute.toString();
+    map['s'] = _date.second.toString();
     map['cdt'] = _date.toIso8601String();
 
     // Screen Resolution
@@ -371,13 +371,12 @@ class _MatomoDispatcher {
       url = '$url$key=$value&';
     }
     event.tracker.log.fine(' -> $url');
-    http
-        .post(url, headers: headers)
-        .catchError((e) => event.tracker.log.fine(' <- ${e.toString()}'))
-        .then((http.Response response) {
+    http.post(url, headers: headers).then((http.Response response) {
       final int statusCode = response.statusCode;
       event.tracker.log.fine(' <- $statusCode');
       if (statusCode != 200) {}
+    }).catchError((e) {
+      event.tracker.log.fine(' <- ${e.toString()}');
     });
   }
 }

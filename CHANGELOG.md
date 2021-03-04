@@ -1,3 +1,10 @@
+## [0.0.9] - 2021/03/03
+
+* Removing dependency on intl and intl_translation to be Flutter 2.0 compatible
+* Making sure to catchError in the proper sequence to avoid null exceptions.
+* Adding an example application.
+* Making `TraceableStatelessWidget`, `TraceableStatefulWidget` and `TraceableInheritedWidget` constructors `const`.
+
 ## [0.0.8] - 2021/03/03
 
 * Fixing documentation.
