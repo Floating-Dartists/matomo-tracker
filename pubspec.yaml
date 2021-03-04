@@ -1,11 +1,11 @@
 name: matomo
 description: A Dart Client for Matomo API
-version: 0.0.6
+version: 0.0.7
 homepage: https://github.com/poitch/dart-matomo
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0 <2.0.0"
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
@@ -13,7 +13,7 @@ dependencies:
   flutter_user_agent: ^1.2.1
   http: ^0.12.0+2
   intl: ^0.17.0
-  intl_translation: any
+  intl_translation: ^0.17.10+1
   uuid: ^2.0.4
   package_info: ^0.4.0+13
   shared_preferences: ^0.5.4+5

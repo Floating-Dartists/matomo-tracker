@@ -1,3 +1,7 @@
+## [0.0.7] - 2021/03/03
+
+* Flutter 2.0 compatibility.
+
 ## [0.0.6] - 2021/01/05
 
 * Do not set User-Agent on the web as it doesn't now work on certain browsers.
