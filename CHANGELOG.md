@@ -1,3 +1,7 @@
+## [0.0.8] - 2021/03/03
+
+* Fixing documentation.
+
 ## [0.0.7] - 2021/03/03
 
 * Flutter 2.0 compatibility.
