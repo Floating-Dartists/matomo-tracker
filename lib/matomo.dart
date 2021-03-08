@@ -107,8 +107,12 @@ class MatomoTracker {
     if (kIsWeb) {
       userAgent = html.window.navigator.userAgent;
     } else {
-      await FlutterUserAgent.init();
-      userAgent = FlutterUserAgent.webViewUserAgent;
+      try {
+        await FlutterUserAgent.init();
+        userAgent = FlutterUserAgent.webViewUserAgent;
+      } catch (_) {
+        userAgent = 'Unknown';
+      }
     }
 
     // Screen Resolution
