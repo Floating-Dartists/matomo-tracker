@@ -189,10 +189,12 @@ class MatomoTracker {
   }
 
   void clear() {
-    _prefs.remove(kFirstVisit);
-    _prefs.remove(kLastVisit);
-    _prefs.remove(kVisitCount);
-    _prefs.remove(kVisitorId);
+    if (_prefs != null) {
+      _prefs.remove(kFirstVisit);
+      _prefs.remove(kLastVisit);
+      _prefs.remove(kVisitCount);
+      _prefs.remove(kVisitorId);
+    }
   }
 
   void dispose() {
