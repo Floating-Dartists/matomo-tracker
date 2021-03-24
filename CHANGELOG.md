@@ -1,3 +1,7 @@
+## [0.0.10] - 2021/03/24
+
+* Fix user agent issue on web.
+
 ## [0.0.9] - 2021/03/03
 
 * Removing dependency on intl and intl_translation to be Flutter 2.0 compatible
