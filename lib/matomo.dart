@@ -11,7 +11,7 @@ import 'package:logging/logging.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'package:universal_html/prefer_universal/html.dart' as html;
+import 'package:universal_html/html.dart' as html;
 
 abstract class TraceableStatelessWidget extends StatelessWidget {
   final String name;
@@ -377,7 +377,7 @@ class _MatomoDispatcher {
       url = '$url$key=$value&';
     }
     event.tracker.log.fine(' -> $url');
-    http.post(url, headers: headers).then((http.Response response) {
+    http.post(Uri.parse(url), headers: headers).then((http.Response response) {
       final int statusCode = response.statusCode;
       event.tracker.log.fine(' <- $statusCode');
       if (statusCode != 200) {}
