@@ -1,3 +1,7 @@
+## [0.1.0] - 2021/04/07
+
+* null-safety compatibility
+
 ## [0.0.10] - 2021/03/24
 
 * Fix user agent issue on web.
