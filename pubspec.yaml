@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_user_agentx: ^1.2.4
+  fk_user_agent: ^2.0.1
   http: ^0.13.1
   uuid: ^3.0.3
   package_info: ^2.0.0

@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_user_agentx/flutter_user_agent.dart';
+import 'package:fk_user_agent/fk_user_agent.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:package_info/package_info.dart';
@@ -111,8 +111,8 @@ class MatomoTracker {
       userAgent = html.window.navigator.userAgent;
     } else {
       try {
-        await FlutterUserAgent.init();
-        userAgent = FlutterUserAgent.webViewUserAgent;
+        await FkUserAgent.init();
+        userAgent = FkUserAgent.webViewUserAgent;
       } catch (_) {
         userAgent = 'Unknown';
       }
