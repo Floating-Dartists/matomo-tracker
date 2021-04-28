@@ -1,3 +1,7 @@
+## [0.1.1] - 2021/04/28
+
+* Fix iOS build
+
 ## [0.1.0] - 2021/04/07
 
 * null-safety compatibility
