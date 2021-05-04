@@ -370,7 +370,8 @@ class _MatomoDispatcher {
 
   void send(_Event event) {
     var headers = {
-      if (!kIsWeb) 'User-Agent': event.tracker.userAgent,
+      if (!kIsWeb && event.tracker.userAgent != null)
+        'User-Agent': event.tracker.userAgent!,
     };
 
     var map = event.toMap();
@@ -380,9 +381,7 @@ class _MatomoDispatcher {
       url = '$url$key=$value&';
     }
     event.tracker.log.fine(' -> $url');
-    http
-        .post(Uri.parse(url), headers: headers as Map<String, String>?)
-        .then((http.Response response) {
+    http.post(Uri.parse(url), headers: headers).then((http.Response response) {
       final int statusCode = response.statusCode;
       event.tracker.log.fine(' <- $statusCode');
       if (statusCode != 200) {}
