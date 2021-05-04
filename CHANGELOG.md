@@ -1,3 +1,7 @@
+## [0.1.2] - 2021/05/04
+
+* Fix crash when User-Agent isn't available.
+
 ## [0.1.1] - 2021/04/28
 
 * Fix iOS build
