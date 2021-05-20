@@ -78,6 +78,7 @@ class MatomoTracker {
   static const String kOptOut = 'matomo_opt_out';
 
   late _MatomoDispatcher _dispatcher;
+
   static MatomoTracker _instance = MatomoTracker.internal();
 
   MatomoTracker.internal();
@@ -332,6 +333,10 @@ class _Event {
       map['cid'] = this.tracker.visitor.forcedId;
     }
     map['uid'] = this.tracker.visitor.userId;
+
+    if (this.tracker.currentScreenId != null) {
+      map['pv_id'] = this.tracker.currentScreenId;
+    }
 
     // Session
     map['_idvc'] = this.tracker.session.visitCount.toString();
