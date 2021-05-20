@@ -18,11 +18,15 @@ abstract class TraceableStatelessWidget extends StatelessWidget {
   final String name;
   final String title;
 
-  const TraceableStatelessWidget({this.name = '', this.title = 'WidgetCreated', Key? key}) : super(key: key);
+  const TraceableStatelessWidget(
+      {this.name = '', this.title = 'WidgetCreated', Key? key})
+      : super(key: key);
 
   @override
   StatelessElement createElement() {
-    MatomoTracker.trackScreenWithName(this.name.isEmpty ? this.runtimeType.toString() : this.name, this.title);
+    MatomoTracker.trackScreenWithName(
+        this.name.isEmpty ? this.runtimeType.toString() : this.name,
+        this.title);
     return StatelessElement(this);
   }
 }
@@ -31,11 +35,15 @@ abstract class TraceableStatefulWidget extends StatefulWidget {
   final String name;
   final String title;
 
-  const TraceableStatefulWidget({this.name = '', this.title = 'WidgetCreated', Key? key}) : super(key: key);
+  const TraceableStatefulWidget(
+      {this.name = '', this.title = 'WidgetCreated', Key? key})
+      : super(key: key);
 
   @override
   StatefulElement createElement() {
-    MatomoTracker.trackScreenWithName(this.name.isEmpty ? this.runtimeType.toString() : this.name, this.title);
+    MatomoTracker.trackScreenWithName(
+        this.name.isEmpty ? this.runtimeType.toString() : this.name,
+        this.title);
     return StatefulElement(this);
   }
 }
@@ -44,12 +52,18 @@ abstract class TraceableInheritedWidget extends InheritedWidget {
   final String name;
   final String title;
 
-  const TraceableInheritedWidget({this.name = '', this.title = 'WidgetCreated', Key? key, required Widget child})
+  const TraceableInheritedWidget(
+      {this.name = '',
+      this.title = 'WidgetCreated',
+      Key? key,
+      required Widget child})
       : super(key: key, child: child);
 
   @override
   InheritedElement createElement() {
-    MatomoTracker.trackScreenWithName(this.name.isEmpty ? this.runtimeType.toString() : this.name, this.title);
+    MatomoTracker.trackScreenWithName(
+        this.name.isEmpty ? this.runtimeType.toString() : this.name,
+        this.title);
     return InheritedElement(this);
   }
 }
@@ -89,7 +103,11 @@ class MatomoTracker {
   Queue<_Event> _queue = Queue();
   late Timer _timer;
 
-  initialize({required int siteId, required String url, String? visitorId, String? contentBaseUrl}) async {
+  initialize(
+      {required int siteId,
+      required String url,
+      String? visitorId,
+      String? contentBaseUrl}) async {
     this.siteId = siteId;
     this.url = url;
 
@@ -119,13 +137,15 @@ class MatomoTracker {
     _prefs = await SharedPreferences.getInstance();
 
     if (_prefs!.containsKey(kFirstVisit)) {
-      firstVisit = DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(kFirstVisit)!);
+      firstVisit =
+          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(kFirstVisit)!);
     } else {
       _prefs!.setInt(kFirstVisit, firstVisit.millisecondsSinceEpoch);
     }
 
     if (_prefs!.containsKey(kLastVisit)) {
-      lastVisit = DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(kLastVisit)!);
+      lastVisit =
+          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(kLastVisit)!);
     }
     // Now is the last visit.
     _prefs!.setInt(kLastVisit, lastVisit.millisecondsSinceEpoch);
@@ -135,7 +155,8 @@ class MatomoTracker {
     }
     _prefs!.setInt(kVisitCount, visitCount);
 
-    session = _Session(firstVisit: firstVisit, lastVisit: lastVisit, visitCount: visitCount);
+    session = _Session(
+        firstVisit: firstVisit, lastVisit: lastVisit, visitCount: visitCount);
 
     // Initialize Visitor
     if (visitorId == null) {
@@ -226,7 +247,8 @@ class MatomoTracker {
     ));
   }
 
-  static void trackEvent(String eventName, String eventAction, {String? widgetName, int? eventValue}) {
+  static void trackEvent(String eventName, String eventAction,
+      {String? widgetName, int? eventValue}) {
     var tracker = MatomoTracker();
     tracker._track(_Event(
         tracker: tracker,
@@ -312,8 +334,10 @@ class _Event {
 
     // Session
     map['_idvc'] = this.tracker.session.visitCount.toString();
-    map['_viewts'] = this.tracker.session.lastVisit!.millisecondsSinceEpoch ~/ 1000;
-    map['_idts'] = this.tracker.session.firstVisit!.millisecondsSinceEpoch ~/ 1000;
+    map['_viewts'] =
+        this.tracker.session.lastVisit!.millisecondsSinceEpoch ~/ 1000;
+    map['_idts'] =
+        this.tracker.session.firstVisit!.millisecondsSinceEpoch ~/ 1000;
 
     map['url'] = '${this.tracker.contentBase}/$action';
     map['action_name'] = action;
@@ -361,7 +385,8 @@ class _MatomoDispatcher {
 
   void send(_Event event) {
     var headers = {
-      if (!kIsWeb && event.tracker.userAgent != null) 'User-Agent': event.tracker.userAgent!,
+      if (!kIsWeb && event.tracker.userAgent != null)
+        'User-Agent': event.tracker.userAgent!,
     };
 
     var map = event.toMap();
