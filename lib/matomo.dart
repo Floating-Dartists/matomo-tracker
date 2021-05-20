@@ -78,7 +78,6 @@ class MatomoTracker {
   static const String kOptOut = 'matomo_opt_out';
 
   late _MatomoDispatcher _dispatcher;
-
   static MatomoTracker _instance = MatomoTracker.internal();
 
   MatomoTracker.internal();
@@ -103,11 +102,12 @@ class MatomoTracker {
   Queue<_Event> _queue = Queue();
   late Timer _timer;
 
-  initialize(
-      {required int siteId,
-      required String url,
-      String? visitorId,
-      String? contentBaseUrl}) async {
+  initialize({
+    required int siteId,
+    required String url,
+    String? visitorId,
+    String? contentBaseUrl,
+  }) async {
     this.siteId = siteId;
     this.url = url;
 
@@ -251,11 +251,12 @@ class MatomoTracker {
       {String? widgetName, int? eventValue}) {
     var tracker = MatomoTracker();
     tracker._track(_Event(
-        tracker: tracker,
-        eventAction: eventAction,
-        eventName: eventName,
-        eventCategory: widgetName,
-        eventValue: eventValue));
+      tracker: tracker,
+      eventAction: eventAction,
+      eventName: eventName,
+      eventCategory: widgetName,
+      eventValue: eventValue,
+    ));
   }
 
   void _track(_Event event) {
