@@ -3,14 +3,16 @@ import 'package:matomo/random_alpha_numeric.dart';
 
 void main() {
   test('test randomAlphaNumeric returns string with correct length', () {
-    final randomString = randomAlphaNumeric(10);
-    expect(randomString.length, 10);
+    final length = 64;
+    final randomString = randomAlphaNumeric(length);
+    expect(randomString.length, length);
   });
 
-  test('test randomAlphaNumeric return string with allowed characters', () {
-    final randomString = randomAlphaNumeric(10);
+  test('test randomAlphaNumeric returns string with allowed characters', () {
+    final length = 42;
+    final randomString = randomAlphaNumeric(length);
 
-    final RegExp exp = RegExp(r"[0-9a-zA-z]{10}");
+    final RegExp exp = RegExp(r"[0-9a-zA-z]{"+length.toString()+"}");
     expect(true, exp.hasMatch(randomString));
   });
 }
