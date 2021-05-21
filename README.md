@@ -6,10 +6,10 @@ A Dart Client for Matomo. This is completely written in Dart and works cross-pla
 
 ```
 dependencies:
-    matomo: ^0.1.2
+    matomo: ^1.0.0
 ```
 
-As early as possible in your application you need to configure the Matomo Tracker to pass the URL endpoint of your instance and your Site ID.
+As early as possible in your application, you need to configure the Matomo Tracker to pass the URL endpoint of your instance and your Site ID.
 
 ```dart
     await MatomoTracker().initialize(
@@ -32,11 +32,16 @@ To track views simply replace `StatelessWidget` by `TraceableStatelessWidget`, `
 
 You can also optionally call directly `trackScreen` or `trackScreenWithName` to track a view.
 
-For tracking goals and events call `trackGoal` and `trackEvent` respectively.
+For tracking goals and, events call `trackGoal` and `trackEvent` respectively.
+
+A value can be passed for events:
+```dart
+MatomoTracker().trackEvent('eventName', 'eventAction', eventValue='eventValue');
+```
 
 ## Opting Out
 
-If you want to offer a way for the user to opt-out of analytics, you can use the ```setOptOut()``` call.
+If you want to offer a way for the user to opt out of analytics, you can use the ```setOptOut()``` call.
 
 ```dart
 MatomoTracker().setOptOut(true);

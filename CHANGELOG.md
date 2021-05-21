@@ -1,3 +1,7 @@
+## [1.0.0] - 2021/05/21
+
+* Add support for passing value in an event (thanks KawachenCofinpro)
+
 ## [0.1.2] - 2021/05/04
 
 * Fix crash when User-Agent isn't available.
