@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fk_user_agent/fk_user_agent.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
+import 'package:matomo/random_alpha_numeric.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -79,7 +80,9 @@ class MatomoTracker {
   late _MatomoDispatcher _dispatcher;
 
   static MatomoTracker _instance = MatomoTracker.internal();
+
   MatomoTracker.internal();
+
   factory MatomoTracker() => _instance;
 
   int? siteId;
@@ -90,6 +93,7 @@ class MatomoTracker {
   String? contentBase;
   int? width;
   int? height;
+  String? currentScreenId;
 
   bool initialized = false;
   bool? _optout = false;
@@ -99,8 +103,12 @@ class MatomoTracker {
   Queue<_Event> _queue = Queue();
   late Timer _timer;
 
-  initialize(
-      {required int siteId, required String url, String? visitorId}) async {
+  initialize({
+    required int siteId,
+    required String url,
+    String? visitorId,
+    String? contentBaseUrl,
+  }) async {
     this.siteId = siteId;
     this.url = url;
 
@@ -162,7 +170,9 @@ class MatomoTracker {
     }
     visitor = _Visitor(id: visitorId, forcedId: null, userId: visitorId);
 
-    if (kIsWeb) {
+    if (contentBaseUrl != null) {
+      contentBase = contentBaseUrl;
+    } else if (kIsWeb) {
       contentBase = html.window.location.href;
     } else {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -222,6 +232,7 @@ class MatomoTracker {
     // -> track().screen(widgetName).with(tracker)
     // -> Event(action:)
     var tracker = MatomoTracker();
+    tracker.currentScreenId = randomAlphaNumeric(6);
     tracker._track(_Event(
       tracker: tracker,
       action: widgetName,
@@ -238,13 +249,14 @@ class MatomoTracker {
   }
 
   static void trackEvent(String eventName, String eventAction,
-      {String? widgetName}) {
+      {String? widgetName, int? eventValue}) {
     var tracker = MatomoTracker();
     tracker._track(_Event(
       tracker: tracker,
       eventAction: eventAction,
       eventName: eventName,
       eventCategory: widgetName,
+      eventValue: eventValue,
     ));
   }
 
@@ -286,6 +298,7 @@ class _Event {
   final String? eventCategory;
   final String? eventAction;
   final String? eventName;
+  final int? eventValue;
   final int? goalId;
   final double? revenue;
 
@@ -297,6 +310,7 @@ class _Event {
       this.eventCategory,
       this.eventAction,
       this.eventName,
+      this.eventValue,
       this.goalId,
       this.revenue}) {
     _date = DateTime.now().toUtc();
@@ -319,6 +333,10 @@ class _Event {
       map['cid'] = this.tracker.visitor.forcedId;
     }
     map['uid'] = this.tracker.visitor.userId;
+
+    if (this.tracker.currentScreenId != null) {
+      map['pv_id'] = this.tracker.currentScreenId;
+    }
 
     // Session
     map['_idvc'] = this.tracker.session.visitCount.toString();
@@ -358,6 +376,9 @@ class _Event {
     }
     if (eventName != null) {
       map['e_n'] = eventName;
+    }
+    if (eventValue != null) {
+      map['e_v'] = eventValue;
     }
     return map;
   }
