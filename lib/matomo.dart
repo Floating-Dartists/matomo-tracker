@@ -108,6 +108,7 @@ class MatomoTracker {
     required String url,
     String? visitorId,
     String? contentBaseUrl,
+    int dequeueInterval = 10
   }) async {
     this.siteId = siteId;
     this.url = url;
@@ -189,7 +190,7 @@ class MatomoTracker {
         'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$lastVisit; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${width}x$height; userAgent=$userAgent');
     this.initialized = true;
 
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _timer = Timer.periodic(Duration(seconds: dequeueInterval), (timer) {
       this._dequeue();
     });
   }
