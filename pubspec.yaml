@@ -1,6 +1,6 @@
 name: matomo
 description: Cross-platform Matomo tracking for Flutter, using the Matomo API and written in pure Dart.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/poitch/dart-matomo
 
 environment:
@@ -13,7 +13,7 @@ dependencies:
   fk_user_agent: ^2.0.1
   http: ^0.13.1
   uuid: ^3.0.3
-  package_info: ^2.0.0
+  package_info_plus: ^1.0.4
   shared_preferences: ^2.0.5
   logging: ^1.0.1
   universal_html: ^2.0.7
