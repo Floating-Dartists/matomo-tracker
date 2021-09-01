@@ -1,3 +1,7 @@
+## [1.0.1]
+
+* Migrated from the deprecated package_info plugin to package_info_plus.
+
 ## [1.0.0] - 2021/05/21
 
 * Add support for passing value in an event (thanks KawachenCofinpro)
