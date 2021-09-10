@@ -422,7 +422,12 @@ class _Event {
     map['_idts'] =
         this.tracker.session.firstVisit!.millisecondsSinceEpoch ~/ 1000;
 
-    map['url'] = '${this.tracker.contentBase}/$action';
+    if (action != null) {
+      map['url'] = '${this.tracker.contentBase}/$action';
+    } else {
+      map['url'] = '${this.tracker.contentBase}';
+    }
+
     map['action_name'] = action;
 
     final locale = window.locale;
