@@ -464,7 +464,7 @@ class _Event {
     }
     if (trackingOrderItems != null) {
       map['ec_items'] =
-          json.encode(trackingOrderItems!.map((i) => i.toArray().toList()));
+          json.encode(trackingOrderItems!.map((i) => i.toArray()).toList());
     }
     if (subTotal != null) {
       map['ec_st'] = subTotal;
