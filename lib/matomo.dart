@@ -437,7 +437,7 @@ class _Event {
     map['res'] = '${this.tracker.width}x${this.tracker.height}';
 
     // Goal
-    if (goalId != null && goalId! > 0) {
+    if (goalId != null) {
       map['idgoal'] = goalId;
     }
     if (revenue != null && revenue! > 0) {
