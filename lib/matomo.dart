@@ -502,7 +502,7 @@ class _MatomoDispatcher {
     var map = event.toMap();
     var url = '$baseUrl?';
     for (String key in map.keys) {
-      var value = Uri.encodeFull(map[key].toString());
+      var value = Uri.encodeComponent(map[key].toString());
       url = '$url$key=$value&';
     }
     event.tracker.log.fine(' -> $url');
