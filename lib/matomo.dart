@@ -108,12 +108,13 @@ class MatomoTracker {
     required String url,
     String? visitorId,
     String? contentBaseUrl,
-    int dequeueInterval = 10
+    int dequeueInterval = 10,
+    String? tokenAuth,
   }) async {
     this.siteId = siteId;
     this.url = url;
 
-    _dispatcher = _MatomoDispatcher(url);
+    _dispatcher = _MatomoDispatcher(url, tokenAuth);
 
     // User agent
     if (kIsWeb) {
@@ -387,8 +388,9 @@ class _Event {
 
 class _MatomoDispatcher {
   final String baseUrl;
+  final String? tokenAuth;
 
-  _MatomoDispatcher(this.baseUrl);
+  _MatomoDispatcher(this.baseUrl, this.tokenAuth);
 
   void send(_Event event) {
     var headers = {
@@ -401,6 +403,9 @@ class _MatomoDispatcher {
     for (String key in map.keys) {
       var value = Uri.encodeFull(map[key].toString());
       url = '$url$key=$value&';
+    }
+    if (tokenAuth != null) {
+      url = '${url}token_auth=$tokenAuth';
     }
     event.tracker.log.fine(' -> $url');
     http.post(Uri.parse(url), headers: headers).then((http.Response response) {
