@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
@@ -262,6 +263,48 @@ class MatomoTracker {
     ));
   }
 
+  static void trackCartUpdate(
+    List<TrackingOrderItem>? trackingOrderItems,
+    num? subTotal,
+    num? taxAmount,
+    num? shippingCost,
+    num? discountAmount,
+  ) {
+    var tracker = MatomoTracker();
+    tracker._track(_Event(
+      tracker: tracker,
+      goalId: 0,
+      trackingOrderItems: trackingOrderItems,
+      subTotal: subTotal,
+      taxAmount: taxAmount,
+      shippingCost: shippingCost,
+      discountAmount: discountAmount,
+    ));
+  }
+
+  static void trackOrder(
+    String? orderId,
+    List<TrackingOrderItem>? trackingOrderItems,
+    num? revenue,
+    num? subTotal,
+    num? taxAmount,
+    num? shippingCost,
+    num? discountAmount,
+  ) {
+    var tracker = MatomoTracker();
+    tracker._track(_Event(
+      tracker: tracker,
+      goalId: 0,
+      orderId: orderId,
+      trackingOrderItems: trackingOrderItems,
+      revenue: revenue,
+      subTotal: subTotal,
+      taxAmount: taxAmount,
+      shippingCost: shippingCost,
+      discountAmount: discountAmount,
+    ));
+  }
+
   void _track(_Event event) {
     _queue.add(event);
   }
@@ -294,6 +337,25 @@ class _Visitor {
   _Visitor({this.id, this.forcedId, this.userId});
 }
 
+class TrackingOrderItem {
+  final String? sku;
+  final String? name;
+  final String? category;
+  final num? price;
+  final int? quantity;
+
+  TrackingOrderItem(
+      {this.sku, this.name, this.category, this.price, this.quantity});
+
+  List<dynamic> toArray() => [
+        sku,
+        name,
+        category,
+        price,
+        quantity,
+      ];
+}
+
 class _Event {
   final MatomoTracker tracker;
   final String? action;
@@ -302,19 +364,34 @@ class _Event {
   final String? eventName;
   final int? eventValue;
   final int? goalId;
-  final double? revenue;
+
+  // Ecommerce
+  final String? orderId;
+  final List<TrackingOrderItem>? trackingOrderItems;
+  final num? revenue;
+  final num? subTotal; // Excludes shipping
+  final num? taxAmount;
+  final num? shippingCost;
+  final num? discountAmount;
 
   late DateTime _date;
 
-  _Event(
-      {required this.tracker,
-      this.action,
-      this.eventCategory,
-      this.eventAction,
-      this.eventName,
-      this.eventValue,
-      this.goalId,
-      this.revenue}) {
+  _Event({
+    required this.tracker,
+    this.action,
+    this.eventCategory,
+    this.eventAction,
+    this.eventName,
+    this.eventValue,
+    this.goalId,
+    this.orderId,
+    this.trackingOrderItems,
+    this.revenue,
+    this.subTotal,
+    this.taxAmount,
+    this.shippingCost,
+    this.discountAmount,
+  }) {
     _date = DateTime.now().toUtc();
   }
 
@@ -347,7 +424,12 @@ class _Event {
     map['_idts'] =
         this.tracker.session.firstVisit!.millisecondsSinceEpoch ~/ 1000;
 
-    map['url'] = '${this.tracker.contentBase}/$action';
+    if (action != null) {
+      map['url'] = '${this.tracker.contentBase}/$action';
+    } else {
+      map['url'] = '${this.tracker.contentBase}';
+    }
+
     map['action_name'] = action;
 
     final locale = window.locale;
@@ -362,7 +444,7 @@ class _Event {
     map['res'] = '${this.tracker.width}x${this.tracker.height}';
 
     // Goal
-    if (goalId != null && goalId! > 0) {
+    if (goalId != null) {
       map['idgoal'] = goalId;
     }
     if (revenue != null && revenue! > 0) {
@@ -382,6 +464,28 @@ class _Event {
     if (eventValue != null) {
       map['e_v'] = eventValue;
     }
+
+    // Ecommerce
+    if (orderId != null) {
+      map['ec_id'] = orderId;
+    }
+    if (trackingOrderItems != null) {
+      map['ec_items'] =
+          json.encode(trackingOrderItems!.map((i) => i.toArray()).toList());
+    }
+    if (subTotal != null) {
+      map['ec_st'] = subTotal;
+    }
+    if (taxAmount != null) {
+      map['ec_tx'] = taxAmount;
+    }
+    if (shippingCost != null) {
+      map['ec_sh'] = shippingCost;
+    }
+    if (discountAmount != null) {
+      map['ec_dt'] = discountAmount;
+    }
+
     return map;
   }
 }
@@ -401,7 +505,7 @@ class _MatomoDispatcher {
     var map = event.toMap();
     var url = '$baseUrl?';
     for (String key in map.keys) {
-      var value = Uri.encodeFull(map[key].toString());
+      var value = Uri.encodeComponent(map[key].toString());
       url = '$url$key=$value&';
     }
     if (tokenAuth != null) {
