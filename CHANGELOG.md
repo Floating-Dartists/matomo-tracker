@@ -1,3 +1,9 @@
+## [1.1.0] - 2021/11/06
+
+* Add ecommerce tracking (Thank you stefan01@)
+* Improved URL encoding (Thank you stefan01@)
+* Add option to add token_auth to params to handle old requests (Thank you Julian Bissekkou)
+
 ## [1.0.1]
 
 * Migrated from the deprecated package_info plugin to package_info_plus.
