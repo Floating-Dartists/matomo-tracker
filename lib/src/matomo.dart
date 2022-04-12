@@ -16,7 +16,6 @@ import 'package:universal_html/html.dart' as html;
 import 'package:uuid/uuid.dart';
 
 const _kFirstVisit = 'matomo_first_visit';
-const _kLastVisit = 'matomo_last_visit';
 const _kVisitCount = 'matomo_visit_count';
 const _kVisitorId = 'matomo_visitor_id';
 const _kOptOut = 'matomo_opt_out';
@@ -79,36 +78,28 @@ class MatomoTracker {
     height = window.physicalSize.height.toInt();
 
     // Initialize Session Information
-    DateTime firstVisit = DateTime.now().toUtc();
-    DateTime lastVisit = DateTime.now().toUtc();
+    final now = DateTime.now().toUtc();
+    DateTime firstVisit = now;
     int visitCount = 1;
 
     _prefs = await SharedPreferences.getInstance();
 
-    if (_prefs!.containsKey(_kFirstVisit)) {
-      firstVisit =
-          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(_kFirstVisit)!);
+    final localFirstVisit = _prefs?.getInt(_kFirstVisit);
+    if (localFirstVisit != null) {
+      firstVisit = DateTime.fromMillisecondsSinceEpoch(
+        localFirstVisit,
+        isUtc: true,
+      );
     } else {
-      _prefs!.setInt(_kFirstVisit, firstVisit.millisecondsSinceEpoch);
+      _prefs?.setInt(_kFirstVisit, now.millisecondsSinceEpoch);
     }
 
-    if (_prefs!.containsKey(_kLastVisit)) {
-      lastVisit =
-          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(_kLastVisit)!);
-    }
-    // Now is the last visit.
-    _prefs!.setInt(_kLastVisit, lastVisit.millisecondsSinceEpoch);
+    final localVisitorCount = _prefs?.getInt(_kVisitCount) ?? 0;
+    visitCount += localVisitorCount;
+    _prefs?.setInt(_kVisitCount, visitCount);
 
-    if (_prefs!.containsKey(_kVisitCount)) {
-      visitCount += _prefs!.getInt(_kVisitCount)!;
-    }
-    _prefs!.setInt(_kVisitCount, visitCount);
-
-    session = Session(
-      firstVisit: firstVisit,
-      lastVisit: lastVisit,
-      visitCount: visitCount,
-    );
+    session =
+        Session(firstVisit: firstVisit, lastVisit: now, visitCount: visitCount);
 
     // Initialize Visitor
     if (_visitorId == null) {
@@ -137,7 +128,7 @@ class MatomoTracker {
     }
 
     log.fine(
-      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$lastVisit; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${width}x$height; userAgent=$userAgent',
+      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${width}x$height; userAgent=$userAgent',
     );
     initialized = true;
 
@@ -156,7 +147,6 @@ class MatomoTracker {
   void clear() {
     if (_prefs != null) {
       _prefs!.remove(_kFirstVisit);
-      _prefs!.remove(_kLastVisit);
       _prefs!.remove(_kVisitCount);
       _prefs!.remove(_kVisitorId);
     }
@@ -279,11 +269,15 @@ class MatomoTracker {
 }
 
 class Session {
-  final DateTime? firstVisit;
-  final DateTime? lastVisit;
-  final int? visitCount;
+  final DateTime firstVisit;
+  final DateTime lastVisit;
+  final int visitCount;
 
-  Session({this.firstVisit, this.lastVisit, this.visitCount});
+  Session({
+    required this.firstVisit,
+    required this.lastVisit,
+    required this.visitCount,
+  });
 }
 
 class Visitor {
@@ -291,7 +285,11 @@ class Visitor {
   final String? forcedId;
   final String? userId;
 
-  Visitor({this.id, this.forcedId, this.userId});
+  Visitor({
+    required this.id,
+    this.forcedId,
+    this.userId,
+  });
 }
 
 class TrackingOrderItem {
@@ -309,13 +307,7 @@ class TrackingOrderItem {
     this.quantity,
   });
 
-  List<dynamic> toArray() => [
-        sku,
-        name,
-        category,
-        price,
-        quantity,
-      ];
+  List<Object?> toArray() => [sku, name, category, price, quantity];
 }
 
 class _Event {
@@ -357,32 +349,44 @@ class _Event {
     _date = DateTime.now().toUtc();
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, String> toMap() {
     // Based from https://developer.matomo.org/api-reference/tracking-api
     // https://github.com/matomo-org/matomo-sdk-ios/blob/develop/MatomoTracker/EventAPISerializer.swift
-    final map = <String, dynamic>{};
+    final map = <String, String>{};
     map['idsite'] = tracker.siteId.toString();
-    map['rec'] = 1;
+    map['rec'] = '1';
 
-    map['rand'] = Random().nextInt(1000000000);
-    map['apiv'] = 1;
-    map['cookie'] = 1;
+    map['rand'] = '${Random().nextInt(1000000000)}';
+    map['apiv'] = '1';
+    map['cookie'] = '1';
 
     // Visitor
-    map['_id'] = tracker.visitor.id;
-    if (tracker.visitor.forcedId != null) {
-      map['cid'] = tracker.visitor.forcedId;
+    final id = tracker.visitor.id;
+    if (id != null) {
+      map['_id'] = id;
     }
-    map['uid'] = tracker.visitor.userId;
 
-    if (tracker.currentScreenId != null) {
-      map['pv_id'] = tracker.currentScreenId;
+    final forcedId = tracker.visitor.forcedId;
+    if (forcedId != null) {
+      map['cid'] = forcedId;
+    }
+
+    final userId = tracker.visitor.userId;
+    if (userId != null) {
+      map['uid'] = userId;
+    }
+
+    final currentScreenId = tracker.currentScreenId;
+    if (currentScreenId != null) {
+      map['pv_id'] = currentScreenId;
     }
 
     // Session
     map['_idvc'] = tracker.session.visitCount.toString();
-    map['_viewts'] = tracker.session.lastVisit!.millisecondsSinceEpoch ~/ 1000;
-    map['_idts'] = tracker.session.firstVisit!.millisecondsSinceEpoch ~/ 1000;
+    map['_viewts'] =
+        '${tracker.session.lastVisit.millisecondsSinceEpoch ~/ 1000}';
+    map['_idts'] =
+        '${tracker.session.firstVisit.millisecondsSinceEpoch ~/ 1000}';
 
     if (action != null) {
       map['url'] = '${tracker.contentBase}/$action';
@@ -390,7 +394,10 @@ class _Event {
       map['url'] = '${tracker.contentBase}';
     }
 
-    map['action_name'] = action;
+    final _action = action;
+    if (_action != null) {
+      map['action_name'] = _action;
+    }
 
     final locale = window.locale;
     map['lang'] = locale.toString();
@@ -404,48 +411,68 @@ class _Event {
     map['res'] = '${tracker.width}x${tracker.height}';
 
     // Goal
-    if (goalId != null) {
-      map['idgoal'] = goalId;
+    final _goalId = goalId;
+    if (_goalId != null) {
+      map['idgoal'] = _goalId.toString();
     }
-    if (revenue != null && revenue! > 0) {
-      map['revenue'] = revenue;
+
+    final _revenue = revenue;
+    if (_revenue != null && _revenue > 0) {
+      map['revenue'] = _revenue.toString();
     }
 
     // Event
-    if (eventCategory != null) {
-      map['e_c'] = eventCategory;
+    final _eventCategory = eventCategory;
+    if (_eventCategory != null) {
+      map['e_c'] = _eventCategory;
     }
-    if (eventAction != null) {
-      map['e_a'] = eventAction;
+
+    final _eventAction = eventAction;
+    if (_eventAction != null) {
+      map['e_a'] = _eventAction;
     }
-    if (eventName != null) {
-      map['e_n'] = eventName;
+
+    final _eventName = eventName;
+    if (_eventName != null) {
+      map['e_n'] = _eventName;
     }
-    if (eventValue != null) {
-      map['e_v'] = eventValue;
+
+    final _eventValue = eventValue;
+    if (_eventValue != null) {
+      map['e_v'] = _eventValue.toString();
     }
 
     // Ecommerce
-    if (orderId != null) {
-      map['ec_id'] = orderId;
-    }
-    if (trackingOrderItems != null) {
-      map['ec_items'] =
-          json.encode(trackingOrderItems!.map((i) => i.toArray()).toList());
-    }
-    if (subTotal != null) {
-      map['ec_st'] = subTotal;
-    }
-    if (taxAmount != null) {
-      map['ec_tx'] = taxAmount;
-    }
-    if (shippingCost != null) {
-      map['ec_sh'] = shippingCost;
-    }
-    if (discountAmount != null) {
-      map['ec_dt'] = discountAmount;
+    final _orderId = orderId;
+    if (_orderId != null) {
+      map['ec_id'] = _orderId;
     }
 
+    final _trackingOrderItems = trackingOrderItems;
+    if (_trackingOrderItems != null) {
+      map['ec_items'] =
+          jsonEncode(_trackingOrderItems.map((i) => i.toArray()).toList());
+    }
+
+    final _subTotal = subTotal;
+    if (_subTotal != null) {
+      map['ec_st'] = _subTotal.toString();
+    }
+
+    final _taxAmount = taxAmount;
+    if (_taxAmount != null) {
+      map['ec_tx'] = _taxAmount.toString();
+    }
+
+    final _shippingCost = shippingCost;
+    if (_shippingCost != null) {
+      map['ec_sh'] = _shippingCost.toString();
+    }
+
+    final _discountAmount = discountAmount;
+    if (_discountAmount != null) {
+      map['ec_dt'] = _discountAmount.toString();
+    }
     return map;
   }
 }
@@ -463,7 +490,11 @@ class _MatomoDispatcher {
     };
 
     final map = event.toMap();
+
+    final baseUri = Uri.parse(baseUrl);
+
     final buffer = StringBuffer('$baseUrl?');
+    baseUri.queryParameters.addAll(map);
     for (final key in map.keys) {
       final value = Uri.encodeComponent(map[key].toString());
       buffer.write('$key=$value&');
