@@ -15,81 +15,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:uuid/uuid.dart';
 
-abstract class TraceableStatelessWidget extends StatelessWidget {
-  final String name;
-  final String title;
-
-  const TraceableStatelessWidget({
-    this.name = '',
-    this.title = 'WidgetCreated',
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  StatelessElement createElement() {
-    MatomoTracker.trackScreenWithName(
-      name.isEmpty ? runtimeType.toString() : name,
-      title,
-    );
-    return StatelessElement(this);
-  }
-}
-
-abstract class TraceableStatefulWidget extends StatefulWidget {
-  final String name;
-  final String title;
-
-  const TraceableStatefulWidget({
-    this.name = '',
-    this.title = 'WidgetCreated',
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  StatefulElement createElement() {
-    MatomoTracker.trackScreenWithName(
-      name.isEmpty ? runtimeType.toString() : name,
-      title,
-    );
-    return StatefulElement(this);
-  }
-}
-
-abstract class TraceableInheritedWidget extends InheritedWidget {
-  final String name;
-  final String title;
-
-  const TraceableInheritedWidget({
-    this.name = '',
-    this.title = 'WidgetCreated',
-    Key? key,
-    required Widget child,
-  }) : super(key: key, child: child);
-
-  @override
-  InheritedElement createElement() {
-    MatomoTracker.trackScreenWithName(
-      name.isEmpty ? runtimeType.toString() : name,
-      title,
-    );
-    return InheritedElement(this);
-  }
-}
+const _kFirstVisit = 'matomo_first_visit';
+const _kVisitCount = 'matomo_visit_count';
+const _kVisitorId = 'matomo_visitor_id';
+const _kOptOut = 'matomo_opt_out';
 
 class MatomoTracker {
   final log = Logger('Matomo');
 
-  static const kFirstVisit = 'matomo_first_visit';
-  static const kLastVisit = 'matomo_last_visit';
-  static const kVisitCount = 'matomo_visit_count';
-  static const kVisitorId = 'matomo_visitor_id';
-  static const kOptOut = 'matomo_opt_out';
-
   late _MatomoDispatcher _dispatcher;
 
-  static final _instance = MatomoTracker._internal();
-
-  factory MatomoTracker() => _instance;
+  static final instance = MatomoTracker._internal();
 
   MatomoTracker._internal();
 
@@ -142,44 +78,36 @@ class MatomoTracker {
     height = window.physicalSize.height.toInt();
 
     // Initialize Session Information
-    DateTime firstVisit = DateTime.now().toUtc();
-    DateTime lastVisit = DateTime.now().toUtc();
+    final now = DateTime.now().toUtc();
+    DateTime firstVisit = now;
     int visitCount = 1;
 
     _prefs = await SharedPreferences.getInstance();
 
-    if (_prefs!.containsKey(kFirstVisit)) {
-      firstVisit =
-          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(kFirstVisit)!);
+    final localFirstVisit = _prefs?.getInt(_kFirstVisit);
+    if (localFirstVisit != null) {
+      firstVisit = DateTime.fromMillisecondsSinceEpoch(
+        localFirstVisit,
+        isUtc: true,
+      );
     } else {
-      _prefs!.setInt(kFirstVisit, firstVisit.millisecondsSinceEpoch);
+      _prefs?.setInt(_kFirstVisit, now.millisecondsSinceEpoch);
     }
 
-    if (_prefs!.containsKey(kLastVisit)) {
-      lastVisit =
-          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(kLastVisit)!);
-    }
-    // Now is the last visit.
-    _prefs!.setInt(kLastVisit, lastVisit.millisecondsSinceEpoch);
+    final localVisitorCount = _prefs?.getInt(_kVisitCount) ?? 0;
+    visitCount += localVisitorCount;
+    _prefs?.setInt(_kVisitCount, visitCount);
 
-    if (_prefs!.containsKey(kVisitCount)) {
-      visitCount += _prefs!.getInt(kVisitCount)!;
-    }
-    _prefs!.setInt(kVisitCount, visitCount);
-
-    session = Session(
-      firstVisit: firstVisit,
-      lastVisit: lastVisit,
-      visitCount: visitCount,
-    );
+    session =
+        Session(firstVisit: firstVisit, lastVisit: now, visitCount: visitCount);
 
     // Initialize Visitor
     if (_visitorId == null) {
       _visitorId = const Uuid().v4();
-      if (_prefs!.containsKey(kVisitorId)) {
-        _visitorId = _prefs?.getString(kVisitorId);
+      if (_prefs!.containsKey(_kVisitorId)) {
+        _visitorId = _prefs?.getString(_kVisitorId);
       } else {
-        _prefs?.setString(kVisitorId, _visitorId);
+        _prefs?.setString(_kVisitorId, _visitorId);
       }
     }
     visitor = Visitor(id: _visitorId, userId: _visitorId);
@@ -193,14 +121,14 @@ class MatomoTracker {
       contentBase = 'https://${packageInfo.packageName}';
     }
 
-    if (_prefs!.containsKey(kOptOut)) {
-      _optout = _prefs!.getBool(kOptOut);
+    if (_prefs!.containsKey(_kOptOut)) {
+      _optout = _prefs!.getBool(_kOptOut);
     } else {
-      _prefs!.setBool(kOptOut, _optout!);
+      _prefs!.setBool(_kOptOut, _optout!);
     }
 
     log.fine(
-      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$lastVisit; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${width}x$height; userAgent=$userAgent',
+      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${width}x$height; userAgent=$userAgent',
     );
     initialized = true;
 
@@ -213,15 +141,14 @@ class MatomoTracker {
 
   void setOptOut({required bool optout}) {
     _optout = optout;
-    _prefs!.setBool(kOptOut, _optout!);
+    _prefs!.setBool(_kOptOut, _optout!);
   }
 
   void clear() {
     if (_prefs != null) {
-      _prefs!.remove(kFirstVisit);
-      _prefs!.remove(kLastVisit);
-      _prefs!.remove(kVisitCount);
-      _prefs!.remove(kVisitorId);
+      _prefs!.remove(_kFirstVisit);
+      _prefs!.remove(_kVisitCount);
+      _prefs!.remove(_kVisitorId);
     }
   }
 
@@ -229,54 +156,50 @@ class MatomoTracker {
     _timer.cancel();
   }
 
-  static void dispatchEvents() {
-    final tracker = MatomoTracker();
-    if (tracker.initialized) {
-      tracker._dequeue();
+  void dispatchEvents() {
+    if (initialized) {
+      _dequeue();
     }
   }
 
-  static void trackScreen(BuildContext context, String eventName) {
+  void trackScreen(BuildContext context, String eventName) {
     final widgetName = context.widget.toStringShort();
     trackScreenWithName(widgetName, eventName);
   }
 
-  static void trackScreenWithName(String widgetName, String eventName) {
+  void trackScreenWithName(String widgetName, String eventName) {
     // From https://gitlab.com/petleo-and-iatros-opensource/flutter_matomo/blob/master/lib/flutter_matomo.dart
     // trackScreen(widgetName: widgetName, eventName: eventName);
     // -> track().screen(widgetName).with(tracker)
     // -> Event(action:)
-    final tracker = MatomoTracker();
-    tracker.currentScreenId = randomAlphaNumeric(6);
-    tracker._track(
+    currentScreenId = randomAlphaNumeric(6);
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         action: widgetName,
       ),
     );
   }
 
-  static void trackGoal(int goalId, {double? revenue}) {
-    final tracker = MatomoTracker();
-    tracker._track(
+  void trackGoal(int goalId, {double? revenue}) {
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         goalId: goalId,
         revenue: revenue,
       ),
     );
   }
 
-  static void trackEvent(
+  void trackEvent(
     String eventName,
     String eventAction, {
     String? widgetName,
     int? eventValue,
   }) {
-    final tracker = MatomoTracker();
-    tracker._track(
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         eventAction: eventAction,
         eventName: eventName,
         eventCategory: widgetName,
@@ -285,17 +208,16 @@ class MatomoTracker {
     );
   }
 
-  static void trackCartUpdate(
+  void trackCartUpdate(
     List<TrackingOrderItem>? trackingOrderItems,
     num? subTotal,
     num? taxAmount,
     num? shippingCost,
     num? discountAmount,
   ) {
-    final tracker = MatomoTracker();
-    tracker._track(
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         goalId: 0,
         trackingOrderItems: trackingOrderItems,
         subTotal: subTotal,
@@ -306,7 +228,7 @@ class MatomoTracker {
     );
   }
 
-  static void trackOrder(
+  void trackOrder(
     String? orderId,
     List<TrackingOrderItem>? trackingOrderItems,
     num? revenue,
@@ -315,10 +237,9 @@ class MatomoTracker {
     num? shippingCost,
     num? discountAmount,
   ) {
-    final tracker = MatomoTracker();
-    tracker._track(
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         goalId: 0,
         orderId: orderId,
         trackingOrderItems: trackingOrderItems,
@@ -348,11 +269,15 @@ class MatomoTracker {
 }
 
 class Session {
-  final DateTime? firstVisit;
-  final DateTime? lastVisit;
-  final int? visitCount;
+  final DateTime firstVisit;
+  final DateTime lastVisit;
+  final int visitCount;
 
-  Session({this.firstVisit, this.lastVisit, this.visitCount});
+  Session({
+    required this.firstVisit,
+    required this.lastVisit,
+    required this.visitCount,
+  });
 }
 
 class Visitor {
@@ -360,7 +285,11 @@ class Visitor {
   final String? forcedId;
   final String? userId;
 
-  Visitor({this.id, this.forcedId, this.userId});
+  Visitor({
+    required this.id,
+    this.forcedId,
+    this.userId,
+  });
 }
 
 class TrackingOrderItem {
@@ -378,13 +307,7 @@ class TrackingOrderItem {
     this.quantity,
   });
 
-  List<dynamic> toArray() => [
-        sku,
-        name,
-        category,
-        price,
-        quantity,
-      ];
+  List<Object?> toArray() => [sku, name, category, price, quantity];
 }
 
 class _Event {
@@ -426,32 +349,44 @@ class _Event {
     _date = DateTime.now().toUtc();
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, String> toMap() {
     // Based from https://developer.matomo.org/api-reference/tracking-api
     // https://github.com/matomo-org/matomo-sdk-ios/blob/develop/MatomoTracker/EventAPISerializer.swift
-    final map = <String, dynamic>{};
+    final map = <String, String>{};
     map['idsite'] = tracker.siteId.toString();
-    map['rec'] = 1;
+    map['rec'] = '1';
 
-    map['rand'] = Random().nextInt(1000000000);
-    map['apiv'] = 1;
-    map['cookie'] = 1;
+    map['rand'] = '${Random().nextInt(1000000000)}';
+    map['apiv'] = '1';
+    map['cookie'] = '1';
 
     // Visitor
-    map['_id'] = tracker.visitor.id;
-    if (tracker.visitor.forcedId != null) {
-      map['cid'] = tracker.visitor.forcedId;
+    final id = tracker.visitor.id;
+    if (id != null) {
+      map['_id'] = id;
     }
-    map['uid'] = tracker.visitor.userId;
 
-    if (tracker.currentScreenId != null) {
-      map['pv_id'] = tracker.currentScreenId;
+    final forcedId = tracker.visitor.forcedId;
+    if (forcedId != null) {
+      map['cid'] = forcedId;
+    }
+
+    final userId = tracker.visitor.userId;
+    if (userId != null) {
+      map['uid'] = userId;
+    }
+
+    final currentScreenId = tracker.currentScreenId;
+    if (currentScreenId != null) {
+      map['pv_id'] = currentScreenId;
     }
 
     // Session
     map['_idvc'] = tracker.session.visitCount.toString();
-    map['_viewts'] = tracker.session.lastVisit!.millisecondsSinceEpoch ~/ 1000;
-    map['_idts'] = tracker.session.firstVisit!.millisecondsSinceEpoch ~/ 1000;
+    map['_viewts'] =
+        '${tracker.session.lastVisit.millisecondsSinceEpoch ~/ 1000}';
+    map['_idts'] =
+        '${tracker.session.firstVisit.millisecondsSinceEpoch ~/ 1000}';
 
     if (action != null) {
       map['url'] = '${tracker.contentBase}/$action';
@@ -459,7 +394,10 @@ class _Event {
       map['url'] = '${tracker.contentBase}';
     }
 
-    map['action_name'] = action;
+    final _action = action;
+    if (_action != null) {
+      map['action_name'] = _action;
+    }
 
     final locale = window.locale;
     map['lang'] = locale.toString();
@@ -473,48 +411,68 @@ class _Event {
     map['res'] = '${tracker.width}x${tracker.height}';
 
     // Goal
-    if (goalId != null) {
-      map['idgoal'] = goalId;
+    final _goalId = goalId;
+    if (_goalId != null) {
+      map['idgoal'] = _goalId.toString();
     }
-    if (revenue != null && revenue! > 0) {
-      map['revenue'] = revenue;
+
+    final _revenue = revenue;
+    if (_revenue != null && _revenue > 0) {
+      map['revenue'] = _revenue.toString();
     }
 
     // Event
-    if (eventCategory != null) {
-      map['e_c'] = eventCategory;
+    final _eventCategory = eventCategory;
+    if (_eventCategory != null) {
+      map['e_c'] = _eventCategory;
     }
-    if (eventAction != null) {
-      map['e_a'] = eventAction;
+
+    final _eventAction = eventAction;
+    if (_eventAction != null) {
+      map['e_a'] = _eventAction;
     }
-    if (eventName != null) {
-      map['e_n'] = eventName;
+
+    final _eventName = eventName;
+    if (_eventName != null) {
+      map['e_n'] = _eventName;
     }
-    if (eventValue != null) {
-      map['e_v'] = eventValue;
+
+    final _eventValue = eventValue;
+    if (_eventValue != null) {
+      map['e_v'] = _eventValue.toString();
     }
 
     // Ecommerce
-    if (orderId != null) {
-      map['ec_id'] = orderId;
-    }
-    if (trackingOrderItems != null) {
-      map['ec_items'] =
-          json.encode(trackingOrderItems!.map((i) => i.toArray()).toList());
-    }
-    if (subTotal != null) {
-      map['ec_st'] = subTotal;
-    }
-    if (taxAmount != null) {
-      map['ec_tx'] = taxAmount;
-    }
-    if (shippingCost != null) {
-      map['ec_sh'] = shippingCost;
-    }
-    if (discountAmount != null) {
-      map['ec_dt'] = discountAmount;
+    final _orderId = orderId;
+    if (_orderId != null) {
+      map['ec_id'] = _orderId;
     }
 
+    final _trackingOrderItems = trackingOrderItems;
+    if (_trackingOrderItems != null) {
+      map['ec_items'] =
+          jsonEncode(_trackingOrderItems.map((i) => i.toArray()).toList());
+    }
+
+    final _subTotal = subTotal;
+    if (_subTotal != null) {
+      map['ec_st'] = _subTotal.toString();
+    }
+
+    final _taxAmount = taxAmount;
+    if (_taxAmount != null) {
+      map['ec_tx'] = _taxAmount.toString();
+    }
+
+    final _shippingCost = shippingCost;
+    if (_shippingCost != null) {
+      map['ec_sh'] = _shippingCost.toString();
+    }
+
+    final _discountAmount = discountAmount;
+    if (_discountAmount != null) {
+      map['ec_dt'] = _discountAmount.toString();
+    }
     return map;
   }
 }
@@ -532,19 +490,14 @@ class _MatomoDispatcher {
     };
 
     final map = event.toMap();
-    final buffer = StringBuffer('$baseUrl?');
-    for (final key in map.keys) {
-      final value = Uri.encodeComponent(map[key].toString());
-      buffer.write('$key=$value&');
+    final baseUri = Uri.parse(baseUrl)..queryParameters.addAll(map);
+    final _tokenAuth = tokenAuth;
+    if (_tokenAuth != null) {
+      baseUri.queryParameters.addEntries([MapEntry('token_auth', _tokenAuth)]);
     }
-    if (tokenAuth != null) {
-      buffer.write('token_auth=$tokenAuth');
-    }
-    event.tracker.log.fine(' -> ${buffer.toString()}');
-    http
-        .post(Uri.parse(buffer.toString()), headers: headers)
-        .then((http.Response response) {
-      final int statusCode = response.statusCode;
+    event.tracker.log.fine(' -> ${baseUri.toString()}');
+    http.post(baseUri, headers: headers).then((http.Response response) {
+      final statusCode = response.statusCode;
       event.tracker.log.fine(' <- $statusCode');
       if (statusCode != 200) {}
     }).catchError((e) {

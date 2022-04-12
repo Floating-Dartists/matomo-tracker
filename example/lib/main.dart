@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
           '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}');
     });
 
-    MatomoTracker().initialize(
+    MatomoTracker.instance.initialize(
       siteId: 1,
       url: 'https://analytics.example.com/piwik.php',
     );
@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Foundation {}
-
-class MyHomePage extends TraceableStatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key, name: title);
+class MyHomePage extends StatefulWidget with TraceableStatefulMixin {
+  MyHomePage({Key key, this.title}) : super(key: key) {
+    init(traceTitle: title);
+  }
 
   final String title;
 
@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    MatomoTracker.trackEvent('IncrementCounter', 'Click');
+    MatomoTracker.instance.trackEvent('IncrementCounter', 'Click');
     setState(() {
       _counter++;
     });
