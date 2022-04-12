@@ -1,34 +1,34 @@
 PODS:
+  - fk_user_agent (2.0.0):
+    - Flutter
   - Flutter (1.0.0)
-  - flutter_user_agent (1.2.2):
+  - package_info_plus (0.4.5):
     - Flutter
-  - package_info (0.0.1):
-    - Flutter
-  - shared_preferences (0.0.1):
+  - shared_preferences_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - fk_user_agent (from `.symlinks/plugins/fk_user_agent/ios`)
   - Flutter (from `Flutter`)
-  - flutter_user_agent (from `.symlinks/plugins/flutter_user_agent/ios`)
-  - package_info (from `.symlinks/plugins/package_info/ios`)
-  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
 
 EXTERNAL SOURCES:
+  fk_user_agent:
+    :path: ".symlinks/plugins/fk_user_agent/ios"
   Flutter:
     :path: Flutter
-  flutter_user_agent:
-    :path: ".symlinks/plugins/flutter_user_agent/ios"
-  package_info:
-    :path: ".symlinks/plugins/package_info/ios"
-  shared_preferences:
-    :path: ".symlinks/plugins/shared_preferences/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
+  shared_preferences_ios:
+    :path: ".symlinks/plugins/shared_preferences_ios/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  flutter_user_agent: 27c45d034dc31b80948d29998cea52cd3a7bf936
-  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  fk_user_agent: 1f47ec39291e8372b1d692b50084b0d54103c545
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
+  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

@@ -15,81 +15,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:uuid/uuid.dart';
 
-abstract class TraceableStatelessWidget extends StatelessWidget {
-  final String name;
-  final String title;
-
-  const TraceableStatelessWidget({
-    this.name = '',
-    this.title = 'WidgetCreated',
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  StatelessElement createElement() {
-    MatomoTracker.trackScreenWithName(
-      name.isEmpty ? runtimeType.toString() : name,
-      title,
-    );
-    return StatelessElement(this);
-  }
-}
-
-abstract class TraceableStatefulWidget extends StatefulWidget {
-  final String name;
-  final String title;
-
-  const TraceableStatefulWidget({
-    this.name = '',
-    this.title = 'WidgetCreated',
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  StatefulElement createElement() {
-    MatomoTracker.trackScreenWithName(
-      name.isEmpty ? runtimeType.toString() : name,
-      title,
-    );
-    return StatefulElement(this);
-  }
-}
-
-abstract class TraceableInheritedWidget extends InheritedWidget {
-  final String name;
-  final String title;
-
-  const TraceableInheritedWidget({
-    this.name = '',
-    this.title = 'WidgetCreated',
-    Key? key,
-    required Widget child,
-  }) : super(key: key, child: child);
-
-  @override
-  InheritedElement createElement() {
-    MatomoTracker.trackScreenWithName(
-      name.isEmpty ? runtimeType.toString() : name,
-      title,
-    );
-    return InheritedElement(this);
-  }
-}
+const _kFirstVisit = 'matomo_first_visit';
+const _kLastVisit = 'matomo_last_visit';
+const _kVisitCount = 'matomo_visit_count';
+const _kVisitorId = 'matomo_visitor_id';
+const _kOptOut = 'matomo_opt_out';
 
 class MatomoTracker {
   final log = Logger('Matomo');
 
-  static const kFirstVisit = 'matomo_first_visit';
-  static const kLastVisit = 'matomo_last_visit';
-  static const kVisitCount = 'matomo_visit_count';
-  static const kVisitorId = 'matomo_visitor_id';
-  static const kOptOut = 'matomo_opt_out';
-
   late _MatomoDispatcher _dispatcher;
 
-  static final _instance = MatomoTracker._internal();
-
-  factory MatomoTracker() => _instance;
+  static final instance = MatomoTracker._internal();
 
   MatomoTracker._internal();
 
@@ -148,24 +85,24 @@ class MatomoTracker {
 
     _prefs = await SharedPreferences.getInstance();
 
-    if (_prefs!.containsKey(kFirstVisit)) {
+    if (_prefs!.containsKey(_kFirstVisit)) {
       firstVisit =
-          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(kFirstVisit)!);
+          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(_kFirstVisit)!);
     } else {
-      _prefs!.setInt(kFirstVisit, firstVisit.millisecondsSinceEpoch);
+      _prefs!.setInt(_kFirstVisit, firstVisit.millisecondsSinceEpoch);
     }
 
-    if (_prefs!.containsKey(kLastVisit)) {
+    if (_prefs!.containsKey(_kLastVisit)) {
       lastVisit =
-          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(kLastVisit)!);
+          DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt(_kLastVisit)!);
     }
     // Now is the last visit.
-    _prefs!.setInt(kLastVisit, lastVisit.millisecondsSinceEpoch);
+    _prefs!.setInt(_kLastVisit, lastVisit.millisecondsSinceEpoch);
 
-    if (_prefs!.containsKey(kVisitCount)) {
-      visitCount += _prefs!.getInt(kVisitCount)!;
+    if (_prefs!.containsKey(_kVisitCount)) {
+      visitCount += _prefs!.getInt(_kVisitCount)!;
     }
-    _prefs!.setInt(kVisitCount, visitCount);
+    _prefs!.setInt(_kVisitCount, visitCount);
 
     session = Session(
       firstVisit: firstVisit,
@@ -176,10 +113,10 @@ class MatomoTracker {
     // Initialize Visitor
     if (_visitorId == null) {
       _visitorId = const Uuid().v4();
-      if (_prefs!.containsKey(kVisitorId)) {
-        _visitorId = _prefs?.getString(kVisitorId);
+      if (_prefs!.containsKey(_kVisitorId)) {
+        _visitorId = _prefs?.getString(_kVisitorId);
       } else {
-        _prefs?.setString(kVisitorId, _visitorId);
+        _prefs?.setString(_kVisitorId, _visitorId);
       }
     }
     visitor = Visitor(id: _visitorId, userId: _visitorId);
@@ -193,10 +130,10 @@ class MatomoTracker {
       contentBase = 'https://${packageInfo.packageName}';
     }
 
-    if (_prefs!.containsKey(kOptOut)) {
-      _optout = _prefs!.getBool(kOptOut);
+    if (_prefs!.containsKey(_kOptOut)) {
+      _optout = _prefs!.getBool(_kOptOut);
     } else {
-      _prefs!.setBool(kOptOut, _optout!);
+      _prefs!.setBool(_kOptOut, _optout!);
     }
 
     log.fine(
@@ -213,15 +150,15 @@ class MatomoTracker {
 
   void setOptOut({required bool optout}) {
     _optout = optout;
-    _prefs!.setBool(kOptOut, _optout!);
+    _prefs!.setBool(_kOptOut, _optout!);
   }
 
   void clear() {
     if (_prefs != null) {
-      _prefs!.remove(kFirstVisit);
-      _prefs!.remove(kLastVisit);
-      _prefs!.remove(kVisitCount);
-      _prefs!.remove(kVisitorId);
+      _prefs!.remove(_kFirstVisit);
+      _prefs!.remove(_kLastVisit);
+      _prefs!.remove(_kVisitCount);
+      _prefs!.remove(_kVisitorId);
     }
   }
 
@@ -229,54 +166,50 @@ class MatomoTracker {
     _timer.cancel();
   }
 
-  static void dispatchEvents() {
-    final tracker = MatomoTracker();
-    if (tracker.initialized) {
-      tracker._dequeue();
+  void dispatchEvents() {
+    if (initialized) {
+      _dequeue();
     }
   }
 
-  static void trackScreen(BuildContext context, String eventName) {
+  void trackScreen(BuildContext context, String eventName) {
     final widgetName = context.widget.toStringShort();
     trackScreenWithName(widgetName, eventName);
   }
 
-  static void trackScreenWithName(String widgetName, String eventName) {
+  void trackScreenWithName(String widgetName, String eventName) {
     // From https://gitlab.com/petleo-and-iatros-opensource/flutter_matomo/blob/master/lib/flutter_matomo.dart
     // trackScreen(widgetName: widgetName, eventName: eventName);
     // -> track().screen(widgetName).with(tracker)
     // -> Event(action:)
-    final tracker = MatomoTracker();
-    tracker.currentScreenId = randomAlphaNumeric(6);
-    tracker._track(
+    currentScreenId = randomAlphaNumeric(6);
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         action: widgetName,
       ),
     );
   }
 
-  static void trackGoal(int goalId, {double? revenue}) {
-    final tracker = MatomoTracker();
-    tracker._track(
+  void trackGoal(int goalId, {double? revenue}) {
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         goalId: goalId,
         revenue: revenue,
       ),
     );
   }
 
-  static void trackEvent(
+  void trackEvent(
     String eventName,
     String eventAction, {
     String? widgetName,
     int? eventValue,
   }) {
-    final tracker = MatomoTracker();
-    tracker._track(
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         eventAction: eventAction,
         eventName: eventName,
         eventCategory: widgetName,
@@ -285,17 +218,16 @@ class MatomoTracker {
     );
   }
 
-  static void trackCartUpdate(
+  void trackCartUpdate(
     List<TrackingOrderItem>? trackingOrderItems,
     num? subTotal,
     num? taxAmount,
     num? shippingCost,
     num? discountAmount,
   ) {
-    final tracker = MatomoTracker();
-    tracker._track(
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         goalId: 0,
         trackingOrderItems: trackingOrderItems,
         subTotal: subTotal,
@@ -306,7 +238,7 @@ class MatomoTracker {
     );
   }
 
-  static void trackOrder(
+  void trackOrder(
     String? orderId,
     List<TrackingOrderItem>? trackingOrderItems,
     num? revenue,
@@ -315,10 +247,9 @@ class MatomoTracker {
     num? shippingCost,
     num? discountAmount,
   ) {
-    final tracker = MatomoTracker();
-    tracker._track(
+    _track(
       _Event(
-        tracker: tracker,
+        tracker: this,
         goalId: 0,
         orderId: orderId,
         trackingOrderItems: trackingOrderItems,
