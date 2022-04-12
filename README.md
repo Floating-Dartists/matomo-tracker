@@ -2,6 +2,11 @@
 
 A Dart Client for Matomo. This is completely written in Dart and works cross-platform, including web.
 
+## TODO
+
+* refacto: Add code linter
+* refacto: Replace widget by minxins
+
 ## Getting Started
 
 ```
