@@ -4,8 +4,9 @@ A Dart Client for Matomo. This is completely written in Dart and works cross-pla
 
 ## TODO
 
-* refacto: Add code linter
-* refacto: Replace widget by minxins
+* Refacto code (replace widgets by mixins)
+* Add Documentation
+* Add unit tests
 
 ## Getting Started
 

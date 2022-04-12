@@ -1,3 +1,8 @@
+## [1.2.0]
+
+* Updated dependencies
+* Linted code
+
 ## [1.1.0] - 2021/11/06
 
 * Add ecommerce tracking (Thank you stefan01@)
