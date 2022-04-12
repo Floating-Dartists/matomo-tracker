@@ -490,23 +490,14 @@ class _MatomoDispatcher {
     };
 
     final map = event.toMap();
-
-    final baseUri = Uri.parse(baseUrl);
-
-    final buffer = StringBuffer('$baseUrl?');
-    baseUri.queryParameters.addAll(map);
-    for (final key in map.keys) {
-      final value = Uri.encodeComponent(map[key].toString());
-      buffer.write('$key=$value&');
+    final baseUri = Uri.parse(baseUrl)..queryParameters.addAll(map);
+    final _tokenAuth = tokenAuth;
+    if (_tokenAuth != null) {
+      baseUri.queryParameters.addEntries([MapEntry('token_auth', _tokenAuth)]);
     }
-    if (tokenAuth != null) {
-      buffer.write('token_auth=$tokenAuth');
-    }
-    event.tracker.log.fine(' -> ${buffer.toString()}');
-    http
-        .post(Uri.parse(buffer.toString()), headers: headers)
-        .then((http.Response response) {
-      final int statusCode = response.statusCode;
+    event.tracker.log.fine(' -> ${baseUri.toString()}');
+    http.post(baseUri, headers: headers).then((http.Response response) {
+      final statusCode = response.statusCode;
       event.tracker.log.fine(' <- $statusCode');
       if (statusCode != 200) {}
     }).catchError((e) {
