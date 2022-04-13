@@ -1,4 +1,4 @@
-# matomo
+# matomo_tracker
 
 Forked from the package [matomo](https://pub.dev/packages/matomo) by [poitch](https://github.com/poitch).
 
