@@ -6,9 +6,11 @@
 
 # matomo_tracker
 
+[![Pub Version](https://img.shields.io/pub/v/matomo_tracker)](https://pub.dev/packages/matomo_tracker)
+
 Forked from the package [matomo](https://pub.dev/packages/matomo) by [poitch](https://github.com/poitch).
 
-A fully cross-platform wrap of the Matomo tracking client for Flutter, using the Matomo API.
+A fully cross-platform wrap of the Matomo tracking client for Flutter, using the [Matomo Tracking API](https://developer.matomo.org/api-reference/tracking-api).
 
 ## Getting Started
 
@@ -26,7 +28,7 @@ If you need to use your own Visitor ID, you can pass it at the initialization of
 ```dart
 await MatomoTracker.instance.initialize(
     siteId: siteId,
-    url: 'https://example.com/piwik.php',
+    url: 'https://example.com/matomo.php',
     visitorId: 'customer_1',
 );
 ```
