@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="https://i.imgur.com/Gd0Mh6y.png" height="300">
+  <a href="https://github.com/Floating-Dartists">
+    <img src="https://i.imgur.com/Gd0Mh6y.png" height="300">
+  </a>
 </p>
 
 # matomo_tracker
