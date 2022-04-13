@@ -19,7 +19,7 @@ As early as possible in your application, you need to configure the Matomo Track
 ```dart
 await MatomoTracker.instance.initialize(
     siteId: siteId,
-    url: 'https://example.com/piwik.php',
+    url: 'https://example.com/matomo.php',
 );
 ```
 

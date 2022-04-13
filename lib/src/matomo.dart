@@ -14,6 +14,9 @@ import 'package:uuid/uuid.dart';
 import '../utils/random_alpha_numeric.dart';
 import 'matomo_dispatcher.dart';
 import 'matomo_event.dart';
+import 'session.dart';
+import 'tracking_order_item.dart';
+import 'visitor.dart';
 
 class MatomoTracker {
   static const kFirstVisit = 'matomo_first_visit';
@@ -34,7 +37,10 @@ class MatomoTracker {
   late final Session session;
   late final Visitor visitor;
   late final String? userAgent;
+
+  /// URL for the current action.
   late final String contentBase;
+
   late final int width;
   late final int height;
   String? currentScreenId;
@@ -318,46 +324,4 @@ class MatomoTracker {
       }
     }
   }
-}
-
-class Session {
-  final DateTime firstVisit;
-  final DateTime lastVisit;
-  final int visitCount;
-
-  Session({
-    required this.firstVisit,
-    required this.lastVisit,
-    required this.visitCount,
-  });
-}
-
-class Visitor {
-  final String? id;
-  final String? forcedId;
-  final String? userId;
-
-  Visitor({
-    this.id,
-    this.forcedId,
-    this.userId,
-  });
-}
-
-class TrackingOrderItem {
-  final String? sku;
-  final String? name;
-  final String? category;
-  final num? price;
-  final int? quantity;
-
-  TrackingOrderItem({
-    this.sku,
-    this.name,
-    this.category,
-    this.price,
-    this.quantity,
-  });
-
-  List<Object?> toArray() => [sku, name, category, price, quantity];
 }

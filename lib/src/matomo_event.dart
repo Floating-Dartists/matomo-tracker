@@ -2,11 +2,17 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
-import '../matomo_tracker.dart';
+import 'matomo.dart';
+import 'tracking_order_item.dart';
 
 class MatomoEvent {
   final MatomoTracker tracker;
+
+  /// The title of the action being tracked. It is possible to use slashes / to
+  /// set one or several categories for this action. For example, **Help /
+  /// Feedback** will create the Action **Feedback** in the category **Help**.
   final String? action;
+
   final String? eventCategory;
   final String? eventAction;
   final String? eventName;
@@ -65,40 +71,53 @@ class MatomoEvent {
     final ua = tracker.userAgent;
 
     return {
+      // Required parameters
       'idsite': tracker.siteId.toString(),
       'rec': '1',
+
+      // Recommended parameters
+      if (actionName != null) 'action_name': actionName,
+      'url': url,
+      if (id != null) '_id': id,
       'rand': '${Random().nextInt(1000000000)}',
       'apiv': '1',
-      'cookie': '1',
-      if (id != null) '_id': id,
-      if (cid != null) 'cid': cid,
-      if (uid != null) 'uid': uid,
-      if (pvId != null) 'pv_id': pvId,
+
+      // Optional User info
       '_idvc': tracker.session.visitCount.toString(),
       '_viewts': '${tracker.session.lastVisit.millisecondsSinceEpoch ~/ 1000}',
       '_idts': '${tracker.session.firstVisit.millisecondsSinceEpoch ~/ 1000}',
-      'url': url,
-      if (actionName != null) 'action_name': actionName,
-      'lang': window.locale.toString(),
+      'res': '${tracker.width}x${tracker.height}',
       'h': _date.hour.toString(),
       'm': _date.minute.toString(),
       's': _date.second.toString(),
-      'cdt': _date.toIso8601String(),
-      'res': '${tracker.width}x${tracker.height}',
+      'cookie': '1',
+      if (ua != null) 'ua': ua,
+      'lang': window.locale.toString(),
+      if (uid != null) 'uid': uid,
+      if (cid != null) 'cid': cid,
+
+      // Optional Action info (measure Page view, Outlink, Download, Site search)
+      if (pvId != null) 'pv_id': pvId,
       if (idgoal != null) 'idgoal': idgoal.toString(),
-      if (_revenue != null && _revenue > 0) 'revenue': _revenue.toString(),
+
+      // Optional Event Tracking info
       if (eC != null) 'e_c': eC,
       if (eA != null) 'e_a': eA,
       if (eN != null) 'e_n': eN,
       if (eV != null) 'e_v': eV.toString(),
+
+      // Optional Ecommerce info
       if (ecId != null) 'ec_id': ecId,
       if (ecItems != null)
         'ec_items': jsonEncode(ecItems.map((i) => i.toArray()).toList()),
+      if (_revenue != null && _revenue > 0) 'revenue': _revenue.toString(),
       if (ecSt != null) 'ec_st': ecSt.toString(),
       if (ecTx != null) 'ec_tx': ecTx.toString(),
       if (ecSh != null) 'ec_sh': ecSh.toString(),
       if (ecDt != null) 'ec_dt': ecDt.toString(),
-      if (ua != null) 'ua': ua,
+
+      // Other parameters (require authentication via `token_auth`)
+      'cdt': _date.toIso8601String(),
     };
   }
 }
