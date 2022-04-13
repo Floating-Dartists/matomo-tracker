@@ -60,14 +60,19 @@ You can also optionally call directly `trackScreen` or `trackScreenWithName` to 
 For tracking goals and, events call `trackGoal` and `trackEvent` respectively.
 
 A value can be passed for events:
+
 ```dart
-MatomoTracker().trackEvent('eventName', 'eventAction', eventValue='eventValue');
+MatomoTracker.instance.trackEvent(
+    name: 'eventName',
+    action: 'eventAction',
+    eventValue: 'eventValue',
+);
 ```
 
 ## Opting Out
 
-If you want to offer a way for the user to opt out of analytics, you can use the ```setOptOut()``` call.
+If you want to offer a way for the user to opt out of analytics, you can use the `setOptOut()` call.
 
 ```dart
-MatomoTracker().setOptOut(true);
+MatomoTracker.instance.setOptOut(optout: true);
 ```
