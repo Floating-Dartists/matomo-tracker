@@ -17,14 +17,17 @@ class MatomoDispatcher {
       if (!kIsWeb && userAgent != null) 'User-Agent': userAgent,
     };
 
-    final map = event.toMap();
-    final baseUri = Uri.parse(baseUrl)..queryParameters.addAll(map);
+    final baseUri = Uri.parse(baseUrl);
+    final queryParameters = Map<String, String>.from(baseUri.queryParameters)
+      ..addAll(event.toMap());
     final _tokenAuth = tokenAuth;
     if (_tokenAuth != null) {
-      baseUri.queryParameters.addEntries([MapEntry('token_auth', _tokenAuth)]);
+      queryParameters.addEntries([MapEntry('token_auth', _tokenAuth)]);
     }
-    event.tracker.log.fine(' -> ${baseUri.toString()}');
-    httpClient.post(baseUri, headers: headers).then((http.Response response) {
+
+    final uri = baseUri.replace(queryParameters: queryParameters);
+    event.tracker.log.fine(' -> ${uri.toString()}');
+    httpClient.post(uri, headers: headers).then((http.Response response) {
       final statusCode = response.statusCode;
       event.tracker.log.fine(' <- $statusCode');
     }).catchError((e) {
