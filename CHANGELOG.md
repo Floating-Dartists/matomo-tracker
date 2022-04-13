@@ -5,4 +5,4 @@
 
 ## [1.0.0]
 
-* Initial release of a matomo-tracker
+* Initial release of matomo-tracker
