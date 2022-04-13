@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
-import '../matomo.dart';
+import '../matomo_tracker.dart';
 
 class MatomoEvent {
   final MatomoTracker tracker;

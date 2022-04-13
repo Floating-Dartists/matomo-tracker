@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../matomo.dart';
+import '../matomo_tracker.dart';
 
 mixin TraceableStatelessMixin on StatelessWidget {
   late final String? traceName;

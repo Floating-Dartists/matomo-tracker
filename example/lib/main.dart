@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:matomo_tracker/matomo.dart';
+import 'package:matomo_tracker/matomo_tracker.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
