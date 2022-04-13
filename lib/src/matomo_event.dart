@@ -28,6 +28,8 @@ class MatomoEvent {
   final num? taxAmount;
   final num? shippingCost;
   final num? discountAmount;
+
+  /// The current time.
   final DateTime _date;
 
   MatomoEvent({

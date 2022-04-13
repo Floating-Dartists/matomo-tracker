@@ -7,11 +7,15 @@ class Visitor {
   final String? id;
 
   final String? forcedId;
+
+  /// User ID is any non-empty unique string identifying the user (such as an
+  /// email address or an username).
   final String? userId;
 
   Visitor({
     this.id,
     this.forcedId,
     this.userId,
-  }) : assert(id == null || id.length == 16);
+  })  : assert(id == null || id.length == 16),
+        assert(userId == null || userId.isNotEmpty);
 }

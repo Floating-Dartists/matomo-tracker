@@ -36,6 +36,8 @@ class MatomoTracker {
   late final String url;
   late final Session session;
   late final Visitor visitor;
+
+  /// The user agent is used to detect the operating system and browser used.
   late final String? userAgent;
 
   /// URL for the current action.
