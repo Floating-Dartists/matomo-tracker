@@ -13,10 +13,19 @@ class MatomoEvent {
   /// Feedback** will create the Action **Feedback** in the category **Help**.
   final String? action;
 
+  /// The event category. Must not be empty. (eg. Videos, Music, Games...)
   final String? eventCategory;
+
+  /// The event action. Must not be empty. (eg. Play, Pause, Duration, Add
+  /// Playlist, Downloaded, Clicked...)
   final String? eventAction;
+
+  /// The event name. (eg. a Movie name, or Song name, or File name...)
   final String? eventName;
-  final int? eventValue;
+
+  /// The event value.
+  final num? eventValue;
+
   final int? goalId;
   final String? orderId;
   final List<TrackingOrderItem>? trackingOrderItems;
@@ -47,7 +56,19 @@ class MatomoEvent {
     this.taxAmount,
     this.shippingCost,
     this.discountAmount,
-  }) : _date = DateTime.now().toUtc();
+  })  : _date = DateTime.now().toUtc(),
+        assert(
+          eventCategory == null || eventCategory.isNotEmpty,
+          'eventCategory must not be empty',
+        ),
+        assert(
+          eventAction == null || eventAction.isNotEmpty,
+          'eventAction must not be empty',
+        ),
+        assert(
+          eventName == null || eventName.isNotEmpty,
+          'eventName must not be empty',
+        );
 
   Map<String, String> toMap() {
     final id = tracker.visitor.id;
