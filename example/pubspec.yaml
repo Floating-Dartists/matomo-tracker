@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  matomo:
+  matomo_tracker:
     path: ../
 
 

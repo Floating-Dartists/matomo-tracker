@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:matomo/matomo.dart';
 import 'package:logging/logging.dart';
+import 'package:matomo_tracker/matomo_tracker.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,10 +12,11 @@ class MyApp extends StatelessWidget {
     Logger.root.level = Level.FINEST;
     Logger.root.onRecord.listen((LogRecord rec) {
       print(
-          '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}');
+        '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}',
+      );
     });
 
-    MatomoTracker().initialize(
+    MatomoTracker.instance.initialize(
       siteId: 1,
       url: 'https://analytics.example.com/piwik.php',
     );
@@ -33,10 +34,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Foundation {}
-
-class MyHomePage extends TraceableStatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key, name: title);
+class MyHomePage extends StatefulWidget with TraceableStatefulMixin {
+  MyHomePage({Key key, this.title}) : super(key: key) {
+    init(traceTitle: title);
+  }
 
   final String title;
 
@@ -48,7 +49,10 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    MatomoTracker.trackEvent('IncrementCounter', 'Click');
+    MatomoTracker.instance.trackEvent(
+      name: 'IncrementCounter',
+      action: 'Click',
+    );
     setState(() {
       _counter++;
     });
