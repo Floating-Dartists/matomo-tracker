@@ -1,4 +1,8 @@
-# matomo
+<p align="center">
+  <img src="https://i.imgur.com/Gd0Mh6y.png" height="300">
+</p>
+
+# matomo_tracker
 
 Forked from the package [matomo](https://pub.dev/packages/matomo) by [poitch](https://github.com/poitch).
 
