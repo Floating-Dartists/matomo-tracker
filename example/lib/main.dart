@@ -34,10 +34,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget with TraceableStatefulMixin {
-  MyHomePage({Key key, this.title}) : super(key: key) {
-    init(traceTitle: title);
-  }
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -45,10 +43,12 @@ class MyHomePage extends StatefulWidget with TraceableStatefulMixin {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+/// Send an event to Matomo on widget creation.
+class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   int _counter = 0;
 
   void _incrementCounter() {
+    // Send an event to Matomo on tap.
     MatomoTracker.instance.trackEvent(
       name: 'IncrementCounter',
       action: 'Click',
@@ -85,4 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  @override
+  String get traceName => 'Created HomePage';
+
+  @override
+  String get traceTitle => widget.title;
 }

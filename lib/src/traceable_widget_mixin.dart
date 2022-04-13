@@ -2,80 +2,37 @@ import 'package:flutter/material.dart';
 
 import '../matomo_tracker.dart';
 
-mixin TraceableStatelessMixin on StatelessWidget {
-  late final String? traceName;
-  late final String traceTitle;
-  late final MatomoTracker tracker;
+/// Register a `trackScreenWithName` on this widget.
+@optionalTypeArgs
+mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
+  /// Equivalent to an event action. (e.g. `'Created HomePage'`)
+  @protected
+  String get traceName => 'Created widget ${widget.toStringShort()}';
 
-  @mustCallSuper
-  void init({
-    String? traceName,
-    String traceTitle = 'WidgetCreated',
-    MatomoTracker? tracker,
-  }) {
-    this.traceName = traceName;
-    this.traceTitle = traceTitle;
-    this.tracker = tracker ?? MatomoTracker.instance;
-  }
+  /// Equivalent to an event name. (e.g. `'HomePage'`)
+  @protected
+  String get traceTitle;
 
-  @override
-  StatelessElement createElement() {
-    tracker.trackScreenWithName(
-      widgetName: traceName ?? runtimeType.toString(),
-      eventName: traceTitle,
-    );
-    return super.createElement();
-  }
-}
+  @protected
+  String get widgetId => widget.toStringShort();
 
-mixin TraceableStatefulMixin on StatefulWidget {
-  late final String? traceName;
-  late final String traceTitle;
-  late final MatomoTracker tracker;
-
-  @mustCallSuper
-  void init({
-    String? traceName,
-    String traceTitle = 'WidgetCreated',
-    MatomoTracker? tracker,
-  }) {
-    this.traceName = traceName;
-    this.traceTitle = traceTitle;
-    this.tracker = tracker ?? MatomoTracker.instance;
-  }
+  /// Matomo instance used to send events.
+  ///
+  /// By default it uses the global [MatomoTracker.instance].
+  @protected
+  MatomoTracker get tracker => MatomoTracker.instance;
 
   @override
-  StatefulElement createElement() {
-    tracker.trackScreenWithName(
-      widgetName: traceName ?? runtimeType.toString(),
-      eventName: traceTitle,
-    );
-    return super.createElement();
-  }
-}
-
-mixin TraceableInheritedMixin on InheritedWidget {
-  late final String? traceName;
-  late final String traceTitle;
-  late final MatomoTracker tracker;
-
-  @mustCallSuper
-  void init({
-    String? traceName,
-    String traceTitle = 'WidgetCreated',
-    MatomoTracker? tracker,
-  }) {
-    this.traceName = traceName;
-    this.traceTitle = traceTitle;
-    this.tracker = tracker ?? MatomoTracker.instance;
+  void initState() {
+    super.initState();
+    _startTracking();
   }
 
-  @override
-  InheritedElement createElement() {
+  void _startTracking() {
     tracker.trackScreenWithName(
-      widgetName: traceName ?? runtimeType.toString(),
+      widgetName: traceName,
       eventName: traceTitle,
+      currentScreenId: widgetId,
     );
-    return super.createElement();
   }
 }

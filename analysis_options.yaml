@@ -10,6 +10,7 @@ analyzer:
   errors:
     missing_required_param: error
     unrelated_type_equality_checks: error
+    must_call_super: error
     missing_return: warning
     close_sinks: warning
     cancel_subscriptions: warning
