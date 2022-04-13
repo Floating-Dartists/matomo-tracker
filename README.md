@@ -13,20 +13,20 @@ A fully cross-platform wrap of the Matomo tracking client for Flutter, using the
 As early as possible in your application, you need to configure the Matomo Tracker to pass the URL endpoint of your instance and your Site ID.
 
 ```dart
-    await MatomoTracker.instance.initialize(
-        siteId: siteId,
-        url: 'https://example.com/piwik.php',
-    );
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/piwik.php',
+);
 ```
 
 If you need to use your own Visitor ID, you can pass it at the initialization of MatomoTracker as is:
 
 ```dart
-    await MatomoTracker.instance.initialize(
-        siteId: siteId,
-        url: 'https://example.com/piwik.php',
-        visitorId: 'customer_1',
-    );
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/piwik.php',
+    visitorId: 'customer_1',
+);
 ```
 
 To track views simply add `TraceableClientMixin` on your `State`:
