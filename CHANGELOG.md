@@ -1,7 +1,10 @@
+## [1.0.1+1]
+
+* Updated README with pub version & Matomo Tracking documentation link
+
 ## [1.0.1]
 
 * Fixed `visitorId` not being set for future visits
-* Added ping/heartbeat mechanism when queue is empty
 
 ## [1.0.0]
 
