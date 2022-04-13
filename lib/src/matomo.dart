@@ -46,6 +46,8 @@ class MatomoTracker {
   /// The resolution of the device the visitor is using, eg **1280x1024**.
   late final Size screenResolution;
 
+  /// 6 character unique ID that identifies which actions were performed on a
+  /// specific page view.
   String? currentScreenId;
 
   bool initialized = false;
@@ -226,12 +228,15 @@ class MatomoTracker {
   /// Register an event with [eventName] as the event's name and [widgetName] as
   /// the event's action.
   ///
-  /// If [currentScreenId] is null a random id will be generated.
+  /// - `currentScreenId`: A 6 character unique ID that identifies which actions
+  /// were performed on a specific page view. If `null`, a random id will be
+  /// generated.
   void trackScreenWithName({
     required String widgetName,
     required String eventName,
     String? currentScreenId,
   }) {
+    assert(currentScreenId == null || currentScreenId.length == 6);
     this.currentScreenId = currentScreenId ?? randomAlphaNumeric(6);
     return _track(
       MatomoEvent(
