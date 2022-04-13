@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:matomo/matomo.dart';
 import 'package:logging/logging.dart';
+import 'package:matomo/matomo.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +12,8 @@ class MyApp extends StatelessWidget {
     Logger.root.level = Level.FINEST;
     Logger.root.onRecord.listen((LogRecord rec) {
       print(
-          '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}');
+        '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}',
+      );
     });
 
     MatomoTracker.instance.initialize(

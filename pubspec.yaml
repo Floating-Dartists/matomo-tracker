@@ -9,14 +9,14 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  fk_user_agent: ^2.1.0
+  device_info_plus: ^3.2.3
   flutter:
     sdk: flutter
   http: ^0.13.4
   logging: ^1.0.2
   package_info_plus: ^1.4.2
   shared_preferences: ^2.0.13
-  universal_html: ^2.0.8
+  universal_platform: ^1.0.0+1
   uuid: ^3.0.6
 
 dev_dependencies:

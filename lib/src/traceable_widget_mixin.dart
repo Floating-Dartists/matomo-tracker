@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:matomo/matomo.dart';
+
+import '../matomo.dart';
 
 mixin TraceableStatelessMixin on StatelessWidget {
   late final String? traceName;
@@ -20,8 +21,8 @@ mixin TraceableStatelessMixin on StatelessWidget {
   @override
   StatelessElement createElement() {
     tracker.trackScreenWithName(
-      traceName ?? runtimeType.toString(),
-      traceTitle,
+      widgetName: traceName ?? runtimeType.toString(),
+      eventName: traceTitle,
     );
     return super.createElement();
   }
@@ -46,8 +47,8 @@ mixin TraceableStatefulMixin on StatefulWidget {
   @override
   StatefulElement createElement() {
     tracker.trackScreenWithName(
-      traceName ?? runtimeType.toString(),
-      traceTitle,
+      widgetName: traceName ?? runtimeType.toString(),
+      eventName: traceTitle,
     );
     return super.createElement();
   }
@@ -72,8 +73,8 @@ mixin TraceableInheritedMixin on InheritedWidget {
   @override
   InheritedElement createElement() {
     tracker.trackScreenWithName(
-      traceName ?? runtimeType.toString(),
-      traceTitle,
+      widgetName: traceName ?? runtimeType.toString(),
+      eventName: traceTitle,
     );
     return super.createElement();
   }
