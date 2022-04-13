@@ -14,6 +14,9 @@ import 'package:uuid/uuid.dart';
 import '../utils/random_alpha_numeric.dart';
 import 'matomo_dispatcher.dart';
 import 'matomo_event.dart';
+import 'session.dart';
+import 'tracking_order_item.dart';
+import 'visitor.dart';
 
 class MatomoTracker {
   static const kFirstVisit = 'matomo_first_visit';
@@ -33,10 +36,18 @@ class MatomoTracker {
   late final String url;
   late final Session session;
   late final Visitor visitor;
+
+  /// The user agent is used to detect the operating system and browser used.
   late final String? userAgent;
+
+  /// URL for the current action.
   late final String contentBase;
-  late final int width;
-  late final int height;
+
+  /// The resolution of the device the visitor is using, eg **1280x1024**.
+  late final Size screenResolution;
+
+  /// 6 character unique ID that identifies which actions were performed on a
+  /// specific page view.
   String? currentScreenId;
 
   bool initialized = false;
@@ -72,8 +83,8 @@ class MatomoTracker {
     userAgent = await _getUserAgent();
 
     // Screen Resolution
-    width = window.physicalSize.width.toInt();
-    height = window.physicalSize.height.toInt();
+    screenResolution =
+        Size(window.physicalSize.width, window.physicalSize.height);
 
     // Initialize Session Information
     final now = DateTime.now().toUtc();
@@ -118,7 +129,7 @@ class MatomoTracker {
     }
 
     log.fine(
-      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${width}x$height; userAgent=$userAgent',
+      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=$userAgent',
     );
     initialized = true;
 
@@ -217,12 +228,15 @@ class MatomoTracker {
   /// Register an event with [eventName] as the event's name and [widgetName] as
   /// the event's action.
   ///
-  /// If [currentScreenId] is null a random id will be generated.
+  /// - `currentScreenId`: A 6 character unique ID that identifies which actions
+  /// were performed on a specific page view. If `null`, a random id will be
+  /// generated.
   void trackScreenWithName({
     required String widgetName,
     required String eventName,
     String? currentScreenId,
   }) {
+    assert(currentScreenId == null || currentScreenId.length == 6);
     this.currentScreenId = currentScreenId ?? randomAlphaNumeric(6);
     return _track(
       MatomoEvent(
@@ -318,46 +332,4 @@ class MatomoTracker {
       }
     }
   }
-}
-
-class Session {
-  final DateTime firstVisit;
-  final DateTime lastVisit;
-  final int visitCount;
-
-  Session({
-    required this.firstVisit,
-    required this.lastVisit,
-    required this.visitCount,
-  });
-}
-
-class Visitor {
-  final String? id;
-  final String? forcedId;
-  final String? userId;
-
-  Visitor({
-    this.id,
-    this.forcedId,
-    this.userId,
-  });
-}
-
-class TrackingOrderItem {
-  final String? sku;
-  final String? name;
-  final String? category;
-  final num? price;
-  final int? quantity;
-
-  TrackingOrderItem({
-    this.sku,
-    this.name,
-    this.category,
-    this.price,
-    this.quantity,
-  });
-
-  List<Object?> toArray() => [sku, name, category, price, quantity];
 }
