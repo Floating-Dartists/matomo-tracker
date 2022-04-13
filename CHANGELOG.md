@@ -1,3 +1,8 @@
+## [1.0.1+2]
+
+* Fixed README.md typo
+* Improved documentation
+
 ## [1.0.1+1]
 
 * Updated README with pub version & Matomo Tracking documentation link
