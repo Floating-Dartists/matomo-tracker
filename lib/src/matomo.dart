@@ -55,10 +55,15 @@ class MatomoTracker {
     int dequeueInterval = 10,
     String? tokenAuth,
   }) async {
+    assert(
+      visitorId == null || visitorId.length == 16,
+      'visitorId must be 16 characters',
+    );
     this.siteId = siteId;
     this.url = url;
-    final _visitorId =
-        visitorId ?? _prefs?.getString(kVisitorId) ?? const Uuid().v4();
+    final _visitorId = visitorId ??
+        _prefs?.getString(kVisitorId) ??
+        const Uuid().v4().replaceAll('-', '').substring(0, 16);
     visitor = Visitor(id: _visitorId, userId: _visitorId);
 
     _dispatcher = MatomoDispatcher(url, tokenAuth);
@@ -85,6 +90,9 @@ class MatomoTracker {
       );
     } else {
       unawaited(_prefs?.setInt(kFirstVisit, now.millisecondsSinceEpoch));
+
+      // Save the visitorId for future visits.
+      unawaited(_prefs?.setString(kVisitorId, _visitorId));
     }
 
     final localVisitorCount = _prefs?.getInt(kVisitCount) ?? 0;
@@ -303,6 +311,11 @@ class MatomoTracker {
   void _dequeue() {
     assert(initialized);
     log.finest('Processing queue ${_queue.length}');
+
+    if (_queue.isEmpty) {
+      _dispatcher.sendPing(this);
+    }
+
     while (_queue.isNotEmpty) {
       final event = _queue.removeFirst();
       if (!_optout) {
