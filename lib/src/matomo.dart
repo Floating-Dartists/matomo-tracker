@@ -191,6 +191,8 @@ class MatomoTracker {
     }
   }
 
+  /// This will register an event with [trackScreenWithName] by using the
+  /// `context.widget.toStringShort()` value.
   void trackScreen(
     BuildContext context, {
     required String eventName,
@@ -204,6 +206,9 @@ class MatomoTracker {
     );
   }
 
+  /// Register an event with [eventName] as the event's name and [widgetName] as
+  /// the event's action.
+  ///
   /// If [currentScreenId] is null a random id will be generated.
   void trackScreenWithName({
     required String widgetName,

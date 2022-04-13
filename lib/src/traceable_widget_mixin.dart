@@ -7,7 +7,7 @@ import '../matomo_tracker.dart';
 mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   /// Equivalent to an event action. (e.g. `'Created HomePage'`)
   @protected
-  String get traceName;
+  String get traceName => 'Created widget ${widget.toStringShort()}';
 
   /// Equivalent to an event name. (e.g. `'HomePage'`)
   @protected

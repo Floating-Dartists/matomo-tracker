@@ -29,33 +29,36 @@ If you need to use your own Visitor ID, you can pass it at the initialization of
     );
 ```
 
-To track views simply add `TraceableStatelessMixin`, `TraceableStatefulMixin` or `TraceableInheritedMixin` to your widget and **call the `init()` method in the constructor**.
+To track views simply add `TraceableClientMixin` on your `State`:
 
 ```dart
-class MyWidget extends StatelessWidget with TraceableStatelessMixin {
-    MyWidget({Key? key, this.title}) : super(key: key) {
-        init(traceTitle: title);
-    }
-    
-    final String title;
-    
-    @override
-    Widget build(BuildContext context) {
-        return Scaffold(
-            appBar: AppBar(title: Text(title)),
-            body: Center(
-                child: ElevatedButton(
-                    onPressed: () {
-                        MatomoTracker.instance.trackEvent(
-                            name: 'PressedButton',
-                            action: 'Click',
-                        );
-                    },
-                    child: Text('Track Event'),
-                ),
-            ),
-        );
-    }
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Text('Hello World!'),
+      ),
+    );
+  }
+
+  @override
+  String get traceName => 'Created HomePage'; // optional
+
+  @override
+  String get traceTitle => widget.title;
 }
 ```
 
