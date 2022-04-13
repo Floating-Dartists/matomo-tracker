@@ -41,8 +41,9 @@ class MatomoTracker {
   /// URL for the current action.
   late final String contentBase;
 
-  late final int width;
-  late final int height;
+  /// The resolution of the device the visitor is using, eg **1280x1024**.
+  late final Size screenResolution;
+
   String? currentScreenId;
 
   bool initialized = false;
@@ -78,8 +79,8 @@ class MatomoTracker {
     userAgent = await _getUserAgent();
 
     // Screen Resolution
-    width = window.physicalSize.width.toInt();
-    height = window.physicalSize.height.toInt();
+    screenResolution =
+        Size(window.physicalSize.width, window.physicalSize.height);
 
     // Initialize Session Information
     final now = DateTime.now().toUtc();
@@ -124,7 +125,7 @@ class MatomoTracker {
     }
 
     log.fine(
-      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${width}x$height; userAgent=$userAgent',
+      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=$userAgent',
     );
     initialized = true;
 

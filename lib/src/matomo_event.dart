@@ -86,7 +86,8 @@ class MatomoEvent {
       '_idvc': tracker.session.visitCount.toString(),
       '_viewts': '${tracker.session.lastVisit.millisecondsSinceEpoch ~/ 1000}',
       '_idts': '${tracker.session.firstVisit.millisecondsSinceEpoch ~/ 1000}',
-      'res': '${tracker.width}x${tracker.height}',
+      'res':
+          '${tracker.screenResolution.width.toInt()}x${tracker.screenResolution.height.toInt()}',
       'h': _date.hour.toString(),
       'm': _date.minute.toString(),
       's': _date.second.toString(),
