@@ -311,11 +311,6 @@ class MatomoTracker {
   void _dequeue() {
     assert(initialized);
     log.finest('Processing queue ${_queue.length}');
-
-    // if (_queue.isEmpty) {
-    //   _dispatcher.sendPing(this);
-    // }
-
     while (_queue.isNotEmpty) {
       final event = _queue.removeFirst();
       if (!_optout) {
