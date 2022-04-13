@@ -230,17 +230,17 @@ class MatomoTracker {
     );
   }
 
-  void trackEvent(
-    String eventName,
-    String eventAction, {
+  void trackEvent({
+    required String name,
+    required String action,
     String? widgetName,
     int? eventValue,
   }) {
     return _track(
       MatomoEvent(
         tracker: this,
-        eventAction: eventAction,
-        eventName: eventName,
+        eventAction: action,
+        eventName: name,
         eventCategory: widgetName,
         eventValue: eventValue,
       ),

@@ -49,7 +49,10 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    MatomoTracker.instance.trackEvent('IncrementCounter', 'Click');
+    MatomoTracker.instance.trackEvent(
+      name: 'IncrementCounter',
+      action: 'Click',
+    );
     setState(() {
       _counter++;
     });

@@ -1,24 +1,15 @@
 # matomo
 
-A Dart Client for Matomo. This is completely written in Dart and works cross-platform, including web.
+Forked from the package [matomo](https://pub.dev/packages/matomo) by [poitch](https://github.com/poitch).
 
-## TODO
-
-* Refacto code (replace widgets by mixins)
-* Add Documentation
-* Add unit tests
+A fully cross-platform wrap of the Matomo tracking client for Flutter, using the Matomo API.
 
 ## Getting Started
-
-```
-dependencies:
-    matomo: ^1.1.0
-```
 
 As early as possible in your application, you need to configure the Matomo Tracker to pass the URL endpoint of your instance and your Site ID.
 
 ```dart
-    await MatomoTracker().initialize(
+    await MatomoTracker.instance.initialize(
         siteId: siteId,
         url: 'https://example.com/piwik.php',
     );
@@ -27,14 +18,42 @@ As early as possible in your application, you need to configure the Matomo Track
 If you need to use your own Visitor ID, you can pass it at the initialization of MatomoTracker as is:
 
 ```dart
-    await MatomoTracker().initialize(
+    await MatomoTracker.instance.initialize(
         siteId: siteId,
         url: 'https://example.com/piwik.php',
         visitorId: 'customer_1',
     );
 ```
 
-To track views simply replace `StatelessWidget` by `TraceableStatelessWidget`, `StatefulWidget` by `TraceableStatefulWidget` and finally `InheritedWidget` by `TraceableInheritedWidget`.
+To track views simply add `TraceableStatelessMixin`, `TraceableStatefulMixin` or `TraceableInheritedMixin` to your widget and **call the `init()` method in the constructor**.
+
+```dart
+class MyWidget extends StatelessWidget with TraceableStatelessMixin {
+    MyWidget({Key? key, this.title}) : super(key: key) {
+        init(traceTitle: title);
+    }
+    
+    final String title;
+    
+    @override
+    Widget build(BuildContext context) {
+        return Scaffold(
+            appBar: AppBar(title: Text(title)),
+            body: Center(
+                child: ElevatedButton(
+                    onPressed: () {
+                        MatomoTracker.instance.trackEvent(
+                            name: 'PressedButton',
+                            action: 'Click',
+                        );
+                    },
+                    child: Text('Track Event'),
+                ),
+            ),
+        );
+    }
+}
+```
 
 You can also optionally call directly `trackScreen` or `trackScreenWithName` to track a view.
 
