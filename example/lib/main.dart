@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
 
     MatomoTracker.instance.initialize(
       siteId: 1,
-      url: 'https://analytics.example.com/piwik.php',
+      url: 'https://analytics.example.com/matomo.php',
     );
   }
   // This widget is the root of your application.
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key key, this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 

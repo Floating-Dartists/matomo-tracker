@@ -13,8 +13,9 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   @protected
   String get traceTitle;
 
+  /// A 6 character unique ID. If `null`, a random id will be generated.
   @protected
-  String get widgetId => widget.toStringShort();
+  String? widgetId;
 
   /// Matomo instance used to send events.
   ///
