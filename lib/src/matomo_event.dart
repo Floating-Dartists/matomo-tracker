@@ -7,6 +7,7 @@ import 'tracking_order_item.dart';
 
 class MatomoEvent {
   final MatomoTracker tracker;
+  final String? path;
 
   /// The title of the action being tracked. It is possible to use slashes / to
   /// set one or several categories for this action. For example, **Help /
@@ -43,6 +44,7 @@ class MatomoEvent {
 
   MatomoEvent({
     required this.tracker,
+    this.path,
     this.action,
     this.eventCategory,
     this.eventAction,
@@ -76,9 +78,8 @@ class MatomoEvent {
     final uid = tracker.visitor.userId;
     final pvId = tracker.currentScreenId;
     final actionName = action;
-    final url = actionName != null
-        ? '${tracker.contentBase}/$actionName'
-        : tracker.contentBase;
+    final url =
+        path != null ? '${tracker.contentBase}/$path' : tracker.contentBase;
     final idgoal = goalId;
     final _revenue = revenue;
     final eC = eventCategory;
