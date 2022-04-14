@@ -17,6 +17,10 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   @protected
   String? widgetId;
 
+  /// Path to the widget. (e.g. `'/home'`)
+  @protected
+  String? path;
+
   /// Matomo instance used to send events.
   ///
   /// By default it uses the global [MatomoTracker.instance].
@@ -34,6 +38,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
       widgetName: traceName,
       eventName: traceTitle,
       currentScreenId: widgetId,
+      path: path,
     );
   }
 }

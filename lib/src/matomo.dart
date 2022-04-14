@@ -192,6 +192,11 @@ class MatomoTracker {
     _prefs?.setBool(kOptOut, _optout);
   }
 
+  /// Clear the following data from the SharedPreferences:
+  ///
+  /// - First visit
+  /// - Number of visits
+  /// - Visitor ID
   void clear() {
     if (_prefs != null) {
       _prefs!.remove(kFirstVisit);
@@ -200,10 +205,13 @@ class MatomoTracker {
     }
   }
 
+  /// Cancel the timer which checks the queued events to send. (This will not
+  /// clear the queue.)
   void dispose() {
     _timer.cancel();
   }
 
+  /// Iterate on the events in the queue and send them to Matomo.
   void dispatchEvents() {
     if (initialized) {
       _dequeue();
@@ -212,29 +220,49 @@ class MatomoTracker {
 
   /// This will register an event with [trackScreenWithName] by using the
   /// `context.widget.toStringShort()` value.
+  ///
+  /// - `eventName`: The name of the event.
+  ///
+  /// - `currentScreenId`: A 6 character unique ID that identifies which actions
+  /// were performed on a specific page view. If `null`, a random id will be
+  /// generated.
+  ///
+  /// - `path`: A string that identifies the path of the screen. If not
+  /// `null`, it will be combined to [contentBase] to create a URL.
   void trackScreen(
     BuildContext context, {
     required String eventName,
     String? currentScreenId,
+    String? path,
   }) {
     final widgetName = context.widget.toStringShort();
     trackScreenWithName(
       widgetName: widgetName,
       eventName: eventName,
       currentScreenId: currentScreenId,
+      path: path,
     );
   }
 
   /// Register an event with [eventName] as the event's name and [widgetName] as
   /// the event's action.
   ///
+  /// - `widgetName`: Equivalent to the event action, here used to identify the
+  /// screen with a proper name.
+  ///
+  /// - `eventName`: The name of the event.
+  ///
   /// - `currentScreenId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random id will be
   /// generated.
+  ///
+  /// - `path`: A string that identifies the path of the screen. If not
+  /// `null`, it will be combined to [contentBase] to create a URL.
   void trackScreenWithName({
     required String widgetName,
     required String eventName,
     String? currentScreenId,
+    String? path,
   }) {
     assert(currentScreenId == null || currentScreenId.length == 6);
     this.currentScreenId = currentScreenId ?? randomAlphaNumeric(6);
@@ -243,6 +271,7 @@ class MatomoTracker {
         tracker: this,
         eventName: eventName,
         action: widgetName,
+        path: path,
       ),
     );
   }
