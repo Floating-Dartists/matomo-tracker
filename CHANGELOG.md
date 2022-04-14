@@ -1,3 +1,8 @@
+## [1.0.2]
+
+* Fixed default `TraceableClientMixin.widgetId`, now `null` and you will have to set it manually with a length of 6 characters
+* Migrated example app to null-safety
+
 ## [1.0.1+2]
 
 * Fixed README.md typo
