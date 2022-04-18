@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://github.com/Floating-Dartists">
-    <img src="https://i.imgur.com/Gd0Mh6y.png" width="800">
+  <a href="https://github.com/Floating-Dartists" target="_blank">
+    <img src="https://raw.githubusercontent.com/Floating-Dartists/fd_template/main/assets/Transparent-light.png" alt="Floating Dartists" width="800">
   </a>
 </p>
 
