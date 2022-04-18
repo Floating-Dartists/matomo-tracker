@@ -1,12 +1,14 @@
+# Matomo Tracker
+
 <p align="center">
-  <a href="https://github.com/Floating-Dartists">
-    <img src="https://i.imgur.com/Gd0Mh6y.png" width="800">
+  <a href="https://github.com/Floating-Dartists" target="_blank">
+    <img src="https://raw.githubusercontent.com/Floating-Dartists/fd_template/main/assets/Transparent-light.png" alt="Floating Dartists" width="600">
   </a>
 </p>
 
-# matomo_tracker
-
 [![Pub Version](https://img.shields.io/pub/v/matomo_tracker)](https://pub.dev/packages/matomo_tracker)
+[![Matomo Integrations](https://img.shields.io/badge/featured%20on-Matomo-blue)](https://matomo.org/integrate/)
+[![GitHub license](https://img.shields.io/github/license/Floating-Dartists/matomo-tracker)](https://github.com/Floating-Dartists/matomo-tracker/blob/main/LICENSE)
 
 Forked from the package [matomo](https://pub.dev/packages/matomo) by [poitch](https://github.com/poitch).
 
