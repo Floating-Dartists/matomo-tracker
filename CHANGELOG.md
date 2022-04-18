@@ -1,3 +1,7 @@
+## [1.0.3+1]
+
+* Updated README with new logo and link to Matomo Integrations page
+
 ## [1.0.3]
 
 * Added `path` property to `TraceableClientMixin`
