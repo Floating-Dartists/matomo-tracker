@@ -305,6 +305,21 @@ class MatomoTracker {
     );
   }
 
+  void trackSearch({
+    required String searchKeyword,
+    String? searchCategory,
+    int? searchCount,
+  }) {
+    return _track(
+      MatomoEvent(
+        tracker: this,
+        searchKeyword: searchKeyword,
+        searchCategory: searchCategory,
+        searchCount: searchCount,
+      ),
+    );
+  }
+
   void trackCartUpdate(
     List<TrackingOrderItem>? trackingOrderItems,
     num? subTotal,

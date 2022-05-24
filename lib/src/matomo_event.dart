@@ -42,6 +42,15 @@ class MatomoEvent {
   /// The current time.
   final DateTime _date;
 
+  /// The search keyword
+  final String? searchKeyword;
+
+  /// The selected categories for search
+  final String? searchCategory;
+
+  /// The count of shown results
+  final int? searchCount;
+
   final String? link;
 
   MatomoEvent({
@@ -60,6 +69,9 @@ class MatomoEvent {
     this.taxAmount,
     this.shippingCost,
     this.discountAmount,
+    this.searchKeyword,
+    this.searchCategory,
+    this.searchCount,
     this.link,
   })  : _date = DateTime.now().toUtc(),
         assert(
@@ -146,6 +158,10 @@ class MatomoEvent {
       if (ecTx != null) 'ec_tx': ecTx.toString(),
       if (ecSh != null) 'ec_sh': ecSh.toString(),
       if (ecDt != null) 'ec_dt': ecDt.toString(),
+
+      if (searchKeyword != null) 'search': searchKeyword!,
+      if (searchCategory != null) 'search_cat': searchCategory!,
+      if (searchCount != null) 'search_count': searchCount!.toString(),
 
       if (link != null) 'link': link!,
 
