@@ -51,6 +51,8 @@ class MatomoEvent {
   /// The count of shown results
   final int? searchCount;
 
+  final String? link;
+
   MatomoEvent({
     required this.tracker,
     this.path,
@@ -70,6 +72,7 @@ class MatomoEvent {
     this.searchKeyword,
     this.searchCategory,
     this.searchCount,
+    this.link,
   })  : _date = DateTime.now().toUtc(),
         assert(
           eventCategory == null || eventCategory.isNotEmpty,
@@ -105,6 +108,7 @@ class MatomoEvent {
     final ecSh = shippingCost;
     final ecDt = discountAmount;
     final ua = tracker.userAgent;
+    final country = window.locale.countryCode;
 
     return {
       // Required parameters
@@ -130,6 +134,8 @@ class MatomoEvent {
       'cookie': '1',
       if (ua != null) 'ua': ua,
       'lang': window.locale.toString(),
+      if (country != null) 'country': country,
+
       if (uid != null) 'uid': uid,
       if (cid != null) 'cid': cid,
 
@@ -156,6 +162,8 @@ class MatomoEvent {
       if (searchKeyword != null) 'search': searchKeyword!,
       if (searchCategory != null) 'search_cat': searchCategory!,
       if (searchCount != null) 'search_count': searchCount!.toString(),
+
+      if (link != null) 'link': link!,
 
       // Other parameters (require authentication via `token_auth`)
       'cdt': _date.toIso8601String(),

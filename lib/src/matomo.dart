@@ -192,6 +192,8 @@ class MatomoTracker {
     _prefs?.setBool(kOptOut, _optout);
   }
 
+  bool getOptOut() => _prefs?.getBool(kOptOut) ?? false;
+
   /// Clear the following data from the SharedPreferences:
   ///
   /// - First visit
@@ -358,6 +360,17 @@ class MatomoTracker {
         taxAmount: taxAmount,
         shippingCost: shippingCost,
         discountAmount: discountAmount,
+      ),
+    );
+  }
+
+  void trackOutlink(
+    String? link,
+  ) {
+    return _track(
+      MatomoEvent(
+        tracker: this,
+        link: link,
       ),
     );
   }
