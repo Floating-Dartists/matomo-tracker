@@ -1,3 +1,11 @@
+## [1.1.0]
+
+* Contributions from [Marvin M](https://github.com/M123-dev)
+    * feat: Allow to see the opt out status [#5](https://github.com/Floating-Dartists/matomo-tracker/pull/5)
+    * feat: Allow tracking of outlinks [#4](https://github.com/Floating-Dartists/matomo-tracker/pull/4)
+    * feat: Send country code [#2](https://github.com/Floating-Dartists/matomo-tracker/pull/2)
+    * feat: Allow search tracking [#3](https://github.com/Floating-Dartists/matomo-tracker/pull/3)
+
 ## [1.0.3+1]
 
 * Updated README with new logo and link to Matomo Integrations page
