@@ -8,10 +8,10 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp() {
+  MyApp({Key? key}) : super(key: key) {
     Logger.root.level = Level.FINEST;
     Logger.root.onRecord.listen((LogRecord rec) {
-      print(
+      debugPrint(
         '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}',
       );
     });
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Matomo Example'),
+      home: const MyHomePage(title: 'Matomo Example'),
     );
   }
 }
@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'You have pushed the button this many times:',
             ),
             Text(
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
