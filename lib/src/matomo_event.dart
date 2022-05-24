@@ -96,6 +96,7 @@ class MatomoEvent {
     final ecSh = shippingCost;
     final ecDt = discountAmount;
     final ua = tracker.userAgent;
+    final country = window.locale.countryCode;
 
     return {
       // Required parameters
@@ -121,6 +122,8 @@ class MatomoEvent {
       'cookie': '1',
       if (ua != null) 'ua': ua,
       'lang': window.locale.toString(),
+      if (country != null) 'country': country,
+
       if (uid != null) 'uid': uid,
       if (cid != null) 'cid': cid,
 
