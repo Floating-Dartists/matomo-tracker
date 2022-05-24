@@ -349,6 +349,17 @@ class MatomoTracker {
     );
   }
 
+  void trackOutlink(
+    String? link,
+  ) {
+    return _track(
+      MatomoEvent(
+        tracker: this,
+        link: link,
+      ),
+    );
+  }
+
   void _track(MatomoEvent event) {
     _queue.add(event);
   }

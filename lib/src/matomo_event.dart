@@ -42,6 +42,8 @@ class MatomoEvent {
   /// The current time.
   final DateTime _date;
 
+  final String? link;
+
   MatomoEvent({
     required this.tracker,
     this.path,
@@ -58,6 +60,7 @@ class MatomoEvent {
     this.taxAmount,
     this.shippingCost,
     this.discountAmount,
+    this.link,
   })  : _date = DateTime.now().toUtc(),
         assert(
           eventCategory == null || eventCategory.isNotEmpty,
@@ -140,6 +143,8 @@ class MatomoEvent {
       if (ecTx != null) 'ec_tx': ecTx.toString(),
       if (ecSh != null) 'ec_sh': ecSh.toString(),
       if (ecDt != null) 'ec_dt': ecDt.toString(),
+
+      if (link != null) 'link': link!,
 
       // Other parameters (require authentication via `token_auth`)
       'cdt': _date.toIso8601String(),
