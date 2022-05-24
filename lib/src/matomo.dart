@@ -192,6 +192,8 @@ class MatomoTracker {
     _prefs?.setBool(kOptOut, _optout);
   }
 
+  bool getOptOut() => _prefs?.getBool(kOptOut) ?? false;
+
   /// Clear the following data from the SharedPreferences:
   ///
   /// - First visit
