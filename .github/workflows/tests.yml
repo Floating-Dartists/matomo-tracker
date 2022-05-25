@@ -1,0 +1,18 @@
+name: Test workflow
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: subosito/flutter-action@v1.5.3
+    - name: Fetch dependencies
+      run: flutter packages get
+    - name: Analyze project
+      run: flutter analyze
