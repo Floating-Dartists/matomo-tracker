@@ -1,6 +1,13 @@
+# Changelog
+
+## [1.1.1]
+
+* Contributions from [Marvin Möltgen](https://github.com/M123-dev)
+  * fix: Now exporting the `Visitor` class [#6](https://github.com/Floating-Dartists/matomo-tracker/pull/6)
+
 ## [1.1.0]
 
-* Contributions from [Marvin M](https://github.com/M123-dev)
+* Contributions from [Marvin Möltgen](https://github.com/M123-dev)
     * feat: Allow to see the opt out status [#5](https://github.com/Floating-Dartists/matomo-tracker/pull/5)
     * feat: Allow tracking of outlinks [#4](https://github.com/Floating-Dartists/matomo-tracker/pull/4)
     * feat: Send country code [#2](https://github.com/Floating-Dartists/matomo-tracker/pull/2)
