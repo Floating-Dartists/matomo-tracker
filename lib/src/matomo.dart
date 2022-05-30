@@ -187,9 +187,9 @@ class MatomoTracker {
 
   bool? get optOut => _optout;
 
-  void setOptOut({required bool optout}) {
+  Future<void> setOptOut({required bool optout}) async {
     _optout = optout;
-    _prefs?.setBool(kOptOut, _optout);
+    await _prefs?.setBool(kOptOut, _optout);
   }
 
   bool getOptOut() => _prefs?.getBool(kOptOut) ?? false;
