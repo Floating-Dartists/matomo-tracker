@@ -134,7 +134,7 @@ class MatomoEvent {
       'cookie': '1',
       if (ua != null) 'ua': ua,
       'lang': window.locale.toString(),
-      if (country != null) 'country': country,
+      if (country != null && tracker.getAuthToken != null) 'country': country,
 
       if (uid != null) 'uid': uid,
       if (cid != null) 'cid': cid,
