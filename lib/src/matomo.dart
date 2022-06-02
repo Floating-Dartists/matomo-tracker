@@ -58,6 +58,10 @@ class MatomoTracker {
   final _queue = Queue<MatomoEvent>();
   late Timer _timer;
 
+  String? _tokenAuth;
+
+  String? get getAuthToken => _tokenAuth;
+
   Future<void> initialize({
     required int siteId,
     required String url,
@@ -77,6 +81,7 @@ class MatomoTracker {
         const Uuid().v4().replaceAll('-', '').substring(0, 16);
     visitor = Visitor(id: _visitorId, userId: _visitorId);
 
+    _tokenAuth = tokenAuth;
     _dispatcher = MatomoDispatcher(url, tokenAuth);
 
     // User agent
@@ -187,9 +192,9 @@ class MatomoTracker {
 
   bool? get optOut => _optout;
 
-  void setOptOut({required bool optout}) {
+  Future<void> setOptOut({required bool optout}) async {
     _optout = optout;
-    _prefs?.setBool(kOptOut, _optout);
+    await _prefs?.setBool(kOptOut, _optout);
   }
 
   bool getOptOut() => _prefs?.getBool(kOptOut) ?? false;
