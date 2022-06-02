@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.2]
+
+* Contributions from [Marvin Möltgen](https://github.com/M123-dev)
+  * fix [#8](https://github.com/Floating-Dartists/matomo-tracker/issues/8): Send country code only in combination with auth_token
+
 ## [1.1.1]
 
 * Contributions from [Marvin Möltgen](https://github.com/M123-dev)
