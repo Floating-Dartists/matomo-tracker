@@ -294,17 +294,21 @@ class MatomoTracker {
   }
 
   void trackEvent({
-    required String name,
+    required String eventCategory,
     required String action,
-    String? widgetName,
+    String? eventName,
+    // TODO: Remove when old enough 13.06.2022
+    @Deprecated('Please use [eventName] instead') String? name,
+    @Deprecated('Please use [eventCategory] instead') String? widgetName,
     int? eventValue,
   }) {
     return _track(
       MatomoEvent(
         tracker: this,
+        action: action,
         eventAction: action,
-        eventName: name,
-        eventCategory: widgetName,
+        eventName: name ?? eventName,
+        eventCategory: widgetName ?? eventCategory,
         eventValue: eventValue,
       ),
     );
