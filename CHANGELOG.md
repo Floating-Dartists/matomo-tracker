@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0]
+
+* Fix [#9](https://github.com/Floating-Dartists/matomo-tracker/issues/9) (Contribution from [Marvin Möltgen](https://github.com/M123-dev))
+  * Deprecated `MatomoTracker.trackEvent.name` use `MatomoTracker.trackEvent.eventName` instead
+  * Deprecated `MatomoTracker.trackEvent.widgetName` use `MatomoTracker.trackEvent.eventCategory` instead
+
 ## [1.1.2]
 
 * Contributions from [Marvin Möltgen](https://github.com/M123-dev)
