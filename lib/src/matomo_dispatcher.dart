@@ -22,9 +22,9 @@ class MatomoDispatcher {
 
     final queryParameters = Map<String, String>.from(baseUri.queryParameters)
       ..addAll(event.toMap());
-    final _tokenAuth = tokenAuth;
-    if (_tokenAuth != null) {
-      queryParameters.addEntries([MapEntry('token_auth', _tokenAuth)]);
+    final aTokenAuth = tokenAuth;
+    if (aTokenAuth != null) {
+      queryParameters.addEntries([MapEntry('token_auth', aTokenAuth)]);
     }
 
     final uri = baseUri.replace(queryParameters: queryParameters);

@@ -96,7 +96,7 @@ class MatomoEvent {
     final url =
         path != null ? '${tracker.contentBase}/$path' : tracker.contentBase;
     final idgoal = goalId;
-    final _revenue = revenue;
+    final aRevenue = revenue;
     final eC = eventCategory;
     final eA = eventAction;
     final eN = eventName;
@@ -153,7 +153,7 @@ class MatomoEvent {
       if (ecId != null) 'ec_id': ecId,
       if (ecItems != null)
         'ec_items': jsonEncode(ecItems.map((i) => i.toArray()).toList()),
-      if (_revenue != null && _revenue > 0) 'revenue': _revenue.toString(),
+      if (aRevenue != null && aRevenue > 0) 'revenue': aRevenue.toString(),
       if (ecSt != null) 'ec_st': ecSt.toString(),
       if (ecTx != null) 'ec_tx': ecTx.toString(),
       if (ecSh != null) 'ec_sh': ecSh.toString(),
