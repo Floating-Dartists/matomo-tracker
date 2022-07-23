@@ -5,8 +5,8 @@ analyzer:
     - lib/**.g.dart
     - test/**.mocks.dart
     - lib/generated_plugin_registrant.dart
-  strong-mode:
-    implicit-casts: false
+  language:
+    strict-casts: true
   errors:
     missing_required_param: error
     unrelated_type_equality_checks: error
