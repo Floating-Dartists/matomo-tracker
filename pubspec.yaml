@@ -1,6 +1,6 @@
 name: matomo_tracker
 description: A fully cross-platform wrap of the Matomo tracking client for Flutter, using the Matomo API.
-version: 1.2.0
+version: 1.2.1
 homepage: https://github.com/Floating-Dartists/matomo-tracker
 
 environment:
