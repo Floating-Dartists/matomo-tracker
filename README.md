@@ -31,7 +31,7 @@ If you need to use your own Visitor ID, you can pass it at the initialization of
 await MatomoTracker.instance.initialize(
     siteId: siteId,
     url: 'https://example.com/matomo.php',
-    visitorId: 'customer_1',
+    visitorId: '2589631479517535',
 );
 ```
 
@@ -78,8 +78,17 @@ A value can be passed for events:
 MatomoTracker.instance.trackEvent(
     name: 'eventName',
     action: 'eventAction',
-    eventValue: 'eventValue',
+    eventValue: 18,
 );
+```
+
+## Using userId
+
+If your application uses authentication and you wish to have your visitors including their specific identity to Matomo, you can use the Visitor property userId with any unique identifier from your back-end, by calling the setVisitorUserId() method. Here's an example on how to do it with Firebase:
+
+```dart
+  String userId = auth.currentUser?.email ?? auth.currentUser!.uid;
+  MatomoTracker.instance.setVisitorUserId(userId);
 ```
 
 ## Opting Out
