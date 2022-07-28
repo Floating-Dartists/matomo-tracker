@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1]
+
+* Added support for Visitor's userId
+  * Solves [#12](https://github.com/Floating-Dartists/matomo-tracker/issues/13) by allowing a userId coming from a third-party source (eg. Firebase) to be linked to the visitor.
+  * Is accessible through the setVisitorUserId() method of the MatomoTracker instance.
+  * No breaking changes.
+
 ## [1.2.0]
 
 * Fix [#9](https://github.com/Floating-Dartists/matomo-tracker/issues/9) (Contribution from [Marvin Möltgen](https://github.com/M123-dev))
