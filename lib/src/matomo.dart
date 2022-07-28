@@ -35,7 +35,14 @@ class MatomoTracker {
   late final int siteId;
   late final String url;
   late final Session session;
-  late final Visitor visitor;
+
+  Visitor get visitor => _visitor;
+  late Visitor _visitor;
+
+  void setVisitorUserId(String? userId) {
+    _visitor =
+        Visitor(id: _visitor.id, forcedId: _visitor.forcedId, userId: userId);
+  }
 
   /// The user agent is used to detect the operating system and browser used.
   late final String? userAgent;
@@ -79,7 +86,7 @@ class MatomoTracker {
     final _visitorId = visitorId ??
         _prefs?.getString(kVisitorId) ??
         const Uuid().v4().replaceAll('-', '').substring(0, 16);
-    visitor = Visitor(id: _visitorId, userId: _visitorId);
+    _visitor = Visitor(id: _visitorId, userId: _visitorId);
 
     _tokenAuth = tokenAuth;
     _dispatcher = MatomoDispatcher(url, tokenAuth);
