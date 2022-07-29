@@ -8,18 +8,18 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  device_info_plus: ^3.2.3
+  device_info_plus: ^4.0.1
   flutter:
     sdk: flutter
   http: ^0.13.4
   logging: ^1.0.2
-  package_info_plus: ^1.4.2
+  package_info_plus: ^1.4.3
   shared_preferences: ^2.0.15
   universal_platform: ^1.0.0+1
   uuid: ^3.0.6
 
 dev_dependencies:
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
 

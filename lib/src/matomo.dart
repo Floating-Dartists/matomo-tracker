@@ -83,10 +83,10 @@ class MatomoTracker {
     );
     this.siteId = siteId;
     this.url = url;
-    final _visitorId = visitorId ??
+    final aVisitorId = visitorId ??
         _prefs?.getString(kVisitorId) ??
         const Uuid().v4().replaceAll('-', '').substring(0, 16);
-    _visitor = Visitor(id: _visitorId, userId: _visitorId);
+    _visitor = Visitor(id: aVisitorId, userId: aVisitorId);
 
     _tokenAuth = tokenAuth;
     _dispatcher = MatomoDispatcher(url, tokenAuth);
@@ -115,7 +115,7 @@ class MatomoTracker {
       unawaited(_prefs?.setInt(kFirstVisit, now.millisecondsSinceEpoch));
 
       // Save the visitorId for future visits.
-      unawaited(_prefs?.setString(kVisitorId, _visitorId));
+      unawaited(_prefs?.setString(kVisitorId, aVisitorId));
     }
 
     final localVisitorCount = _prefs?.getInt(kVisitCount) ?? 0;
