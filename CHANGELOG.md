@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0]
+
+* Contribution from [Isaudon](https://github.com/lsaudon)
+  * Updated dependency `device_info_plus` to `4.0.1`
+  * Updated dependency `package_info_plus` to `1.4.3`
+  * Fixed analysis warnings
+
 ## [1.2.1]
 
 * Added support for Visitor's userId
