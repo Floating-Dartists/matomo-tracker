@@ -98,3 +98,8 @@ If you want to offer a way for the user to opt out of analytics, you can use the
 ```dart
 MatomoTracker.instance.setOptOut(optout: true);
 ```
+
+## Contributors
+
+<!-- readme: contributors -start -->
+<!-- readme: contributors -end -->
