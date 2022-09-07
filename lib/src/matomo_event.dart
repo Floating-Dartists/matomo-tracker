@@ -53,6 +53,9 @@ class MatomoEvent {
 
   final String? link;
 
+  // The dimensions associated with the event
+  final Map<String, String>? dimensions;
+
   MatomoEvent({
     required this.tracker,
     this.path,
@@ -73,6 +76,7 @@ class MatomoEvent {
     this.searchCategory,
     this.searchCount,
     this.link,
+    this.dimensions,
   })  : _date = DateTime.now().toUtc(),
         assert(
           eventCategory == null || eventCategory.isNotEmpty,
@@ -109,6 +113,7 @@ class MatomoEvent {
     final ecDt = discountAmount;
     final ua = tracker.userAgent;
     final country = window.locale.countryCode;
+    final dims = dimensions ?? {};
 
     return {
       // Required parameters
@@ -167,6 +172,6 @@ class MatomoEvent {
 
       // Other parameters (require authentication via `token_auth`)
       'cdt': _date.toIso8601String(),
-    };
+    }..addAll(dims);
   }
 }

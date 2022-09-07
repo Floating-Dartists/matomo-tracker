@@ -99,6 +99,27 @@ If you want to offer a way for the user to opt out of analytics, you can use the
 MatomoTracker.instance.setOptOut(optout: true);
 ```
 
+## Using Dimensions
+
+If you want to track Visit or Action dimensions you can either use the `trackDimensions` (if 
+it's a Visit level dimension) or provide data in the optional dimensions param of `trackEvent`
+(if it's an Action level dimension):
+
+```dart
+MatomoTracker.instance.trackDimensions({
+  'dimension1': '0.0.1'
+});
+```
+
+```dart
+MatomoTracker.instance.trackEvent(
+    name: 'eventName',
+    action: 'eventAction',
+    eventValue: 18,
+    dimensions: {'dimension2':'guest-user'}
+);
+```
+
 ## Contributors
 
 <!-- readme: contributors -start -->

@@ -308,6 +308,7 @@ class MatomoTracker {
     @Deprecated('Please use [eventName] instead') String? name,
     @Deprecated('Please use [eventCategory] instead') String? widgetName,
     int? eventValue,
+    Map<String, String>? dimensions,
   }) {
     return _track(
       MatomoEvent(
@@ -317,6 +318,16 @@ class MatomoTracker {
         eventName: name ?? eventName,
         eventCategory: widgetName ?? eventCategory,
         eventValue: eventValue,
+        dimensions: dimensions,
+      ),
+    );
+  }
+
+  void trackDimensions(Map<String, String> dimensions) {
+    return _track(
+      MatomoEvent(
+        tracker: this,
+        dimensions: dimensions,
       ),
     );
   }
