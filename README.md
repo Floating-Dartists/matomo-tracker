@@ -183,6 +183,13 @@ MatomoTracker.instance.trackEvent(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/petcupaula">
+            <img src="https://avatars.githubusercontent.com/u/12584735?v=4" width="100;" alt="petcupaula"/>
+            <br />
+            <sub><b>Paula Petcu</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/Bendix20">
             <img src="https://avatars.githubusercontent.com/u/52244034?v=4" width="100;" alt="Bendix20"/>
             <br />
