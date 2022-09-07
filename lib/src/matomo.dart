@@ -312,13 +312,14 @@ class MatomoTracker {
   }) {
     return _track(
       MatomoEvent(
-          tracker: this,
-          action: action,
-          eventAction: action,
-          eventName: name ?? eventName,
-          eventCategory: widgetName ?? eventCategory,
-          eventValue: eventValue,
-          dimensions: dimensions),
+        tracker: this,
+        action: action,
+        eventAction: action,
+        eventName: name ?? eventName,
+        eventCategory: widgetName ?? eventCategory,
+        eventValue: eventValue,
+        dimensions: dimensions,
+      ),
     );
   }
 
