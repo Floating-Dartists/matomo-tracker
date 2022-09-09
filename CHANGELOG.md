@@ -1,16 +1,22 @@
 # Changelog
 
+## [1.4.0]
+
+* Fix [#16](https://github.com/Floating-Dartists/matomo-tracker/issues/16) (Contribution from [Paula Petcu](https://github.com/petcupaula))
+* Updated dependency [device_info_plus](https://pub.dev/packages/device_info_plus) to version [4.1.2](https://pub.dev/packages/device_info_plus/versions/4.1.2)
+* Updated dependency [http](https://pub.dev/packages/http) to version [0.13.5](https://pub.dev/packages/http/versions/0.13.5)
+
 ## [1.3.0]
 
-* Contribution from [Isaudon](https://github.com/lsaudon)
-  * Updated dependency `device_info_plus` to `4.0.1`
+* Contribution from [lsaudon](https://github.com/lsaudon)
+  * Updated dependency [device_info_plus](https://pub.dev/packages/device_info_plus) to [4.0.1](https://pub.dev/packages/device_info_plus/versions/4.0.1)
   * Updated dependency `package_info_plus` to `1.4.3`
   * Fixed analysis warnings
 
 ## [1.2.1]
 
 * Added support for Visitor's userId
-  * Solves [#12](https://github.com/Floating-Dartists/matomo-tracker/issues/13) by allowing a userId coming from a third-party source (eg. Firebase) to be linked to the visitor.
+  * Solves [#13](https://github.com/Floating-Dartists/matomo-tracker/issues/13) by allowing a userId coming from a third-party source (eg. Firebase) to be linked to the visitor.
   * Is accessible through the setVisitorUserId() method of the MatomoTracker instance.
   * No breaking changes.
 
