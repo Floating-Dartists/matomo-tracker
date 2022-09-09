@@ -98,3 +98,117 @@ If you want to offer a way for the user to opt out of analytics, you can use the
 ```dart
 MatomoTracker.instance.setOptOut(optout: true);
 ```
+
+## Using Dimensions
+
+If you want to track Visit or Action dimensions you can either use the `trackDimensions` (if 
+it's a Visit level dimension) or provide data in the optional dimensions param of `trackEvent`
+(if it's an Action level dimension):
+
+```dart
+MatomoTracker.instance.trackDimensions({
+  'dimension1': '0.0.1'
+});
+```
+
+```dart
+MatomoTracker.instance.trackEvent(
+    name: 'eventName',
+    action: 'eventAction',
+    eventValue: 18,
+    dimensions: {'dimension2':'guest-user'}
+);
+```
+
+## Contributors
+
+<!-- readme: contributors -start -->
+<table>
+<tr>
+    <td align="center">
+        <a href="https://github.com/TesteurManiak">
+            <img src="https://avatars.githubusercontent.com/u/14369698?v=4" width="100;" alt="TesteurManiak"/>
+            <br />
+            <sub><b>Guillaume Roux</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/poitch">
+            <img src="https://avatars.githubusercontent.com/u/80989?v=4" width="100;" alt="poitch"/>
+            <br />
+            <sub><b>Jêrôme Poichet</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/M123-dev">
+            <img src="https://avatars.githubusercontent.com/u/39344769?v=4" width="100;" alt="M123-dev"/>
+            <br />
+            <sub><b>Marvin Möltgen</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/krillefear">
+            <img src="https://avatars.githubusercontent.com/u/24619905?v=4" width="100;" alt="krillefear"/>
+            <br />
+            <sub><b>Krille Fear</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/KawachenCofinpro">
+            <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
+            <br />
+            <sub><b>Null</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/stefan01">
+            <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
+            <br />
+            <sub><b>Null</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/MeixDev">
+            <img src="https://avatars.githubusercontent.com/u/14351291?v=4" width="100;" alt="MeixDev"/>
+            <br />
+            <sub><b>Meï</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/lsaudon">
+            <img src="https://avatars.githubusercontent.com/u/25029876?v=4" width="100;" alt="lsaudon"/>
+            <br />
+            <sub><b>Lsaudon</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/petcupaula">
+            <img src="https://avatars.githubusercontent.com/u/12584735?v=4" width="100;" alt="petcupaula"/>
+            <br />
+            <sub><b>Paula Petcu</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Bendix20">
+            <img src="https://avatars.githubusercontent.com/u/52244034?v=4" width="100;" alt="Bendix20"/>
+            <br />
+            <sub><b>Null</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/lukaslihotzki">
+            <img src="https://avatars.githubusercontent.com/u/10326063?v=4" width="100;" alt="lukaslihotzki"/>
+            <br />
+            <sub><b>Lukas Lihotzki</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/svprdga">
+            <img src="https://avatars.githubusercontent.com/u/43069276?v=4" width="100;" alt="svprdga"/>
+            <br />
+            <sub><b>David Serrano Canales</b></sub>
+        </a>
+    </td></tr>
+</table>
+<!-- readme: contributors -end -->
