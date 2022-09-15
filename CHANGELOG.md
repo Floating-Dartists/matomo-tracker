@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.1]
+
+* Fix [#18](https://github.com/Floating-Dartists/matomo-tracker/issues/18)
+
 ## [1.4.0]
 
 * Fix [#16](https://github.com/Floating-Dartists/matomo-tracker/issues/16) (Contribution from [Paula Petcu](https://github.com/petcupaula))
