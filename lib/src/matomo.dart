@@ -83,6 +83,9 @@ class MatomoTracker {
     );
     this.siteId = siteId;
     this.url = url;
+
+    _prefs = await SharedPreferences.getInstance();
+
     final aVisitorId = visitorId ??
         _prefs?.getString(kVisitorId) ??
         const Uuid().v4().replaceAll('-', '').substring(0, 16);
@@ -102,8 +105,6 @@ class MatomoTracker {
     final now = DateTime.now().toUtc();
     DateTime firstVisit = now;
     int visitCount = 1;
-
-    _prefs = await SharedPreferences.getInstance();
 
     final localFirstVisit = _prefs?.getInt(kFirstVisit);
     if (localFirstVisit != null) {
