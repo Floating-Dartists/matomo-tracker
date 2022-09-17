@@ -249,6 +249,7 @@ class MatomoTracker {
     required String eventName,
     String? currentScreenId,
     String? path,
+    Map<String, String>? dimensions,
   }) {
     final widgetName = context.widget.toStringShort();
     trackScreenWithName(
@@ -256,6 +257,7 @@ class MatomoTracker {
       eventName: eventName,
       currentScreenId: currentScreenId,
       path: path,
+      dimensions: dimensions,
     );
   }
 
@@ -278,6 +280,7 @@ class MatomoTracker {
     required String eventName,
     String? currentScreenId,
     String? path,
+    Map<String, String>? dimensions,
   }) {
     assert(currentScreenId == null || currentScreenId.length == 6);
     this.currentScreenId = currentScreenId ?? randomAlphaNumeric(6);
@@ -287,16 +290,22 @@ class MatomoTracker {
         eventName: eventName,
         action: widgetName,
         path: path,
+        dimensions: dimensions,
       ),
     );
   }
 
-  void trackGoal(int goalId, {double? revenue}) {
+  void trackGoal(
+    int goalId, {
+    double? revenue,
+    Map<String, String>? dimensions,
+  }) {
     return _track(
       MatomoEvent(
         tracker: this,
         goalId: goalId,
         revenue: revenue,
+        dimensions: dimensions,
       ),
     );
   }
@@ -337,6 +346,7 @@ class MatomoTracker {
     required String searchKeyword,
     String? searchCategory,
     int? searchCount,
+    Map<String, String>? dimensions,
   }) {
     return _track(
       MatomoEvent(
@@ -344,6 +354,7 @@ class MatomoTracker {
         searchKeyword: searchKeyword,
         searchCategory: searchCategory,
         searchCount: searchCount,
+        dimensions: dimensions,
       ),
     );
   }
@@ -354,6 +365,7 @@ class MatomoTracker {
     num? taxAmount,
     num? shippingCost,
     num? discountAmount,
+    Map<String, String>? dimensions,
   ) {
     return _track(
       MatomoEvent(
@@ -364,6 +376,7 @@ class MatomoTracker {
         taxAmount: taxAmount,
         shippingCost: shippingCost,
         discountAmount: discountAmount,
+        dimensions: dimensions,
       ),
     );
   }
@@ -376,6 +389,7 @@ class MatomoTracker {
     num? taxAmount,
     num? shippingCost,
     num? discountAmount,
+    Map<String, String>? dimensions,
   ) {
     return _track(
       MatomoEvent(
@@ -388,17 +402,20 @@ class MatomoTracker {
         taxAmount: taxAmount,
         shippingCost: shippingCost,
         discountAmount: discountAmount,
+        dimensions: dimensions,
       ),
     );
   }
 
   void trackOutlink(
     String? link,
+    Map<String, String>? dimensions,
   ) {
     return _track(
       MatomoEvent(
         tracker: this,
         link: link,
+        dimensions: dimensions,
       ),
     );
   }
