@@ -364,9 +364,9 @@ class MatomoTracker {
     num? subTotal,
     num? taxAmount,
     num? shippingCost,
-    num? discountAmount,
+    num? discountAmount, {
     Map<String, String>? dimensions,
-  ) {
+  }) {
     return _track(
       MatomoEvent(
         tracker: this,
@@ -388,9 +388,9 @@ class MatomoTracker {
     num? subTotal,
     num? taxAmount,
     num? shippingCost,
-    num? discountAmount,
+    num? discountAmount, {
     Map<String, String>? dimensions,
-  ) {
+  }) {
     return _track(
       MatomoEvent(
         tracker: this,
@@ -408,9 +408,9 @@ class MatomoTracker {
   }
 
   void trackOutlink(
-    String? link,
+    String? link, {
     Map<String, String>? dimensions,
-  ) {
+  }) {
     return _track(
       MatomoEvent(
         tracker: this,
