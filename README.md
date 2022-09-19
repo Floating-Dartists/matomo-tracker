@@ -68,6 +68,32 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
 }
 ```
 
+If you are in a `StatelessWidget` you can use the `TraceableWidget` widget:
+
+```dart
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key key, this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return TraceableWidget(
+      traceName: 'Created HomePage', // optional
+      traceTitle: title,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+        ),
+        body: Center(
+          child: Text('Hello World!'),
+        ),
+      ),
+    );
+  }
+}
+```
+
 You can also optionally call directly `trackScreen` or `trackScreenWithName` to track a view.
 
 For tracking goals and, events call `trackGoal` and `trackEvent` respectively.

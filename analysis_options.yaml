@@ -57,4 +57,5 @@ linter:
     - use_string_buffers
     - avoid_unnecessary_containers
     - use_build_context_synchronously
-    
+    - always_put_required_named_parameters_first
+    - package_api_docs
