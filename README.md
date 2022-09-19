@@ -120,6 +120,16 @@ MatomoTracker.instance.trackEvent(
 );
 ```
 
+You can similarly track dimensions on Screen views with:
+
+```dart
+MatomoTracker.instance.trackScreenWithName(
+      widgetName: "Settings",
+      eventName: "screen_view",
+      dimensions: {'dimension1': '0.0.1'}
+    );
+```
+
 ## Contributors
 
 <!-- readme: contributors -start -->
@@ -176,17 +186,17 @@ MatomoTracker.instance.trackEvent(
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/lsaudon">
-            <img src="https://avatars.githubusercontent.com/u/25029876?v=4" width="100;" alt="lsaudon"/>
-            <br />
-            <sub><b>Lsaudon</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/petcupaula">
             <img src="https://avatars.githubusercontent.com/u/12584735?v=4" width="100;" alt="petcupaula"/>
             <br />
             <sub><b>Paula Petcu</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/lsaudon">
+            <img src="https://avatars.githubusercontent.com/u/25029876?v=4" width="100;" alt="lsaudon"/>
+            <br />
+            <sub><b>Lsaudon</b></sub>
         </a>
     </td>
     <td align="center">
