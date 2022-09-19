@@ -11,21 +11,29 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   @protected
   String get traceName => 'Created widget ${widget.toStringShort()}';
 
+  /// {@template traceableClientMixin.traceTitle}
   /// Equivalent to an event name. (e.g. `'HomePage'`)
+  /// {@endtemplate}
   @protected
   String get traceTitle;
 
+  /// {@template traceableClientMixin.widgetId}
   /// A 6 character unique ID. If `null`, a random id will be generated.
+  /// {@endtemplate}
   @protected
   String? widgetId;
 
+  /// {@template traceableClientMixin.path}
   /// Path to the widget. (e.g. `'/home'`)
+  /// {@endtemplate}
   @protected
   String? path;
 
+  /// {@template traceableClientMixin.tracker}
   /// Matomo instance used to send events.
   ///
   /// By default it uses the global [MatomoTracker.instance].
+  /// {@endtemplate}
   @protected
   MatomoTracker get tracker => MatomoTracker.instance;
 
