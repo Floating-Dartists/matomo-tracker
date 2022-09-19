@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.5.0]
+
+* Contribution from [Paula Petcu](https://github.com/Floating-Dartists/matomo-tracker/pull/21)
+* Addition of a `TraceableWidget` to track `StatelessWidget`.
+
 ## [1.4.1]
 
 * Fix [#18](https://github.com/Floating-Dartists/matomo-tracker/issues/18)
