@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'platform_info_interface.dart';
 import 'platform_info_io.dart' if (dart.library.html) 'platform_info_web.dart';
 
@@ -6,7 +8,12 @@ class PlatformInfo extends PlatformInfoInterface {
 
   static final instance = PlatformInfo._internal();
 
-  final PlatformInfoInterface _platformInfo = PlatformInfoImpl();
+  PlatformInfoInterface _platformInfo = PlatformInfoImpl();
+
+  @visibleForTesting
+  set platformInfo(PlatformInfoInterface platformInfo) {
+    _platformInfo = platformInfo;
+  }
 
   @override
   bool get isWeb => _platformInfo.isWeb;
