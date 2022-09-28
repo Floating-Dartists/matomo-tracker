@@ -5,13 +5,13 @@ import 'dart:ui';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
 import 'package:uuid/uuid.dart';
 
 import '../utils/random_alpha_numeric.dart';
+import 'logger.dart';
 import 'matomo_dispatcher.dart';
 import 'matomo_event.dart';
 import 'session.dart';
