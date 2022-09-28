@@ -7,13 +7,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:universal_platform/universal_platform.dart';
 import 'package:uuid/uuid.dart';
 
 import '../utils/random_alpha_numeric.dart';
 import 'logger.dart';
 import 'matomo_dispatcher.dart';
 import 'matomo_event.dart';
+import 'platform_info/platform_info.dart';
 import 'session.dart';
 import 'tracking_order_item.dart';
 import 'visitor.dart';
@@ -25,6 +25,7 @@ class MatomoTracker {
   static const kOptOut = 'matomo_opt_out';
 
   final log = Logger('Matomo');
+  final _platformInfo = PlatformInfo.instance;
 
   late MatomoDispatcher _dispatcher;
 
@@ -154,11 +155,11 @@ class MatomoTracker {
   Future<String?> _getUserAgent() async {
     try {
       final deviceInfo = DeviceInfoPlugin();
-      if (UniversalPlatform.isWeb) {
+      if (_platformInfo.isWeb) {
         final webBrowserInfo = await deviceInfo.webBrowserInfo;
 
         return webBrowserInfo.userAgent;
-      } else if (UniversalPlatform.isAndroid) {
+      } else if (_platformInfo.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
         final release = androidInfo.version.release;
         final sdkInt = androidInfo.version.sdkInt;
@@ -166,7 +167,7 @@ class MatomoTracker {
         final model = androidInfo.model;
 
         return 'Android $release (SDK $sdkInt), $manufacturer $model';
-      } else if (UniversalPlatform.isIOS) {
+      } else if (_platformInfo.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
         final systemName = iosInfo.systemName;
         final version = iosInfo.systemVersion;
@@ -174,11 +175,11 @@ class MatomoTracker {
         final model = iosInfo.model;
 
         return '$systemName $version, $name $model';
-      } else if (UniversalPlatform.isWindows) {
+      } else if (_platformInfo.isWindows) {
         final windowsInfo = await deviceInfo.windowsInfo;
 
         return 'Windows ${windowsInfo.computerName}';
-      } else if (UniversalPlatform.isMacOS) {
+      } else if (_platformInfo.isMacOS) {
         final macInfo = await deviceInfo.macOsInfo;
         final computerName = macInfo.computerName;
         final model = macInfo.model;
@@ -186,7 +187,7 @@ class MatomoTracker {
         final release = macInfo.osRelease;
 
         return '$computerName, $model, $version, $release';
-      } else if (UniversalPlatform.isLinux) {
+      } else if (_platformInfo.isLinux) {
         final linuxInfo = await deviceInfo.linuxInfo;
 
         return linuxInfo.prettyName;
