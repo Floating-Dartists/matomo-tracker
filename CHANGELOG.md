@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.0]
+
+* Bumped Dart SDK version to `2.17.0`
+* Removed [logging](https://pub.dev/packages/logging) dependency
+* Removed [universal_platform](https://pub.dev/packages/universal_platform) dependency
+
 ## [1.5.0]
 
 * Contribution from [Paula Petcu](https://github.com/Floating-Dartists/matomo-tracker/pull/21)
