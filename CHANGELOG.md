@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.7.0]
+
+* Bumped `device_info_plus` to `7.0.1`
+* Bumped `package_info_plus` to `3.0.1`
+
 ## [1.6.0]
 
 * Bumped Dart SDK version to `2.17.0`
