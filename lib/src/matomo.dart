@@ -233,6 +233,22 @@ class MatomoTracker {
       _dequeue();
     }
   }
+  
+  // Pause tracker
+  void pause() {
+    if(initialized){
+      _timer.cancel();
+      _dequeue();
+    }
+  }
+  
+  void resume(){
+    if (initialized && !_timer?.isActive==true) {
+      _timer = Timer.periodic(Duration(seconds: dequeueInterval), (timer) {
+      _dequeue();
+    });
+    }
+  }
 
   /// This will register an event with [trackScreenWithName] by using the
   /// `context.widget.toStringShort()` value.
