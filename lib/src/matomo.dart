@@ -17,6 +17,7 @@ import 'platform_info/platform_info.dart';
 import 'session.dart';
 import 'tracking_order_item.dart';
 import 'visitor.dart';
+import 'package:synchronized/synchronized.dart' as sync;
 
 class MatomoTracker {
   static const kFirstVisit = 'matomo_first_visit';
@@ -70,6 +71,8 @@ class MatomoTracker {
 
   String? get getAuthToken => _tokenAuth;
 
+  late int _dequeueInterval;
+
   Future<void> initialize({
     required int siteId,
     required String url,
@@ -84,7 +87,7 @@ class MatomoTracker {
     );
     this.siteId = siteId;
     this.url = url;
-
+    this._dequeueInterval = dequeueInterval;
     _prefs = await SharedPreferences.getInstance();
 
     final aVisitorId = visitorId ??
@@ -147,7 +150,7 @@ class MatomoTracker {
     );
     initialized = true;
 
-    _timer = Timer.periodic(Duration(seconds: dequeueInterval), (timer) {
+    _timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
       _dequeue();
     });
   }
@@ -227,13 +230,6 @@ class MatomoTracker {
     _timer.cancel();
   }
 
-  /// Iterate on the events in the queue and send them to Matomo.
-  void dispatchEvents() {
-    if (initialized) {
-      _dequeue();
-    }
-  }
-  
   // Pause tracker
   void pause() {
     if(initialized){
@@ -241,12 +237,21 @@ class MatomoTracker {
       _dequeue();
     }
   }
-  
+
+  // Resume tracker
   void resume(){
-    if (initialized && !_timer?.isActive==true) {
-      _timer = Timer.periodic(Duration(seconds: dequeueInterval), (timer) {
+    if (initialized && !_timer.isActive) {
+      _timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
+        _dequeue();
+      });
+    }
+  }
+
+
+  /// Iterate on the events in the queue and send them to Matomo.
+  void dispatchEvents() {
+    if (initialized) {
       _dequeue();
-    });
     }
   }
 
@@ -444,11 +449,14 @@ class MatomoTracker {
   void _dequeue() {
     assert(initialized);
     log.finest('Processing queue ${_queue.length}');
-    while (_queue.isNotEmpty) {
-      final event = _queue.removeFirst();
-      if (!_optout) {
-        _dispatcher.send(event);
+    var lock = sync.Lock();
+    lock.synchronized(() {
+      while (_queue.isNotEmpty) {
+        final event = _queue.removeFirst();
+        if (!_optout) {
+          _dispatcher.send(event);
+        }
       }
-    }
+    });
   }
 }
