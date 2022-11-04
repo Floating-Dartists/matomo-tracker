@@ -66,6 +66,7 @@ class MatomoTracker {
 
   final _queue = Queue<MatomoEvent>();
   late Timer _timer;
+  late sync.Lock _lock;
 
   String? _tokenAuth;
 
@@ -88,6 +89,7 @@ class MatomoTracker {
     this.siteId = siteId;
     this.url = url;
     this._dequeueInterval = dequeueInterval;
+    _lock = sync.Lock();
     _prefs = await SharedPreferences.getInstance();
 
     final aVisitorId = visitorId ??
@@ -449,14 +451,15 @@ class MatomoTracker {
   void _dequeue() {
     assert(initialized);
     log.finest('Processing queue ${_queue.length}');
-    var lock = sync.Lock();
-    lock.synchronized(() {
-      while (_queue.isNotEmpty) {
-        final event = _queue.removeFirst();
-        if (!_optout) {
-          _dispatcher.send(event);
+    if(!_lock.locked){
+      _lock.synchronized(() {
+        while (_queue.isNotEmpty) {
+          final event = _queue.removeFirst();
+          if (!_optout) {
+            _dispatcher.send(event);
+          }
         }
-      }
-    });
+      });
+    }
   }
 }
