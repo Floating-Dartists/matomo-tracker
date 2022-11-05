@@ -17,7 +17,7 @@ import 'platform_info/platform_info.dart';
 import 'session.dart';
 import 'tracking_order_item.dart';
 import 'visitor.dart';
-import 'package:synchronized/synchronized.dart' as sync;
+import '../utils/lock.dart' as sync;
 
 class MatomoTracker {
   static const kFirstVisit = 'matomo_first_visit';
@@ -88,7 +88,7 @@ class MatomoTracker {
     );
     this.siteId = siteId;
     this.url = url;
-    this._dequeueInterval = dequeueInterval;
+    _dequeueInterval = dequeueInterval;
     _lock = sync.Lock();
     _prefs = await SharedPreferences.getInstance();
 
