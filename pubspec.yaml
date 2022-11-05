@@ -18,7 +18,6 @@ dependencies:
   package_info_plus: ^3.0.1
   shared_preferences: ^2.0.15
   uuid: ^3.0.6
-  synchronized: ^3.0.0+3
 
 dev_dependencies:
   flutter_lints: ^2.0.1
