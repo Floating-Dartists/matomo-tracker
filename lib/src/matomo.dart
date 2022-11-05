@@ -9,6 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import '../utils/lock.dart' as sync;
 import '../utils/random_alpha_numeric.dart';
 import 'logger.dart';
 import 'matomo_dispatcher.dart';
@@ -17,7 +18,6 @@ import 'platform_info/platform_info.dart';
 import 'session.dart';
 import 'tracking_order_item.dart';
 import 'visitor.dart';
-import '../utils/lock.dart' as sync;
 
 class MatomoTracker {
   static const kFirstVisit = 'matomo_first_visit';
