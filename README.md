@@ -190,20 +190,27 @@ MatomoTracker.instance.trackScreenWithName(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/scolnet">
+            <img src="https://avatars.githubusercontent.com/u/79212486?v=4" width="100;" alt="scolnet"/>
+            <br />
+            <sub><b>Scolnet</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/KawachenCofinpro">
             <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/stefan01">
             <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/MeixDev">
             <img src="https://avatars.githubusercontent.com/u/14351291?v=4" width="100;" alt="MeixDev"/>
@@ -238,7 +245,8 @@ MatomoTracker.instance.trackScreenWithName(
             <br />
             <sub><b>Lukas Lihotzki</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/svprdga">
             <img src="https://avatars.githubusercontent.com/u/43069276?v=4" width="100;" alt="svprdga"/>
