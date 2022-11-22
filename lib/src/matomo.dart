@@ -275,6 +275,9 @@ class MatomoTracker {
     String? path,
     Map<String, String>? dimensions,
   }) {
+    if (currentScreenId != null) {
+      this.currentScreenId = currentScreenId;
+    }
     final widgetName = context.widget.toStringShort();
     trackScreenWithName(
       widgetName: widgetName,
