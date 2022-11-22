@@ -453,11 +453,10 @@ class MatomoTracker {
     log.finest('Processing queue ${_queue.length}');
     if(!_lock.locked){
       _lock.synchronized(() {
-        while (_queue.isNotEmpty) {
-          final event = _queue.removeFirst();
-          if (!_optout) {
-            _dispatcher.send(event);
-          }
+        final events = List<MatomoEvent>.from(_queue);
+        _queue.clear();
+        if (!_optout) {
+          _dispatcher.sendBatch(events);
         }
       });
     }
