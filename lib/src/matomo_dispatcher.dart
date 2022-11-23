@@ -21,9 +21,8 @@ class MatomoDispatcher {
         httpClient = httpClient ?? http.Client();
 
   Future<void> send(MatomoEvent event) async {
-    final userAgent = event.tracker.userAgent;
     final headers = <String, String>{
-      if (!kIsWeb && userAgent != null) 'User-Agent': userAgent,
+      if (!kIsWeb) 'User-Agent': 'Dart Matomo Tracker',
     };
 
     final uri = buildUriForEvent(event);
