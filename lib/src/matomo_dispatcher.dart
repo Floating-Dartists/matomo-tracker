@@ -15,9 +15,8 @@ class MatomoDispatcher {
         httpClient = httpClient ?? http.Client();
 
   void send(MatomoEvent event) {
-    final userAgent = event.tracker.userAgent;
     final headers = <String, String>{
-      if (!kIsWeb && userAgent != null) 'User-Agent': userAgent,
+      if (!kIsWeb) 'User-Agent': 'Dart Matomo Tracker',
     };
 
     final queryParameters = Map<String, String>.from(baseUri.queryParameters)
