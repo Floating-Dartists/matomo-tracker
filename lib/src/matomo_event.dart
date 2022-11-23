@@ -27,6 +27,10 @@ class MatomoEvent {
   /// The event value.
   final num? eventValue;
 
+  /// 6 character unique ID that identifies which actions were performed on a
+  /// specific page view.
+  final String? screenId;
+
   final int? goalId;
   final String? orderId;
   final List<TrackingOrderItem>? trackingOrderItems;
@@ -64,6 +68,7 @@ class MatomoEvent {
     this.eventAction,
     this.eventName,
     this.eventValue,
+    String? screenId,
     this.goalId,
     this.orderId,
     this.trackingOrderItems,
@@ -78,6 +83,11 @@ class MatomoEvent {
     this.link,
     this.dimensions,
   })  : _date = DateTime.now().toUtc(),
+        screenId = screenId ?? tracker.currentScreenId,
+        assert(
+          screenId == null || screenId.length == 6,
+          'screenId has to be six characters long',
+        ),
         assert(
           eventCategory == null || eventCategory.isNotEmpty,
           'eventCategory must not be empty',
@@ -95,7 +105,7 @@ class MatomoEvent {
     final id = tracker.visitor.id;
     final cid = tracker.visitor.forcedId;
     final uid = tracker.visitor.userId;
-    final pvId = tracker.currentScreenId;
+    final pvId = screenId;
     final actionName = action;
     final url =
         path != null ? '${tracker.contentBase}/$path' : tracker.contentBase;
