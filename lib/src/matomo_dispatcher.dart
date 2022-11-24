@@ -11,6 +11,9 @@ class MatomoDispatcher {
 
   final Uri baseUri;
 
+  @visibleForTesting
+  static const tokenAuthUriKey = 'token_auth';
+
   MatomoDispatcher(
     String baseUrl,
     this.tokenAuth, {
@@ -24,7 +27,7 @@ class MatomoDispatcher {
       if (!kIsWeb && userAgent != null) 'User-Agent': userAgent,
     };
 
-    final uri = _buildUriForEvent(event);
+    final uri = buildUriForEvent(event);
     event.tracker.log.fine(' -> ${uri.toString()}');
     try {
       final response = await httpClient.post(uri, headers: headers);
@@ -47,8 +50,7 @@ class MatomoDispatcher {
 
     final batch = {
       "requests": [
-        for (final event in events)
-          "?${_buildUriForEvent(event).query}",
+        for (final event in events) "?${buildUriForEvent(event).query}",
       ],
     };
     events.first.tracker.log.fine(' -> ${batch.toString()}');
@@ -65,12 +67,13 @@ class MatomoDispatcher {
     }
   }
 
-  Uri _buildUriForEvent(MatomoEvent event) {
+  @visibleForTesting
+  Uri buildUriForEvent(MatomoEvent event) {
     final queryParameters = Map<String, String>.from(baseUri.queryParameters)
       ..addAll(event.toMap());
     final aTokenAuth = tokenAuth;
     if (aTokenAuth != null) {
-      queryParameters.addEntries([MapEntry('token_auth', aTokenAuth)]);
+      queryParameters.addEntries([MapEntry(tokenAuthUriKey, aTokenAuth)]);
     }
 
     return baseUri.replace(queryParameters: queryParameters);

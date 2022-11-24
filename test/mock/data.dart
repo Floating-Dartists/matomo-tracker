@@ -40,5 +40,13 @@ const matomoSubTotal = 1.0;
 const matomoTaxAmount = 1.0;
 final matomoTrackingOrderItems = [mockTrackingOrderItem];
 
+// MatomoDisptacher
+const matomoDispatcherBaseUrl = 'https://example.com';
+const matomoDispatcherToken = 'token';
+
+// Mocks
 final mockMatomoTracker = MockMatomoTracker();
 final mockTrackingOrderItem = MockTrackingOrderItem();
+final mockHttpClient = MockHttpClient();
+final mockMatomoEvent = MockMatomoEvent();
+final mockHttpResponse = MockHttpResponse();
