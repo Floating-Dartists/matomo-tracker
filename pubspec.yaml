@@ -20,9 +20,11 @@ dependencies:
   uuid: ^3.0.6
 
 dev_dependencies:
+  clock: ^1.1.1
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
+  mocktail: ^0.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
