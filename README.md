@@ -255,6 +255,13 @@ MatomoTracker.instance.trackScreenWithName(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/luckyrat">
+            <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
+            <br />
+            <sub><b>Chris Tomlinson</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/svprdga">
             <img src="https://avatars.githubusercontent.com/u/43069276?v=4" width="100;" alt="svprdga"/>
             <br />
