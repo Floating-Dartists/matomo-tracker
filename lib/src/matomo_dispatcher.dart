@@ -1,25 +1,71 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'matomo_event.dart';
 
 class MatomoDispatcher {
-  final String baseUrl;
   final String? tokenAuth;
   final http.Client httpClient;
 
   final Uri baseUri;
 
-  MatomoDispatcher(this.baseUrl, this.tokenAuth, {http.Client? httpClient})
-      : baseUri = Uri.parse(baseUrl),
+  MatomoDispatcher(
+    String baseUrl,
+    this.tokenAuth, {
+    http.Client? httpClient,
+  })  : baseUri = Uri.parse(baseUrl),
         httpClient = httpClient ?? http.Client();
 
-  void send(MatomoEvent event) {
+  Future<void> send(MatomoEvent event) async {
     final userAgent = event.tracker.userAgent;
     final headers = <String, String>{
       if (!kIsWeb && userAgent != null) 'User-Agent': userAgent,
     };
 
+    final uri = _buildUriForEvent(event);
+    event.tracker.log.fine(' -> ${uri.toString()}');
+    try {
+      final response = await httpClient.post(uri, headers: headers);
+      final statusCode = response.statusCode;
+      event.tracker.log.fine(' <- $statusCode');
+    } catch (e) {
+      event.tracker.log.fine(' <- ${e.toString()}');
+    }
+  }
+
+  Future<void> sendBatch(List<MatomoEvent> events) async {
+    if (events.isEmpty) {
+      return;
+    }
+
+    final userAgent = events.first.tracker.userAgent;
+    final headers = <String, String>{
+      if (!kIsWeb && userAgent != null) 'User-Agent': userAgent,
+    };
+
+    final batch = {
+      "requests": [
+        for (final event in events)
+          "?${_buildUriForEvent(event).query}",
+      ],
+    };
+    events.first.tracker.log.fine(' -> ${batch.toString()}');
+    try {
+      final response = await httpClient.post(
+        baseUri,
+        headers: headers,
+        body: jsonEncode(batch),
+      );
+      final statusCode = response.statusCode;
+      events.first.tracker.log.fine(' <- $statusCode');
+    } catch (e) {
+      events.first.tracker.log.fine(' <- ${e.toString()}');
+    }
+  }
+
+  Uri _buildUriForEvent(MatomoEvent event) {
     final queryParameters = Map<String, String>.from(baseUri.queryParameters)
       ..addAll(event.toMap());
     final aTokenAuth = tokenAuth;
@@ -27,13 +73,6 @@ class MatomoDispatcher {
       queryParameters.addEntries([MapEntry('token_auth', aTokenAuth)]);
     }
 
-    final uri = baseUri.replace(queryParameters: queryParameters);
-    event.tracker.log.fine(' -> ${uri.toString()}');
-    httpClient.post(uri, headers: headers).then((response) {
-      final statusCode = response.statusCode;
-      event.tracker.log.fine(' <- $statusCode');
-    }).catchError((e) {
-      event.tracker.log.fine(' <- ${e.toString()}');
-    });
+    return baseUri.replace(queryParameters: queryParameters);
   }
 }

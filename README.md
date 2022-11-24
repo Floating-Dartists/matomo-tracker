@@ -190,20 +190,27 @@ MatomoTracker.instance.trackScreenWithName(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/scolnet">
+            <img src="https://avatars.githubusercontent.com/u/79212486?v=4" width="100;" alt="scolnet"/>
+            <br />
+            <sub><b>Scolnet</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/KawachenCofinpro">
             <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/stefan01">
             <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/MeixDev">
             <img src="https://avatars.githubusercontent.com/u/14351291?v=4" width="100;" alt="MeixDev"/>
@@ -219,6 +226,13 @@ MatomoTracker.instance.trackScreenWithName(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/JohannSchramm">
+            <img src="https://avatars.githubusercontent.com/u/43448334?v=4" width="100;" alt="JohannSchramm"/>
+            <br />
+            <sub><b>Johann Schramm</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/lsaudon">
             <img src="https://avatars.githubusercontent.com/u/25029876?v=4" width="100;" alt="lsaudon"/>
             <br />
@@ -231,12 +245,20 @@ MatomoTracker.instance.trackScreenWithName(
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/lukaslihotzki">
             <img src="https://avatars.githubusercontent.com/u/10326063?v=4" width="100;" alt="lukaslihotzki"/>
             <br />
             <sub><b>Lukas Lihotzki</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/luckyrat">
+            <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
+            <br />
+            <sub><b>Chris Tomlinson</b></sub>
         </a>
     </td>
     <td align="center">

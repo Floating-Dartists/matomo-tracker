@@ -20,8 +20,7 @@ class Visitor {
   final String? userId;
 
   Visitor({this.id, this.forcedId, this.userId})
-      : assert(id == null || id.length == 16, 'id must be 16 characters'),
-        assert(userId == null || userId.isNotEmpty, 'userId must not be empty'),
+      : assert(userId == null || userId.isNotEmpty, 'userId must not be empty'),
         assert(
           forcedId == null || forcedId.length == 16,
           'forcedId must be 16 characters',

@@ -9,6 +9,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import '../utils/lock.dart' as sync;
 import '../utils/random_alpha_numeric.dart';
 import 'logger.dart';
 import 'matomo_dispatcher.dart';
@@ -65,10 +66,13 @@ class MatomoTracker {
 
   final _queue = Queue<MatomoEvent>();
   late Timer _timer;
+  late sync.Lock _lock;
 
   String? _tokenAuth;
 
   String? get getAuthToken => _tokenAuth;
+
+  late int _dequeueInterval;
 
   Future<void> initialize({
     required int siteId,
@@ -84,7 +88,8 @@ class MatomoTracker {
     );
     this.siteId = siteId;
     this.url = url;
-
+    _dequeueInterval = dequeueInterval;
+    _lock = sync.Lock();
     _prefs = await SharedPreferences.getInstance();
 
     final aVisitorId = visitorId ??
@@ -147,7 +152,7 @@ class MatomoTracker {
     );
     initialized = true;
 
-    _timer = Timer.periodic(Duration(seconds: dequeueInterval), (timer) {
+    _timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
       _dequeue();
     });
   }
@@ -227,6 +232,24 @@ class MatomoTracker {
     _timer.cancel();
   }
 
+  // Pause tracker
+  void pause() {
+    if(initialized){
+      _timer.cancel();
+      _dequeue();
+    }
+  }
+
+  // Resume tracker
+  void resume(){
+    if (initialized && !_timer.isActive) {
+      _timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
+        _dequeue();
+      });
+    }
+  }
+
+
   /// Iterate on the events in the queue and send them to Matomo.
   void dispatchEvents() {
     if (initialized) {
@@ -252,6 +275,9 @@ class MatomoTracker {
     String? path,
     Map<String, String>? dimensions,
   }) {
+    if (currentScreenId != null) {
+      this.currentScreenId = currentScreenId;
+    }
     final widgetName = context.widget.toStringShort();
     trackScreenWithName(
       widgetName: widgetName,
@@ -428,11 +454,14 @@ class MatomoTracker {
   void _dequeue() {
     assert(initialized);
     log.finest('Processing queue ${_queue.length}');
-    while (_queue.isNotEmpty) {
-      final event = _queue.removeFirst();
-      if (!_optout) {
-        _dispatcher.send(event);
-      }
+    if(!_lock.locked){
+      _lock.synchronized(() {
+        final events = List<MatomoEvent>.from(_queue);
+        _queue.clear();
+        if (!_optout) {
+          _dispatcher.sendBatch(events);
+        }
+      });
     }
   }
 }
