@@ -1,11 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:clock/clock.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../mock/data.dart';
 
 void main() {
-  test('it should be able to create MatomotoEvent', () async {
-    final matomotoEvent = MatomoEvent(
+  MatomoEvent getCompleteMatomoEvent() {
+    return MatomoEvent(
       tracker: mockMatomoTracker,
       path: matomoEventPath,
       action: matomoEventAction,
@@ -28,6 +34,10 @@ void main() {
       taxAmount: matomoTaxAmount,
       trackingOrderItems: matomoTrackingOrderItems,
     );
+  }
+
+  test('it should be able to create MatomotoEvent', () async {
+    final matomotoEvent = getCompleteMatomoEvent();
 
     expect(matomotoEvent.tracker, mockMatomoTracker);
     expect(matomotoEvent.path, matomoEventPath);
@@ -52,71 +62,104 @@ void main() {
     expect(matomotoEvent.trackingOrderItems, matomoTrackingOrderItems);
   });
 
-  test(
-    'it should throw AssertionError if screen id is not 6 characters',
+  group(
+    'AssertionError checking',
     () {
-      MatomoEvent getMatomoEventWithWrongScreenId() {
-        return MatomoEvent(
-          tracker: mockMatomoTracker,
-          screenId: matomoWrongScreenId,
-        );
-      }
+      test(
+        'it should throw AssertionError if screen id is not 6 characters',
+        () {
+          MatomoEvent getMatomoEventWithWrongScreenId() {
+            return MatomoEvent(
+              tracker: mockMatomoTracker,
+              screenId: matomoWrongScreenId,
+            );
+          }
 
-      expect(
-        getMatomoEventWithWrongScreenId,
-        throwsA(isA<AssertionError>()),
+          expect(
+            getMatomoEventWithWrongScreenId,
+            throwsA(isA<AssertionError>()),
+          );
+        },
       );
+
+      test(
+        'it should throw AssertionError if eventCategory is empty',
+        () {
+          MatomoEvent getMatomoEventWithEmptyEventCategory() {
+            return MatomoEvent(
+              tracker: mockMatomoTracker,
+              eventCategory: '',
+            );
+          }
+
+          expect(
+            getMatomoEventWithEmptyEventCategory,
+            throwsA(isA<AssertionError>()),
+          );
+        },
+      );
+
+      test(
+        'it should throw AssertionError if eventAction is empty',
+        () {
+          MatomoEvent getMatomoEventWithEmptyEventAction() {
+            return MatomoEvent(
+              tracker: mockMatomoTracker,
+              eventAction: '',
+            );
+          }
+
+          expect(
+            getMatomoEventWithEmptyEventAction,
+            throwsA(isA<AssertionError>()),
+          );
+        },
+      );
+
+      test('it should throw AssertionError if eventName is empty', () {
+        MatomoEvent getMatomoEventWithEmptyEventName() {
+          return MatomoEvent(
+            tracker: mockMatomoTracker,
+            eventName: '',
+          );
+        }
+
+        expect(
+          getMatomoEventWithEmptyEventName,
+          throwsA(isA<AssertionError>()),
+        );
+      });
     },
   );
 
-  test(
-    'it should throw AssertionError if eventCategory is empty',
-    () {
-      MatomoEvent getMatomoEventWithEmptyEventCategory() {
-        return MatomoEvent(
-          tracker: mockMatomoTracker,
-          eventCategory: '',
-        );
-      }
+  test('it should be able to compute a map representation', () {
+    when(() => mockMatomoTracker.visitor).thenReturn(mockVisitor);
+    when(() => mockMatomoTracker.session).thenReturn(mockSession);
+    when(() => mockMatomoTracker.screenResolution)
+        .thenReturn(matomoTrackerScreenResolution);
+    when(() => mockMatomoTracker.contentBase)
+        .thenReturn(matomoTrackerContentBase);
+    when(() => mockMatomoTracker.siteId).thenReturn(matomoTrackerSiteId);
+    when(() => mockVisitor.id).thenReturn(visitorId);
+    when(() => mockVisitor.forcedId).thenReturn(forceId);
+    when(() => mockVisitor.userId).thenReturn(userId);
+    when(mockTrackingOrderItem.toArray).thenReturn([]);
+    when(() => mockSession.visitCount).thenReturn(sessionVisitCount);
+    when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
+    when(() => mockSession.firstVisit).thenReturn(sessionFirstVisite);
 
-      expect(
-        getMatomoEventWithEmptyEventCategory,
-        throwsA(isA<AssertionError>()),
-      );
-    },
-  );
+    withClock(Clock.fixed(DateTime(2022)), () {
+      final matomotoEvent = getCompleteMatomoEvent();
+      final eventMap = matomotoEvent.toMap();
+      final jsonEventFile = File('test/mock/ressources/matomo_event.json');
+      final wantedEvent =
+          jsonDecode(jsonEventFile.readAsStringSync()) as Map<String, dynamic>;
 
-  test(
-    'it should throw AssertionError if eventAction is empty',
-    () {
-      MatomoEvent getMatomoEventWithEmptyEventAction() {
-        return MatomoEvent(
-          tracker: mockMatomoTracker,
-          eventAction: '',
-        );
-      }
+      // we remove the rand key, because we can't have the same each times
+      eventMap.remove('rand');
+      wantedEvent.remove('rand');
 
-      expect(
-        getMatomoEventWithEmptyEventAction,
-        throwsA(isA<AssertionError>()),
-      );
-    },
-  );
-
-  test(
-    'it should throw AssertionError if eventName is empty',
-    () {
-      MatomoEvent getMatomoEventWithEmptyEventName() {
-        return MatomoEvent(
-          tracker: mockMatomoTracker,
-          eventName: '',
-        );
-      }
-
-      expect(
-        getMatomoEventWithEmptyEventName,
-        throwsA(isA<AssertionError>()),
-      );
-    },
-  );
+      expect(mapEquals(wantedEvent, eventMap), true);
+    });
+  });
 }

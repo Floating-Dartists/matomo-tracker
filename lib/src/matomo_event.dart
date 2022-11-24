@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:clock/clock.dart';
+
 import 'matomo.dart';
 import 'tracking_order_item.dart';
 
@@ -82,7 +84,9 @@ class MatomoEvent {
     this.searchCount,
     this.link,
     this.dimensions,
-  })  : _date = DateTime.now().toUtc(),
+  })  :
+        // we use clock.now instead of DateTime.now to make testing easier
+        _date = clock.now().toUtc(),
         screenId = screenId ?? tracker.currentScreenId,
         assert(
           screenId == null || screenId.length == 6,

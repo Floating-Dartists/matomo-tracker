@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+
 import 'mock.dart';
 
 // Session
-final sessionLastVisiste = DateTime(2022, 1, 2, 1, 1, 1);
-final sessionFirstVisiste = DateTime(2022, 1, 1, 1, 1, 1);
+final sessionLastVisite = DateTime(2022, 1, 2);
+final sessionFirstVisite = DateTime(2022, 1, 1);
 const sessionVisitCount = 1;
 
 // Visitor
@@ -44,9 +46,16 @@ final matomoTrackingOrderItems = [mockTrackingOrderItem];
 const matomoDispatcherBaseUrl = 'https://example.com';
 const matomoDispatcherToken = 'token';
 
+// MatomoTracker
+const matomoTrackerContentBase = 'contentBase';
+const matomoTrackerSiteId = 1;
+const matomoTrackerScreenResolution = Size(200, 200);
+
 // Mocks
 final mockMatomoTracker = MockMatomoTracker();
 final mockTrackingOrderItem = MockTrackingOrderItem();
 final mockHttpClient = MockHttpClient();
 final mockMatomoEvent = MockMatomoEvent();
 final mockHttpResponse = MockHttpResponse();
+final mockVisitor = MockVisitor();
+final mockSession = MockSession();

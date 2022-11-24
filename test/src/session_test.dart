@@ -6,13 +6,13 @@ import '../mock/data.dart';
 void main() {
   test('it should be able to create Session', () async {
     final session = Session(
-      firstVisit: sessionFirstVisiste,
-      lastVisit: sessionLastVisiste,
+      firstVisit: sessionFirstVisite,
+      lastVisit: sessionLastVisite,
       visitCount: sessionVisitCount,
     );
 
-    expect(session.firstVisit, sessionFirstVisiste);
-    expect(session.lastVisit, sessionLastVisiste);
+    expect(session.firstVisit, sessionFirstVisite);
+    expect(session.lastVisit, sessionLastVisite);
     expect(session.visitCount, sessionVisitCount);
   });
 }
