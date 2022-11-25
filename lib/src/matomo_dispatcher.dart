@@ -11,7 +11,6 @@ class MatomoDispatcher {
 
   final Uri baseUri;
 
-  @visibleForTesting
   static const tokenAuthUriKey = 'token_auth';
 
   MatomoDispatcher(
