@@ -25,7 +25,7 @@ void main() {
       );
     }
 
-    expect(getVisitorWithWrongForceId, throwsA(isA<AssertionError>()));
+    expect(getVisitorWithWrongForceId, throwsAssertionError);
   });
 
   test('it should throw if userId is null or empty', () async {
@@ -45,7 +45,7 @@ void main() {
       );
     }
 
-    expect(getVisitorWithNullUserId, throwsA(isA<AssertionError>()));
-    expect(getVisitorWithEmptyUserId, throwsA(isA<AssertionError>()));
+    expect(getVisitorWithNullUserId, throwsAssertionError);
+    expect(getVisitorWithEmptyUserId, throwsAssertionError);
   });
 }

@@ -77,7 +77,7 @@ void main() {
 
           expect(
             getMatomoEventWithWrongScreenId,
-            throwsA(isA<AssertionError>()),
+            throwsAssertionError,
           );
         },
       );
@@ -94,7 +94,7 @@ void main() {
 
           expect(
             getMatomoEventWithEmptyEventCategory,
-            throwsA(isA<AssertionError>()),
+            throwsAssertionError,
           );
         },
       );
@@ -111,7 +111,7 @@ void main() {
 
           expect(
             getMatomoEventWithEmptyEventAction,
-            throwsA(isA<AssertionError>()),
+            throwsAssertionError,
           );
         },
       );
@@ -126,7 +126,7 @@ void main() {
 
         expect(
           getMatomoEventWithEmptyEventName,
-          throwsA(isA<AssertionError>()),
+          throwsAssertionError,
         );
       });
     },

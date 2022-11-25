@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 
+import 'package:clock/clock.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -64,8 +65,12 @@ class MatomoTracker {
 
   SharedPreferences? _prefs;
 
-  final _queue = Queue<MatomoEvent>();
-  late Timer _timer;
+  @visibleForTesting
+  final queue = Queue<MatomoEvent>();
+
+  @visibleForTesting
+  late Timer timer;
+
   late sync.Lock _lock;
 
   String? _tokenAuth;
@@ -81,6 +86,8 @@ class MatomoTracker {
     String? contentBaseUrl,
     int dequeueInterval = 10,
     String? tokenAuth,
+    SharedPreferences? prefs,
+    PackageInfo? packageInfo,
   }) async {
     assert(
       visitorId == null || visitorId.length == 16,
@@ -90,7 +97,7 @@ class MatomoTracker {
     this.url = url;
     _dequeueInterval = dequeueInterval;
     _lock = sync.Lock();
-    _prefs = await SharedPreferences.getInstance();
+    _prefs = prefs ?? await SharedPreferences.getInstance();
 
     final aVisitorId = visitorId ??
         _prefs?.getString(kVisitorId) ??
@@ -108,7 +115,7 @@ class MatomoTracker {
         Size(window.physicalSize.width, window.physicalSize.height);
 
     // Initialize Session Information
-    final now = DateTime.now().toUtc();
+    final now = clock.now().toUtc();
     DateTime firstVisit = now;
     int visitCount = 1;
 
@@ -137,8 +144,9 @@ class MatomoTracker {
     } else if (kIsWeb) {
       contentBase = Uri.base.toString();
     } else {
-      final packageInfo = await PackageInfo.fromPlatform();
-      contentBase = 'https://${packageInfo.packageName}';
+      final effectivePackageInfo =
+          packageInfo ?? await PackageInfo.fromPlatform();
+      contentBase = 'https://${effectivePackageInfo.packageName}';
     }
 
     if (_prefs!.containsKey(kOptOut)) {
@@ -152,7 +160,7 @@ class MatomoTracker {
     );
     initialized = true;
 
-    _timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
+    timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
       _dequeue();
     });
   }
@@ -229,26 +237,25 @@ class MatomoTracker {
   /// Cancel the timer which checks the queued events to send. (This will not
   /// clear the queue.)
   void dispose() {
-    _timer.cancel();
+    timer.cancel();
   }
 
   // Pause tracker
   void pause() {
-    if(initialized){
-      _timer.cancel();
+    if (initialized) {
+      timer.cancel();
       _dequeue();
     }
   }
 
   // Resume tracker
-  void resume(){
-    if (initialized && !_timer.isActive) {
-      _timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
+  void resume() {
+    if (initialized && !timer.isActive) {
+      timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
         _dequeue();
       });
     }
   }
-
 
   /// Iterate on the events in the queue and send them to Matomo.
   void dispatchEvents() {
@@ -448,16 +455,16 @@ class MatomoTracker {
   }
 
   void _track(MatomoEvent event) {
-    _queue.add(event);
+    queue.add(event);
   }
 
   void _dequeue() {
     assert(initialized);
-    log.finest('Processing queue ${_queue.length}');
-    if(!_lock.locked){
+    log.finest('Processing queue ${queue.length}');
+    if (!_lock.locked) {
       _lock.synchronized(() {
-        final events = List<MatomoEvent>.from(_queue);
-        _queue.clear();
+        final events = List<MatomoEvent>.from(queue);
+        queue.clear();
         if (!_optout) {
           _dispatcher.sendBatch(events);
         }

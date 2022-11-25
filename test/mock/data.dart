@@ -50,6 +50,17 @@ const matomoDispatcherToken = 'token';
 const matomoTrackerContentBase = 'contentBase';
 const matomoTrackerSiteId = 1;
 const matomoTrackerScreenResolution = Size(200, 200);
+const matomoTrackerUrl = 'https://example.com';
+const matomoTrackerPackageName = 'packageName';
+const matomoTrackerWrongVisitorId = '1234'; // not 16 characters
+const matomoTrackerEvenName = 'eventName';
+const matomoTrackerMockWidget = MockWidget();
+const matomoTrackerGoalId = 1;
+const matomoTrackerEventCategory = 'eventCategory';
+const matomoTrackerAction = 'action';
+const matomoTrackerDimensions = <String, String>{};
+const matomoTrackerSearchKeyword = 'searchKeyword';
+const matomoTrackerVisiterId = '1234567890123456'; // 16 characters
 
 // Mocks
 final mockMatomoTracker = MockMatomoTracker();
@@ -59,3 +70,6 @@ final mockMatomoEvent = MockMatomoEvent();
 final mockHttpResponse = MockHttpResponse();
 final mockVisitor = MockVisitor();
 final mockSession = MockSession();
+final mockSharedPreferences = MockSharedPreferences();
+final mockPackageInfo = MockPackageInfo();
+final mockBuildContext = MockBuildContext();
