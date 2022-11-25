@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../mock/data.dart';
+import '../mock/mock.dart';
 
 void matomoTrackerSetup() {
   WidgetsFlutterBinding.ensureInitialized();

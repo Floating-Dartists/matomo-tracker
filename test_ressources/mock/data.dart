@@ -33,7 +33,7 @@ const matomoLink = 'link';
 const matomoOrderId = 'orderId';
 const matomoRevenue = 1.0;
 const matomoScreenId = '123456'; // 6 characters
-const matomoWrongScreenId = '123'; // 6 characters
+const matomoWrongScreenId = '123';
 const matomoSearchCategory = 'searchCategory';
 const matomoSearchCount = 1;
 const matomoSearchKeyword = 'searchKeyword';
@@ -61,15 +61,3 @@ const matomoTrackerAction = 'action';
 const matomoTrackerDimensions = <String, String>{};
 const matomoTrackerSearchKeyword = 'searchKeyword';
 const matomoTrackerVisiterId = '1234567890123456'; // 16 characters
-
-// Mocks
-final mockMatomoTracker = MockMatomoTracker();
-final mockTrackingOrderItem = MockTrackingOrderItem();
-final mockHttpClient = MockHttpClient();
-final mockMatomoEvent = MockMatomoEvent();
-final mockHttpResponse = MockHttpResponse();
-final mockVisitor = MockVisitor();
-final mockSession = MockSession();
-final mockSharedPreferences = MockSharedPreferences();
-final mockPackageInfo = MockPackageInfo();
-final mockBuildContext = MockBuildContext();

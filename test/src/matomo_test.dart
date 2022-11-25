@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../test_ressources/mock/data.dart';
+import '../../test_ressources/mock/mock.dart';
 import '../../test_ressources/utils/get_initialized_mamoto_tracker.dart';
 import '../../test_ressources/utils/matomo_tracker_setup.dart';
 
@@ -43,28 +44,23 @@ void main() {
     final matomoTracker = await getInitializedMatomoTracker();
     await matomoTracker.setOptOut(optout: true);
 
-    verify(() => mockSharedPreferences.setBool(MatomoTracker.kOptOut, true))
-        .called(1);
+    verify(() => mockSharedPreferences.setBool(MatomoTracker.kOptOut, true));
   });
 
   test('it should be able to get optOut', () async {
     final matomoTracker = await getInitializedMatomoTracker();
     matomoTracker.getOptOut();
 
-    verify(() => mockSharedPreferences.getBool(MatomoTracker.kOptOut))
-        .called(1);
+    verify(() => mockSharedPreferences.getBool(MatomoTracker.kOptOut));
   });
 
   test('it should be able to clear localData', () async {
     final matomoTracker = await getInitializedMatomoTracker();
     matomoTracker.clear();
 
-    verify(() => mockSharedPreferences.remove(MatomoTracker.kFirstVisit))
-        .called(1);
-    verify(() => mockSharedPreferences.remove(MatomoTracker.kVisitCount))
-        .called(1);
-    verify(() => mockSharedPreferences.remove(MatomoTracker.kVisitorId))
-        .called(1);
+    verify(() => mockSharedPreferences.remove(MatomoTracker.kFirstVisit));
+    verify(() => mockSharedPreferences.remove(MatomoTracker.kVisitCount));
+    verify(() => mockSharedPreferences.remove(MatomoTracker.kVisitorId));
   });
 
   test('it should be able to dispose', () async {

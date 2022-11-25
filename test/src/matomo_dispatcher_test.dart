@@ -4,6 +4,7 @@ import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../test_ressources/mock/data.dart';
+import '../../test_ressources/mock/mock.dart';
 
 void main() {
   setUpAll(() {
@@ -32,7 +33,7 @@ void main() {
         any(),
         headers: any(named: 'headers'),
       ),
-    ).called(1);
+    );
   });
 
   group('sendBatch', () {
@@ -64,7 +65,7 @@ void main() {
           headers: any(named: 'headers'),
           body: any(named: 'body'),
         ),
-      ).called(1);
+      );
     });
 
     test(

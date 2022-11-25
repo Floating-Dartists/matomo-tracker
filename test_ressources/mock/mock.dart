@@ -36,3 +36,14 @@ class MockWidget extends StatelessWidget {
     return const SizedBox();
   }
 }
+
+final mockMatomoTracker = MockMatomoTracker();
+final mockTrackingOrderItem = MockTrackingOrderItem();
+final mockHttpClient = MockHttpClient();
+final mockMatomoEvent = MockMatomoEvent();
+final mockHttpResponse = MockHttpResponse();
+final mockVisitor = MockVisitor();
+final mockSession = MockSession();
+final mockSharedPreferences = MockSharedPreferences();
+final mockPackageInfo = MockPackageInfo();
+final mockBuildContext = MockBuildContext();
