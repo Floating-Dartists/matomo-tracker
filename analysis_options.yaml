@@ -22,6 +22,7 @@ analyzer:
     unnecessary_null_aware_assignments: warning
     use_string_buffers: warning
     avoid_unnecessary_containers: warning
+    invalid_use_of_visible_for_testing_member: error
 
 linter:
   rules:

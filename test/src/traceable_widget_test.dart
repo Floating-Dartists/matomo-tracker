@@ -1,0 +1,28 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:matomo_tracker/matomo_tracker.dart';
+
+import '../../test_ressources/utils/get_initialized_mamoto_tracker.dart';
+import '../../test_ressources/utils/matomo_tracker_setup.dart';
+
+void main() {
+  late final MatomoTracker matomoTracker;
+
+  setUpAll(() async {
+    matomoTrackerSetup();
+    matomoTracker = await getInitializedMatomoTracker();
+  });
+
+  testWidgets('it should be able to track widget', (tester) async {
+    final queueLength = matomoTracker.queue.length;
+
+    await tester.pumpWidget(
+      const TraceableWidget(traceTitle: 'test', child: SizedBox()),
+    );
+
+    final traceableWidgetFinder = find.byType(TraceableWidget);
+
+    expect(traceableWidgetFinder, findsOneWidget);
+    expect(matomoTracker.queue.length, queueLength + 1);
+  });
+}
