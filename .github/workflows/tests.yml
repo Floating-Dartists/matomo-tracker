@@ -16,3 +16,5 @@ jobs:
         run: flutter packages get
       - name: Analyze project
         run: flutter analyze
+      - name: Run tests
+        run: flutter test --coverage --dart-define=CI=true
