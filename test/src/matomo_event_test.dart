@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../mock/data.dart';
+import '../../test_ressources/mock/data.dart';
 
 void main() {
   MatomoEvent getCompleteMatomoEvent() {
@@ -151,7 +151,7 @@ void main() {
     withClock(Clock.fixed(DateTime(2022)), () {
       final matomotoEvent = getCompleteMatomoEvent();
       final eventMap = matomotoEvent.toMap();
-      final jsonEventFile = File('test/mock/ressources/matomo_event.json');
+      final jsonEventFile = File('test_ressources/files/matomo_event.json');
       final wantedEvent =
           jsonDecode(jsonEventFile.readAsStringSync()) as Map<String, dynamic>;
 

@@ -1,32 +1,15 @@
 import 'package:clock/clock.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/matomo_tracker.dart';
 import 'package:meta/meta.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../mock/data.dart';
+import '../../test_ressources/mock/data.dart';
+import '../../test_ressources/utils/get_initialized_mamoto_tracker.dart';
+import '../../test_ressources/utils/matomo_tracker_setup.dart';
 
 void main() {
-  setUpAll(() {
-    WidgetsFlutterBinding.ensureInitialized();
-    when(() => mockSharedPreferences.getBool(any())).thenReturn(null);
-    when(() => mockSharedPreferences.getString(any())).thenReturn(null);
-    when(() => mockSharedPreferences.getInt(any())).thenReturn(null);
-    when(() => mockSharedPreferences.containsKey(any())).thenReturn(false);
-    when(() => mockSharedPreferences.setInt(any(), any()))
-        .thenAnswer((_) async => true);
-    when(() => mockSharedPreferences.setString(any(), any()))
-        .thenAnswer((_) async => true);
-    when(() => mockSharedPreferences.setBool(any(), any()))
-        .thenAnswer((_) async => true);
-    when(() => mockSharedPreferences.remove(any()))
-        .thenAnswer((_) async => true);
-    when(() => mockPackageInfo.packageName)
-        .thenReturn(matomoTrackerPackageName);
-    when(() => mockPackageInfo.packageName)
-        .thenReturn(matomoTrackerPackageName);
-  });
+  setUpAll(matomoTrackerSetup);
 
   // this test should be the first one to launch, because once the MatomoTracker
   // is initialized, it will not be possible reinitialize it
@@ -168,23 +151,6 @@ void main() {
   testTracking('it should be able to trackOutlink', (tracker) async {
     tracker.trackOutlink(null);
   });
-}
-
-Future<MatomoTracker> getInitializedMatomoTracker({String? visitorId}) async {
-  final matomoTracker = MatomoTracker.instance;
-  if (matomoTracker.initialized) {
-    return matomoTracker;
-  }
-
-  await matomoTracker.initialize(
-    url: matomoTrackerUrl,
-    siteId: matomoTrackerSiteId,
-    prefs: mockSharedPreferences,
-    packageInfo: mockPackageInfo,
-    visitorId: visitorId,
-  );
-
-  return matomoTracker;
 }
 
 @isTest

@@ -3,7 +3,7 @@ import 'package:matomo_tracker/src/logger.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../mock/data.dart';
+import '../../test_ressources/mock/data.dart';
 
 void main() {
   setUpAll(() {

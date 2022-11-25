@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/matomo_tracker.dart';
 
-import '../mock/data.dart';
+import '../../test_ressources/mock/data.dart';
 
 void main() {
   TrackingOrderItem getTrackingOrderItem() {
