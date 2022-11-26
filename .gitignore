@@ -73,3 +73,5 @@ pubspec.lock
 
 android/key.properties
 .flutter-plugins-dependencies
+
+coverage/
