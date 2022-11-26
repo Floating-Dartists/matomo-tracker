@@ -156,6 +156,13 @@ void main() {
       eventMap.remove('rand');
       wantedEvent.remove('rand');
 
+      // ignore: avoid_print
+      print(eventMap);
+      // ignore: avoid_print
+      print('\n');
+      // ignore: avoid_print
+      print(wantedEvent);
+
       expect(mapEquals(wantedEvent, eventMap), true);
     });
   });
