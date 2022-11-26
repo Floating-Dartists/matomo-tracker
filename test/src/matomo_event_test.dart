@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -152,15 +149,11 @@ void main() {
     withClock(Clock.fixed(DateTime(2022)), () {
       final matomotoEvent = getCompleteMatomoEvent();
       final eventMap = matomotoEvent.toMap();
-      final jsonEventFile = File('test_ressources/files/matomo_event.json');
-      final wantedEvent =
-          jsonDecode(jsonEventFile.readAsStringSync()) as Map<String, dynamic>;
 
-      // we remove the rand key, because we can't have the same each times
       eventMap.remove('rand');
-      wantedEvent.remove('rand');
+      wantedEventMap.remove('rand');
 
-      expect(mapEquals(wantedEvent, eventMap), true);
+      expect(mapEquals(wantedEventMap, eventMap), true);
     });
   });
 }
