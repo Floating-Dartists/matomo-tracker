@@ -146,21 +146,17 @@ void main() {
     when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
     when(() => mockSession.firstVisit).thenReturn(sessionFirstVisite);
 
-    withClock(Clock.fixed(DateTime(2022)), () {
+    final fixedDate = DateTime(2022).toUtc();
+
+    withClock(Clock.fixed(fixedDate), () {
       final matomotoEvent = getCompleteMatomoEvent();
       final eventMap = matomotoEvent.toMap();
+      final wantedEvent = getWantedEventMap(fixedDate);
 
       eventMap.remove('rand');
-      wantedEventMap.remove('rand');
+      wantedEvent.remove('rand');
 
-      // ignore: avoid_print
-      print(eventMap);
-      // ignore: avoid_print
-      print('\n');
-      // ignore: avoid_print
-      print(wantedEventMap);
-
-      expect(mapEquals(wantedEventMap, eventMap), true);
+      expect(mapEquals(wantedEvent, eventMap), true);
     });
   });
 }
