@@ -153,8 +153,11 @@ void main() {
       eventMap.remove('rand');
       wantedEventMap.remove('rand');
 
+      // ignore: avoid_print
       print(eventMap);
+      // ignore: avoid_print
       print('\n');
+      // ignore: avoid_print
       print(wantedEventMap);
 
       expect(mapEquals(wantedEventMap, eventMap), true);
