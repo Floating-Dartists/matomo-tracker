@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'mock.dart';
 
 // Session
-final sessionLastVisite = DateTime(2022, 1, 2);
-final sessionFirstVisite = DateTime(2022, 1, 1);
+final sessionLastVisite = DateTime(2022, 1, 2).toUtc();
+final sessionFirstVisite = DateTime(2022, 1, 1).toUtc();
 const sessionVisitCount = 1;
 
 // Visitor
@@ -41,7 +41,7 @@ const matomoShippingCost = 1.0;
 const matomoSubTotal = 1.0;
 const matomoTaxAmount = 1.0;
 final matomoTrackingOrderItems = [mockTrackingOrderItem];
-Map<String, String> getWantedEventMap(DateTime fixedDate) => {
+Map<String, String> getWantedEventMap(DateTime now) => {
       "idsite": "1",
       "rec": "1",
       "action_name": "action",
@@ -49,12 +49,12 @@ Map<String, String> getWantedEventMap(DateTime fixedDate) => {
       "_id": "visitorId",
       "apiv": "1",
       "_idvc": "1",
-      "_viewts": "1641078000",
-      "_idts": "1640991600",
+      "_viewts": '${sessionLastVisite.millisecondsSinceEpoch ~/ 1000}',
+      "_idts": '${sessionFirstVisite.millisecondsSinceEpoch ~/ 1000}',
       "res": "200x200",
-      "h": fixedDate.hour.toString(),
-      "m": fixedDate.minute.toString(),
-      "s": fixedDate.second.toString(),
+      "h": now.hour.toString(),
+      "m": now.minute.toString(),
+      "s": now.second.toString(),
       "cookie": "1",
       "lang": "en_US",
       "uid": "userId",
@@ -76,7 +76,7 @@ Map<String, String> getWantedEventMap(DateTime fixedDate) => {
       "search_cat": "searchCategory",
       "search_count": "1",
       "link": "link",
-      "cdt": fixedDate.toIso8601String(),
+      "cdt": now.toIso8601String(),
       "dimension": "dimension"
     };
 
