@@ -184,6 +184,13 @@ MatomoTracker.instance.trackScreenWithName(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/Pierre-Monier">
+            <img src="https://avatars.githubusercontent.com/u/65488471?v=4" width="100;" alt="Pierre-Monier"/>
+            <br />
+            <sub><b>Pierre Monier</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/krillefear">
             <img src="https://avatars.githubusercontent.com/u/24619905?v=4" width="100;" alt="krillefear"/>
             <br />
@@ -196,15 +203,15 @@ MatomoTracker.instance.trackScreenWithName(
             <br />
             <sub><b>Scolnet</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/KawachenCofinpro">
             <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/stefan01">
             <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
@@ -239,15 +246,15 @@ MatomoTracker.instance.trackScreenWithName(
             <br />
             <sub><b>Lsaudon</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/Bendix20">
             <img src="https://avatars.githubusercontent.com/u/52244034?v=4" width="100;" alt="Bendix20"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/lukaslihotzki">
             <img src="https://avatars.githubusercontent.com/u/10326063?v=4" width="100;" alt="lukaslihotzki"/>
