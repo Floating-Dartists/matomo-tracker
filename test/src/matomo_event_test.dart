@@ -153,6 +153,10 @@ void main() {
       eventMap.remove('rand');
       wantedEventMap.remove('rand');
 
+      print(eventMap);
+      print('\n');
+      print(wantedEventMap);
+
       expect(mapEquals(wantedEventMap, eventMap), true);
     });
   });
