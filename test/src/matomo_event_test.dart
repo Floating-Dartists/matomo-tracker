@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -149,14 +146,13 @@ void main() {
     when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
     when(() => mockSession.firstVisit).thenReturn(sessionFirstVisite);
 
-    withClock(Clock.fixed(DateTime(2022)), () {
+    final fixedDate = DateTime(2022).toUtc();
+
+    withClock(Clock.fixed(fixedDate), () {
       final matomotoEvent = getCompleteMatomoEvent();
       final eventMap = matomotoEvent.toMap();
-      final jsonEventFile = File('test_ressources/files/matomo_event.json');
-      final wantedEvent =
-          jsonDecode(jsonEventFile.readAsStringSync()) as Map<String, dynamic>;
+      final wantedEvent = getWantedEventMap(fixedDate);
 
-      // we remove the rand key, because we can't have the same each times
       eventMap.remove('rand');
       wantedEvent.remove('rand');
 
