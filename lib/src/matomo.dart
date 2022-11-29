@@ -184,22 +184,22 @@ class MatomoTracker {
         final iosInfo = await deviceInfo.iosInfo;
         final systemName = iosInfo.systemName;
         final version = iosInfo.systemVersion;
-        final name = iosInfo.name;
         final model = iosInfo.model;
 
-        return '$systemName $version, $name $model';
+        return '$systemName $version, $model';
       } else if (_platformInfo.isWindows) {
         final windowsInfo = await deviceInfo.windowsInfo;
+        final releaseId = windowsInfo.releaseId;
+        final buildNumber = windowsInfo.buildNumber;
 
-        return 'Windows ${windowsInfo.computerName}';
+        return 'Windows $releaseId.$buildNumber';
       } else if (_platformInfo.isMacOS) {
         final macInfo = await deviceInfo.macOsInfo;
-        final computerName = macInfo.computerName;
         final model = macInfo.model;
         final version = macInfo.kernelVersion;
         final release = macInfo.osRelease;
 
-        return '$computerName, $model, $version, $release';
+        return '$model, $version, $release';
       } else if (_platformInfo.isLinux) {
         final linuxInfo = await deviceInfo.linuxInfo;
 
