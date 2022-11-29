@@ -234,20 +234,27 @@ MatomoTracker.instance.trackScreenWithName(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/luckyrat">
+            <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
+            <br />
+            <sub><b>Chris Tomlinson</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/JohannSchramm">
             <img src="https://avatars.githubusercontent.com/u/43448334?v=4" width="100;" alt="JohannSchramm"/>
             <br />
             <sub><b>Johann Schramm</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/lsaudon">
             <img src="https://avatars.githubusercontent.com/u/25029876?v=4" width="100;" alt="lsaudon"/>
             <br />
             <sub><b>Lsaudon</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/Bendix20">
             <img src="https://avatars.githubusercontent.com/u/52244034?v=4" width="100;" alt="Bendix20"/>
@@ -260,13 +267,6 @@ MatomoTracker.instance.trackScreenWithName(
             <img src="https://avatars.githubusercontent.com/u/10326063?v=4" width="100;" alt="lukaslihotzki"/>
             <br />
             <sub><b>Lukas Lihotzki</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/luckyrat">
-            <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
-            <br />
-            <sub><b>Chris Tomlinson</b></sub>
         </a>
     </td>
     <td align="center">
