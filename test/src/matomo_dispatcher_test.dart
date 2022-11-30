@@ -85,6 +85,37 @@ void main() {
     });
 
     test(
+        'it should add user agent in http request if the first event has an user agent',
+        () async {
+      final events = [mockMatomoEvent, mockMatomoEvent];
+      when(() => events.first.tracker).thenReturn(mockMatomoTracker);
+      when(() => mockMatomoTracker.userAgent)
+          .thenReturn(matomoTrackerUserAgent);
+
+      final matomoDispatcher = MatomoDispatcher(
+        matomoDispatcherBaseUrl,
+        matomoDispatcherToken,
+        httpClient: mockHttpClient,
+      );
+
+      await matomoDispatcher.sendBatch(events);
+
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(
+            named: 'headers',
+            that: containsPair(
+              MatomoDispatcher.userAgentHeaderKeys,
+              matomoTrackerUserAgent,
+            ),
+          ),
+          body: any(named: 'body'),
+        ),
+      );
+    });
+
+    test(
         'it should send nothing in sendBatch if the list of MatomoEvent is empty',
         () async {
       final matomoDispatcher = MatomoDispatcher(

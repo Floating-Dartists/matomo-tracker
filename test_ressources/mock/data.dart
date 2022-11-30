@@ -99,3 +99,4 @@ const matomoTrackerAction = 'action';
 const matomoTrackerDimensions = <String, String>{};
 const matomoTrackerSearchKeyword = 'searchKeyword';
 const matomoTrackerVisiterId = '1234567890123456'; // 16 characters
+const matomoTrackerUserAgent = 'userAgent';
