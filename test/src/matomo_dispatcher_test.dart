@@ -15,25 +15,41 @@ void main() {
     when(() => mockMatomoTracker.log).thenReturn(Logger());
   });
 
-  test('it should be able to send MatomoEvent', () async {
-    when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
-        .thenAnswer((_) async => mockHttpResponse);
-    when(() => mockHttpResponse.statusCode).thenReturn(200);
+  group('send', () {
+    test('it should be able to send MatomoEvent', () async {
+      when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => mockHttpResponse);
+      when(() => mockHttpResponse.statusCode).thenReturn(200);
 
-    final matomoDispatcher = MatomoDispatcher(
-      matomoDispatcherBaseUrl,
-      matomoDispatcherToken,
-      httpClient: mockHttpClient,
-    );
+      final matomoDispatcher = MatomoDispatcher(
+        matomoDispatcherBaseUrl,
+        matomoDispatcherToken,
+        httpClient: mockHttpClient,
+      );
 
-    await matomoDispatcher.send(mockMatomoEvent);
+      await matomoDispatcher.send(mockMatomoEvent);
 
-    verify(
-      () => mockHttpClient.post(
-        any(),
-        headers: any(named: 'headers'),
-      ),
-    );
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+        ),
+      );
+    });
+
+    test('it should not throw if something wrong happen in send', () async {
+      when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => throw Exception());
+      when(() => mockHttpResponse.statusCode).thenReturn(200);
+
+      final matomoDispatcher = MatomoDispatcher(
+        matomoDispatcherBaseUrl,
+        matomoDispatcherToken,
+        httpClient: mockHttpClient,
+      );
+
+      await expectLater(matomoDispatcher.send(mockMatomoEvent), completes);
+    });
   });
 
   group('sendBatch', () {
@@ -87,6 +103,27 @@ void main() {
         ),
       );
     });
+  });
+
+  test('it should not throw exception if something wrong happen in sendBatch',
+      () async {
+    when(
+      () => mockHttpClient.post(
+        any(),
+        headers: any(named: 'headers'),
+        body: any(named: 'body'),
+      ),
+    ).thenAnswer((_) async => throw Exception());
+    final matomoDispatcher = MatomoDispatcher(
+      matomoDispatcherBaseUrl,
+      matomoDispatcherToken,
+      httpClient: mockHttpClient,
+    );
+
+    await expectLater(
+      matomoDispatcher.sendBatch([mockMatomoEvent, mockMatomoEvent]),
+      completes,
+    );
   });
 
   test("it should add the tokenAuth to Uri if it's not null", () {
