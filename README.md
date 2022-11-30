@@ -9,6 +9,7 @@
 [![Pub Version](https://img.shields.io/pub/v/matomo_tracker)](https://pub.dev/packages/matomo_tracker)
 [![Matomo Integrations](https://img.shields.io/badge/featured%20on-Matomo-blue)](https://matomo.org/integrate/)
 [![GitHub license](https://img.shields.io/github/license/Floating-Dartists/matomo-tracker)](https://github.com/Floating-Dartists/matomo-tracker/blob/main/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/Floating-Dartists/matomo-tracker/badge.svg?branch=main)](https://coveralls.io/github/Floating-Dartists/matomo-tracker?branch=main)
 
 Forked from the package [matomo](https://pub.dev/packages/matomo) by [poitch](https://github.com/poitch).
 
@@ -183,6 +184,13 @@ MatomoTracker.instance.trackScreenWithName(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/Pierre-Monier">
+            <img src="https://avatars.githubusercontent.com/u/65488471?v=4" width="100;" alt="Pierre-Monier"/>
+            <br />
+            <sub><b>Pierre Monier</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/krillefear">
             <img src="https://avatars.githubusercontent.com/u/24619905?v=4" width="100;" alt="krillefear"/>
             <br />
@@ -195,15 +203,15 @@ MatomoTracker.instance.trackScreenWithName(
             <br />
             <sub><b>Scolnet</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/KawachenCofinpro">
             <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/stefan01">
             <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
@@ -226,12 +234,20 @@ MatomoTracker.instance.trackScreenWithName(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/luckyrat">
+            <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
+            <br />
+            <sub><b>Chris Tomlinson</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/JohannSchramm">
             <img src="https://avatars.githubusercontent.com/u/43448334?v=4" width="100;" alt="JohannSchramm"/>
             <br />
             <sub><b>Johann Schramm</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/lsaudon">
             <img src="https://avatars.githubusercontent.com/u/25029876?v=4" width="100;" alt="lsaudon"/>
@@ -245,20 +261,12 @@ MatomoTracker.instance.trackScreenWithName(
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/lukaslihotzki">
             <img src="https://avatars.githubusercontent.com/u/10326063?v=4" width="100;" alt="lukaslihotzki"/>
             <br />
             <sub><b>Lukas Lihotzki</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/luckyrat">
-            <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
-            <br />
-            <sub><b>Chris Tomlinson</b></sub>
         </a>
     </td>
     <td align="center">

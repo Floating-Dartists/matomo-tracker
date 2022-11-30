@@ -5,6 +5,7 @@ on:
     branches: [dev]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -16,3 +17,9 @@ jobs:
         run: flutter packages get
       - name: Analyze project
         run: flutter analyze
+      - name: Run tests
+        run: flutter test --coverage --dart-define=CI=true
+      - name: Collect and report coverage
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

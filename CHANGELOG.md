@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0]
+
+* **Breaking Change**: Removed `name` and `widgetName` arguments from `trackEvent` method
+* Contributions from [Chris Tomlinson](https://github.com/luckyrat)
+  * fix: Problem with visitor id [#26](https://github.com/Floating-Dartists/matomo-tracker/issues/26)
+  * fix: PII in the user agent string can cause tracking failure [#39](https://github.com/Floating-Dartists/matomo-tracker/issues/39)
+* Contribution from [Johann Schramm](https://github.com/JohannSchramm)
+  * fix: queue in matomo.dart breaks tracking [#33](https://github.com/Floating-Dartists/matomo-tracker/issues/33)
+* Contribution from [Scolnet](https://github.com/scolnet)
+  * Add pause and resume capabilities
+* Contribution from [Pierre Monier](https://github.com/Pierre-Monier)
+  * Added tests and code coverage
+* Bumped `device_info_plus` to `8.0.0`
+* Bumped `package_info_plus` to `3.0.2`
+* Bumped `uuid` to `3.0.7`
+
 ## [1.7.0]
 
 * Bumped `device_info_plus` to `7.0.1`
