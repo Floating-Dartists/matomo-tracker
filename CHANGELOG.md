@@ -1,7 +1,8 @@
 # Changelog
 
-## [1.8.0]
+## [2.0.0]
 
+* **Breaking Change**: Removed `name` and `widgetName` arguments from `trackEvent` method
 * Contributions from [Chris Tomlinson](https://github.com/luckyrat)
   * fix: Problem with visitor id [#26](https://github.com/Floating-Dartists/matomo-tracker/issues/26)
   * fix: PII in the user agent string can cause tracking failure [#39](https://github.com/Floating-Dartists/matomo-tracker/issues/39)

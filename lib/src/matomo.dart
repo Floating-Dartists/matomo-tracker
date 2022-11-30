@@ -348,9 +348,6 @@ class MatomoTracker {
     required String eventCategory,
     required String action,
     String? eventName,
-    // TODO: Remove when old enough 13.06.2022
-    @Deprecated('Please use [eventName] instead') String? name,
-    @Deprecated('Please use [eventCategory] instead') String? widgetName,
     int? eventValue,
     Map<String, String>? dimensions,
   }) {
@@ -359,8 +356,8 @@ class MatomoTracker {
         tracker: this,
         action: action,
         eventAction: action,
-        eventName: name ?? eventName,
-        eventCategory: widgetName ?? eventCategory,
+        eventName: eventName,
+        eventCategory: eventCategory,
         eventValue: eventValue,
         dimensions: dimensions,
       ),
