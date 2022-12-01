@@ -41,7 +41,7 @@ const matomoShippingCost = 1.0;
 const matomoSubTotal = 1.0;
 const matomoTaxAmount = 1.0;
 final matomoTrackingOrderItems = [mockTrackingOrderItem];
-Map<String, String> getWantedEventMap(DateTime now) => {
+Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "idsite": "1",
       "rec": "1",
       "action_name": "action",
@@ -56,6 +56,7 @@ Map<String, String> getWantedEventMap(DateTime now) => {
       "m": now.minute.toString(),
       "s": now.second.toString(),
       "cookie": "1",
+      if (userAgent != null) "ua": userAgent,
       "lang": "en_US",
       "uid": "userId",
       "cid": "1234567890123456",

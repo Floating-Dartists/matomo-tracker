@@ -130,33 +130,58 @@ void main() {
     },
   );
 
-  test('it should be able to compute a map representation', () {
-    when(() => mockMatomoTracker.visitor).thenReturn(mockVisitor);
-    when(() => mockMatomoTracker.session).thenReturn(mockSession);
-    when(() => mockMatomoTracker.screenResolution)
-        .thenReturn(matomoTrackerScreenResolution);
-    when(() => mockMatomoTracker.contentBase)
-        .thenReturn(matomoTrackerContentBase);
-    when(() => mockMatomoTracker.siteId).thenReturn(matomoTrackerSiteId);
-    when(() => mockVisitor.id).thenReturn(visitorId);
-    when(() => mockVisitor.forcedId).thenReturn(forceId);
-    when(() => mockVisitor.userId).thenReturn(userId);
-    when(mockTrackingOrderItem.toArray).thenReturn([]);
-    when(() => mockSession.visitCount).thenReturn(sessionVisitCount);
-    when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
-    when(() => mockSession.firstVisit).thenReturn(sessionFirstVisite);
+  group('toMap', () {
+    setUpAll(() {
+      when(() => mockMatomoTracker.visitor).thenReturn(mockVisitor);
+      when(() => mockMatomoTracker.session).thenReturn(mockSession);
+      when(() => mockMatomoTracker.screenResolution)
+          .thenReturn(matomoTrackerScreenResolution);
+      when(() => mockMatomoTracker.contentBase)
+          .thenReturn(matomoTrackerContentBase);
+      when(() => mockMatomoTracker.siteId).thenReturn(matomoTrackerSiteId);
+      when(() => mockVisitor.id).thenReturn(visitorId);
+      when(() => mockVisitor.forcedId).thenReturn(forceId);
+      when(() => mockVisitor.userId).thenReturn(userId);
+      when(mockTrackingOrderItem.toArray).thenReturn([]);
+      when(() => mockSession.visitCount).thenReturn(sessionVisitCount);
+      when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
+      when(() => mockSession.firstVisit).thenReturn(sessionFirstVisite);
+    });
 
-    final fixedDate = DateTime(2022).toUtc();
+    test('it should be able to compute a map representation', () {
+      final fixedDate = DateTime(2022).toUtc();
 
-    withClock(Clock.fixed(fixedDate), () {
-      final matomotoEvent = getCompleteMatomoEvent();
-      final eventMap = matomotoEvent.toMap();
-      final wantedEvent = getWantedEventMap(fixedDate);
+      withClock(Clock.fixed(fixedDate), () {
+        final matomotoEvent = getCompleteMatomoEvent();
+        final eventMap = matomotoEvent.toMap();
+        final wantedEvent = getWantedEventMap(fixedDate);
 
-      eventMap.remove('rand');
-      wantedEvent.remove('rand');
+        eventMap.remove('rand');
+        wantedEvent.remove('rand');
 
-      expect(mapEquals(wantedEvent, eventMap), true);
+        expect(mapEquals(wantedEvent, eventMap), true);
+      });
+    });
+
+    test(
+        'it should be able to compute a map representation with User Agent data if tracker have it',
+        () {
+      when(() => mockMatomoTracker.userAgent)
+          .thenReturn(matomoTrackerUserAgent);
+
+      final fixedDate = DateTime(2022).toUtc();
+
+      withClock(Clock.fixed(fixedDate), () {
+        final matomotoEvent = getCompleteMatomoEvent();
+        final eventMap = matomotoEvent.toMap();
+        final wantedEvent =
+            getWantedEventMap(fixedDate, userAgent: matomoTrackerUserAgent);
+
+        eventMap.remove('rand');
+        wantedEvent.remove('rand');
+
+        expect(mapEquals(wantedEvent, eventMap), true);
+      });
     });
   });
 }
