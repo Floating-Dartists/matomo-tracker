@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../test_ressources/mock/data.dart';
-import '../../test_ressources/mock/mock.dart';
+import '../ressources/mock/data.dart';
+import '../ressources/mock/mock.dart';
 
 void main() {
   MatomoEvent getCompleteMatomoEvent() {

@@ -27,13 +27,17 @@ class MatomoTracker {
   static const kOptOut = 'matomo_opt_out';
 
   final log = Logger('Matomo');
-  final _platformInfo = PlatformInfo.instance;
+  late final PlatformInfo _platformInfo;
 
   late MatomoDispatcher _dispatcher;
 
   static final instance = MatomoTracker._internal();
 
   MatomoTracker._internal();
+
+  /// This is only used for testing purpose, because testing singleton is hard
+  @visibleForTesting
+  MatomoTracker();
 
   late final int siteId;
   late final String url;
@@ -88,6 +92,7 @@ class MatomoTracker {
     String? tokenAuth,
     SharedPreferences? prefs,
     PackageInfo? packageInfo,
+    PlatformInfo? platformInfo,
   }) async {
     assert(
       visitorId == null || visitorId.length == 16,
@@ -98,6 +103,7 @@ class MatomoTracker {
     _dequeueInterval = dequeueInterval;
     _lock = sync.Lock();
     _prefs = prefs ?? await SharedPreferences.getInstance();
+    _platformInfo = platformInfo ?? PlatformInfo.instance;
 
     final aVisitorId = visitorId ??
         _prefs?.getString(kVisitorId) ??
@@ -108,7 +114,7 @@ class MatomoTracker {
     _dispatcher = MatomoDispatcher(url, tokenAuth);
 
     // User agent
-    userAgent = await _getUserAgent();
+    userAgent = await getUserAgent();
 
     // Screen Resolution
     screenResolution =
@@ -165,15 +171,18 @@ class MatomoTracker {
     });
   }
 
-  Future<String?> _getUserAgent() async {
+  @visibleForTesting
+  Future<String?> getUserAgent({
+    DeviceInfoPlugin? deviceInfoPlugin,
+  }) async {
     try {
-      final deviceInfo = DeviceInfoPlugin();
+      final effectiveDeviceInfo = deviceInfoPlugin ?? DeviceInfoPlugin();
       if (_platformInfo.isWeb) {
-        final webBrowserInfo = await deviceInfo.webBrowserInfo;
+        final webBrowserInfo = await effectiveDeviceInfo.webBrowserInfo;
 
         return webBrowserInfo.userAgent;
       } else if (_platformInfo.isAndroid) {
-        final androidInfo = await deviceInfo.androidInfo;
+        final androidInfo = await effectiveDeviceInfo.androidInfo;
         final release = androidInfo.version.release;
         final sdkInt = androidInfo.version.sdkInt;
         final manufacturer = androidInfo.manufacturer;
@@ -181,27 +190,27 @@ class MatomoTracker {
 
         return 'Android $release (SDK $sdkInt), $manufacturer $model';
       } else if (_platformInfo.isIOS) {
-        final iosInfo = await deviceInfo.iosInfo;
+        final iosInfo = await effectiveDeviceInfo.iosInfo;
         final systemName = iosInfo.systemName;
         final version = iosInfo.systemVersion;
         final model = iosInfo.model;
 
         return '$systemName $version, $model';
       } else if (_platformInfo.isWindows) {
-        final windowsInfo = await deviceInfo.windowsInfo;
+        final windowsInfo = await effectiveDeviceInfo.windowsInfo;
         final releaseId = windowsInfo.releaseId;
         final buildNumber = windowsInfo.buildNumber;
 
         return 'Windows $releaseId.$buildNumber';
       } else if (_platformInfo.isMacOS) {
-        final macInfo = await deviceInfo.macOsInfo;
+        final macInfo = await effectiveDeviceInfo.macOsInfo;
         final model = macInfo.model;
         final version = macInfo.kernelVersion;
         final release = macInfo.osRelease;
 
         return '$model, $version, $release';
       } else if (_platformInfo.isLinux) {
-        final linuxInfo = await deviceInfo.linuxInfo;
+        final linuxInfo = await effectiveDeviceInfo.linuxInfo;
 
         return linuxInfo.prettyName;
       } else {
