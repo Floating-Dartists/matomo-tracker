@@ -12,6 +12,7 @@ class MatomoDispatcher {
   final Uri baseUri;
 
   static const tokenAuthUriKey = 'token_auth';
+  static const userAgentHeaderKeys = 'User-Agent';
 
   MatomoDispatcher(
     String baseUrl,
@@ -43,7 +44,7 @@ class MatomoDispatcher {
 
     final userAgent = events.first.tracker.userAgent;
     final headers = <String, String>{
-      if (!kIsWeb && userAgent != null) 'User-Agent': userAgent,
+      if (!kIsWeb && userAgent != null) userAgentHeaderKeys: userAgent,
     };
 
     final batch = {
