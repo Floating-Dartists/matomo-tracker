@@ -170,6 +170,13 @@ MatomoTracker.instance.trackScreenWithName(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/Pierre-Monier">
+            <img src="https://avatars.githubusercontent.com/u/65488471?v=4" width="100;" alt="Pierre-Monier"/>
+            <br />
+            <sub><b>Pierre Monier</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/poitch">
             <img src="https://avatars.githubusercontent.com/u/80989?v=4" width="100;" alt="poitch"/>
             <br />
@@ -181,13 +188,6 @@ MatomoTracker.instance.trackScreenWithName(
             <img src="https://avatars.githubusercontent.com/u/39344769?v=4" width="100;" alt="M123-dev"/>
             <br />
             <sub><b>Marvin Möltgen</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/Pierre-Monier">
-            <img src="https://avatars.githubusercontent.com/u/65488471?v=4" width="100;" alt="Pierre-Monier"/>
-            <br />
-            <sub><b>Pierre Monier</b></sub>
         </a>
     </td>
     <td align="center">
