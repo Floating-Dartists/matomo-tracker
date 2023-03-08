@@ -41,7 +41,7 @@ const matomoShippingCost = 1.0;
 const matomoSubTotal = 1.0;
 const matomoTaxAmount = 1.0;
 final matomoTrackingOrderItems = [mockTrackingOrderItem];
-Map<String, String> getWantedEventMap(DateTime now) => {
+Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "idsite": "1",
       "rec": "1",
       "action_name": "action",
@@ -56,6 +56,7 @@ Map<String, String> getWantedEventMap(DateTime now) => {
       "m": now.minute.toString(),
       "s": now.second.toString(),
       "cookie": "1",
+      if (userAgent != null) "ua": userAgent,
       "lang": "en_US",
       "uid": "userId",
       "cid": "1234567890123456",
@@ -89,6 +90,7 @@ const matomoTrackerContentBase = 'contentBase';
 const matomoTrackerSiteId = 1;
 const matomoTrackerScreenResolution = Size(200, 200);
 const matomoTrackerUrl = 'https://example.com';
+const matomoTrackerContentBaseUrl = 'https://example.com';
 const matomoTrackerPackageName = 'packageName';
 const matomoTrackerWrongVisitorId = '1234'; // not 16 characters
 const matomoTrackerEvenName = 'eventName';
@@ -99,3 +101,23 @@ const matomoTrackerAction = 'action';
 const matomoTrackerDimensions = <String, String>{};
 const matomoTrackerSearchKeyword = 'searchKeyword';
 const matomoTrackerVisiterId = '1234567890123456'; // 16 characters
+const matomoTrackerUserAgent = 'userAgent';
+const matomoTrackerTokenAuth = 'tokenAuth';
+const matomoTrackerLocalFirstVisist = 1640979000000;
+const matomoTrackerCurrentScreenId = '123456'; // 6 characters
+
+// DeviceInfoPlugin
+const webBrowserUserAgent = 'webBrowserUserAgent';
+const androidRelease = 'androidRelease';
+const androidSdkInt = 1;
+const androidManufacturer = 'androidManufacturer';
+const androidModel = 'androidModel';
+const iosSystemName = 'iosSystemName';
+const iosSystemVersion = 'iosSystemVersion';
+const iosModel = 'iosModel';
+const windowsReleaseId = 'windowsReleaseId';
+const windowsBuildNumber = 1;
+const macOsModel = 'macOsModel';
+const macOsKernelVersion = 'macOsKernelVersion';
+const macOsRelease = 'macOsRelease';
+const linuxPrettyName = 'linuxPrettyName';

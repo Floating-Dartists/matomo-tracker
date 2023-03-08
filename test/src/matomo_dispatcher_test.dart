@@ -3,8 +3,8 @@ import 'package:matomo_tracker/src/logger.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../test_ressources/mock/data.dart';
-import '../../test_ressources/mock/mock.dart';
+import '../ressources/mock/data.dart';
+import '../ressources/mock/mock.dart';
 
 void main() {
   setUpAll(() {
@@ -15,25 +15,41 @@ void main() {
     when(() => mockMatomoTracker.log).thenReturn(Logger());
   });
 
-  test('it should be able to send MatomoEvent', () async {
-    when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
-        .thenAnswer((_) async => mockHttpResponse);
-    when(() => mockHttpResponse.statusCode).thenReturn(200);
+  group('send', () {
+    test('it should be able to send MatomoEvent', () async {
+      when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => mockHttpResponse);
+      when(() => mockHttpResponse.statusCode).thenReturn(200);
 
-    final matomoDispatcher = MatomoDispatcher(
-      matomoDispatcherBaseUrl,
-      matomoDispatcherToken,
-      httpClient: mockHttpClient,
-    );
+      final matomoDispatcher = MatomoDispatcher(
+        matomoDispatcherBaseUrl,
+        matomoDispatcherToken,
+        httpClient: mockHttpClient,
+      );
 
-    await matomoDispatcher.send(mockMatomoEvent);
+      await matomoDispatcher.send(mockMatomoEvent);
 
-    verify(
-      () => mockHttpClient.post(
-        any(),
-        headers: any(named: 'headers'),
-      ),
-    );
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+        ),
+      );
+    });
+
+    test('it should not throw if something wrong happen in send', () async {
+      when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => throw Exception());
+      when(() => mockHttpResponse.statusCode).thenReturn(200);
+
+      final matomoDispatcher = MatomoDispatcher(
+        matomoDispatcherBaseUrl,
+        matomoDispatcherToken,
+        httpClient: mockHttpClient,
+      );
+
+      await expectLater(matomoDispatcher.send(mockMatomoEvent), completes);
+    });
   });
 
   group('sendBatch', () {
@@ -69,6 +85,37 @@ void main() {
     });
 
     test(
+        'it should add user agent in http request if the first event has an user agent',
+        () async {
+      final events = [mockMatomoEvent, mockMatomoEvent];
+      when(() => events.first.tracker).thenReturn(mockMatomoTracker);
+      when(() => mockMatomoTracker.userAgent)
+          .thenReturn(matomoTrackerUserAgent);
+
+      final matomoDispatcher = MatomoDispatcher(
+        matomoDispatcherBaseUrl,
+        matomoDispatcherToken,
+        httpClient: mockHttpClient,
+      );
+
+      await matomoDispatcher.sendBatch(events);
+
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(
+            named: 'headers',
+            that: containsPair(
+              MatomoDispatcher.userAgentHeaderKeys,
+              matomoTrackerUserAgent,
+            ),
+          ),
+          body: any(named: 'body'),
+        ),
+      );
+    });
+
+    test(
         'it should send nothing in sendBatch if the list of MatomoEvent is empty',
         () async {
       final matomoDispatcher = MatomoDispatcher(
@@ -87,6 +134,27 @@ void main() {
         ),
       );
     });
+  });
+
+  test('it should not throw exception if something wrong happen in sendBatch',
+      () async {
+    when(
+      () => mockHttpClient.post(
+        any(),
+        headers: any(named: 'headers'),
+        body: any(named: 'body'),
+      ),
+    ).thenAnswer((_) async => throw Exception());
+    final matomoDispatcher = MatomoDispatcher(
+      matomoDispatcherBaseUrl,
+      matomoDispatcherToken,
+      httpClient: mockHttpClient,
+    );
+
+    await expectLater(
+      matomoDispatcher.sendBatch([mockMatomoEvent, mockMatomoEvent]),
+      completes,
+    );
   });
 
   test("it should add the tokenAuth to Uri if it's not null", () {
