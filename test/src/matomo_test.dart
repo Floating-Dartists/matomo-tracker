@@ -142,7 +142,7 @@ void main() {
 
     matomoTracker.trackDimensions(matomoTrackerDimensions);
     expect(matomoTracker.queue.length, queueLength + 1);
-    matomoTracker.dispatchEvents();
+    await matomoTracker.dispatchEvents();
     expect(matomoTracker.queue.length, 0);
   });
 
