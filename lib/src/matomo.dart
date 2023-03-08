@@ -80,7 +80,7 @@ class MatomoTracker {
 
   String? get getAuthToken => _tokenAuth;
 
-  late int _dequeueInterval;
+  int _dequeueInterval = 10;
 
   Future<void> initialize({
     required int siteId,
@@ -469,9 +469,12 @@ class MatomoTracker {
     if (!_lock.locked) {
       _lock.synchronized(() {
         final events = List<MatomoEvent>.from(queue);
-        queue.clear();
         if (!_optout) {
-          _dispatcher.sendBatch(events);
+          _dispatcher.sendBatch(events).then((isSuccessful) {
+            if (isSuccessful) {
+              queue.clear();
+            }
+          });
         }
       });
     }
