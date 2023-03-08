@@ -1,4 +1,10 @@
 class Session {
+  Session({
+    required this.firstVisit,
+    required this.lastVisit,
+    required this.visitCount,
+  });
+
   /// Date of the visitor's first visit.
   final DateTime firstVisit;
 
@@ -7,10 +13,4 @@ class Session {
 
   /// The current count of visits for this visitor.
   final int visitCount;
-
-  Session({
-    required this.firstVisit,
-    required this.lastVisit,
-    required this.visitCount,
-  });
 }

@@ -3,11 +3,52 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:clock/clock.dart';
-
-import 'matomo.dart';
-import 'tracking_order_item.dart';
+import 'package:matomo_tracker/src/matomo.dart';
+import 'package:matomo_tracker/src/tracking_order_item.dart';
 
 class MatomoEvent {
+  MatomoEvent({
+    required this.tracker,
+    this.path,
+    this.action,
+    this.eventCategory,
+    this.eventAction,
+    this.eventName,
+    this.eventValue,
+    String? screenId,
+    this.goalId,
+    this.orderId,
+    this.trackingOrderItems,
+    this.revenue,
+    this.subTotal,
+    this.taxAmount,
+    this.shippingCost,
+    this.discountAmount,
+    this.searchKeyword,
+    this.searchCategory,
+    this.searchCount,
+    this.link,
+    this.dimensions,
+  })  :
+        // we use clock.now instead of DateTime.now to make testing easier
+        _date = clock.now().toUtc(),
+        screenId = screenId ?? tracker.currentScreenId,
+        assert(
+          screenId == null || screenId.length == 6,
+          'screenId has to be six characters long',
+        ),
+        assert(
+          eventCategory == null || eventCategory.isNotEmpty,
+          'eventCategory must not be empty',
+        ),
+        assert(
+          eventAction == null || eventAction.isNotEmpty,
+          'eventAction must not be empty',
+        ),
+        assert(
+          eventName == null || eventName.isNotEmpty,
+          'eventName must not be empty',
+        );
   final MatomoTracker tracker;
   final String? path;
 
@@ -61,49 +102,6 @@ class MatomoEvent {
 
   // The dimensions associated with the event
   final Map<String, String>? dimensions;
-
-  MatomoEvent({
-    required this.tracker,
-    this.path,
-    this.action,
-    this.eventCategory,
-    this.eventAction,
-    this.eventName,
-    this.eventValue,
-    String? screenId,
-    this.goalId,
-    this.orderId,
-    this.trackingOrderItems,
-    this.revenue,
-    this.subTotal,
-    this.taxAmount,
-    this.shippingCost,
-    this.discountAmount,
-    this.searchKeyword,
-    this.searchCategory,
-    this.searchCount,
-    this.link,
-    this.dimensions,
-  })  :
-        // we use clock.now instead of DateTime.now to make testing easier
-        _date = clock.now().toUtc(),
-        screenId = screenId ?? tracker.currentScreenId,
-        assert(
-          screenId == null || screenId.length == 6,
-          'screenId has to be six characters long',
-        ),
-        assert(
-          eventCategory == null || eventCategory.isNotEmpty,
-          'eventCategory must not be empty',
-        ),
-        assert(
-          eventAction == null || eventAction.isNotEmpty,
-          'eventAction must not be empty',
-        ),
-        assert(
-          eventName == null || eventName.isNotEmpty,
-          'eventName must not be empty',
-        );
 
   Map<String, String> toMap() {
     final id = tracker.visitor.id;

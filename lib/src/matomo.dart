@@ -6,21 +6,26 @@ import 'package:clock/clock.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:matomo_tracker/src/logger.dart';
+import 'package:matomo_tracker/src/matomo_dispatcher.dart';
+import 'package:matomo_tracker/src/matomo_event.dart';
+import 'package:matomo_tracker/src/platform_info/platform_info.dart';
+import 'package:matomo_tracker/src/session.dart';
+import 'package:matomo_tracker/src/tracking_order_item.dart';
+import 'package:matomo_tracker/src/visitor.dart';
+import 'package:matomo_tracker/utils/lock.dart' as sync;
+import 'package:matomo_tracker/utils/random_alpha_numeric.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
-import '../utils/lock.dart' as sync;
-import '../utils/random_alpha_numeric.dart';
-import 'logger.dart';
-import 'matomo_dispatcher.dart';
-import 'matomo_event.dart';
-import 'platform_info/platform_info.dart';
-import 'session.dart';
-import 'tracking_order_item.dart';
-import 'visitor.dart';
-
 class MatomoTracker {
+  /// This is only used for testing purpose, because testing singleton is hard
+  @visibleForTesting
+  MatomoTracker();
+
+  MatomoTracker._internal();
+
   static const kFirstVisit = 'matomo_first_visit';
   static const kVisitCount = 'matomo_visit_count';
   static const kVisitorId = 'matomo_visitor_id';
@@ -32,12 +37,6 @@ class MatomoTracker {
   late MatomoDispatcher _dispatcher;
 
   static final instance = MatomoTracker._internal();
-
-  MatomoTracker._internal();
-
-  /// This is only used for testing purpose, because testing singleton is hard
-  @visibleForTesting
-  MatomoTracker();
 
   late final int siteId;
   late final String url;

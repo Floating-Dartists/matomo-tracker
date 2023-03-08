@@ -120,8 +120,9 @@ void main() {
 
     test('it should be able to resume', () async {
       final matomoTracker = await getInitializedMatomoTracker();
-      matomoTracker.pause();
-      matomoTracker.resume();
+      matomoTracker
+        ..pause()
+        ..resume();
       expect(matomoTracker.timer.isActive, true);
     });
 

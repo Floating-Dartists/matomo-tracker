@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../matomo_tracker.dart';
+import 'package:matomo_tracker/matomo_tracker.dart';
 
 /// Register a `trackScreenWithName` on this widget.
 @optionalTypeArgs

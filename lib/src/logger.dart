@@ -22,7 +22,7 @@ enum Level {
   finest(300),
   fine(500);
 
-  final int value;
-
   const Level(this.value);
+
+  final int value;
 }

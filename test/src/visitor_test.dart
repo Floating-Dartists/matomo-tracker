@@ -33,7 +33,6 @@ void main() {
       return Visitor(
         id: visitorId,
         forcedId: wrongForceId,
-        userId: null,
       );
     }
 

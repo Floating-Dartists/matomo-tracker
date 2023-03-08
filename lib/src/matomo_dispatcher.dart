@@ -2,10 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-
-import 'matomo_event.dart';
+import 'package:matomo_tracker/src/matomo_event.dart';
 
 class MatomoDispatcher {
+  MatomoDispatcher(
+    String baseUrl,
+    this.tokenAuth, {
+    http.Client? httpClient,
+  })  : baseUri = Uri.parse(baseUrl),
+        httpClient = httpClient ?? http.Client();
   final String? tokenAuth;
   final http.Client httpClient;
 
@@ -14,26 +19,19 @@ class MatomoDispatcher {
   static const tokenAuthUriKey = 'token_auth';
   static const userAgentHeaderKeys = 'User-Agent';
 
-  MatomoDispatcher(
-    String baseUrl,
-    this.tokenAuth, {
-    http.Client? httpClient,
-  })  : baseUri = Uri.parse(baseUrl),
-        httpClient = httpClient ?? http.Client();
-
   Future<void> send(MatomoEvent event) async {
     final headers = <String, String>{
       if (!kIsWeb) 'User-Agent': 'Dart Matomo Tracker',
     };
 
     final uri = buildUriForEvent(event);
-    event.tracker.log.fine(' -> ${uri.toString()}');
+    event.tracker.log.fine(' -> $uri');
     try {
       final response = await httpClient.post(uri, headers: headers);
       final statusCode = response.statusCode;
       event.tracker.log.fine(' <- $statusCode');
     } catch (e) {
-      event.tracker.log.fine(' <- ${e.toString()}');
+      event.tracker.log.fine(' <- $e');
     }
   }
 
@@ -52,7 +50,7 @@ class MatomoDispatcher {
         for (final event in events) "?${buildUriForEvent(event).query}",
       ],
     };
-    events.first.tracker.log.fine(' -> ${batch.toString()}');
+    events.first.tracker.log.fine(' -> $batch');
     try {
       final response = await httpClient.post(
         baseUri,
@@ -62,7 +60,7 @@ class MatomoDispatcher {
       final statusCode = response.statusCode;
       events.first.tracker.log.fine(' <- $statusCode');
     } catch (e) {
-      events.first.tracker.log.fine(' <- ${e.toString()}');
+      events.first.tracker.log.fine(' <- $e');
     }
   }
 

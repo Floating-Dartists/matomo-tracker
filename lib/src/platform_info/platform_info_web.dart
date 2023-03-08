@@ -1,4 +1,4 @@
-import 'platform_info_interface.dart';
+import 'package:matomo_tracker/src/platform_info/platform_info_interface.dart';
 
 class PlatformInfoImpl implements PlatformInfoInterface {
   @override
