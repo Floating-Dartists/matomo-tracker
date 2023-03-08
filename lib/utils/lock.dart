@@ -13,7 +13,7 @@ class Lock {
     FutureOr<T> Function() func,
   ) async {
     final prev = last;
-    final completer = Completer<T>.sync();
+    final completer = Completer<void>.sync();
     last = completer.future;
     try {
       if (prev != null) {
