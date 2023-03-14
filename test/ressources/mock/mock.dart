@@ -49,7 +49,7 @@ class MockBuildContext extends Mock implements BuildContext {}
 
 // used to mock widgets
 class MockWidget extends StatelessWidget {
-  const MockWidget({Key? key}) : super(key: key);
+  const MockWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

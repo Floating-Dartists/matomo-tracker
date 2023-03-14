@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../matomo_tracker.dart';
+import 'package:matomo_tracker/matomo_tracker.dart';
 
 /// Wrapper around [TraceableClientMixin] to easily track a [child] widget.
 class TraceableWidget extends StatefulWidget {
+  const TraceableWidget({
+    super.key,
+    required this.child,
+    required this.traceTitle,
+    this.traceName,
+    this.widgetId,
+    this.path,
+    this.tracker,
+  });
+
   /// {@macro traceableClientMixin.traceName}
   final String? traceName;
 
@@ -20,16 +30,6 @@ class TraceableWidget extends StatefulWidget {
   final MatomoTracker? tracker;
 
   final Widget child;
-
-  const TraceableWidget({
-    required this.child,
-    required this.traceTitle,
-    Key? key,
-    this.traceName,
-    this.widgetId,
-    this.path,
-    this.tracker,
-  }) : super(key: key);
 
   @override
   State<TraceableWidget> createState() => _TraceableWidgetState();

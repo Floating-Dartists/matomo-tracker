@@ -4,7 +4,7 @@ import 'mock.dart';
 
 // Session
 final sessionLastVisite = DateTime(2022, 1, 2).toUtc();
-final sessionFirstVisite = DateTime(2022, 1, 1).toUtc();
+final sessionFirstVisite = DateTime(2022).toUtc();
 const sessionVisitCount = 1;
 
 // Visitor

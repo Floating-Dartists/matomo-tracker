@@ -1,5 +1,6 @@
 library matomo_tracker;
 
+export 'src/exceptions.dart';
 export 'src/matomo.dart';
 export 'src/traceable_widget.dart';
 export 'src/traceable_widget_mixin.dart';

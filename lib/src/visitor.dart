@@ -1,4 +1,14 @@
 class Visitor {
+  Visitor({
+    this.id,
+    this.forcedId,
+    this.userId,
+  })  : assert(userId == null || userId.isNotEmpty, 'userId must not be empty'),
+        assert(
+          forcedId == null || forcedId.length == 16,
+          'forcedId must be 16 characters',
+        );
+
   /// The unique visitor ID, must be a 16 characters hexadecimal string.
   ///
   /// Every unique visitor must be assigned a different ID and this ID must not
@@ -18,11 +28,4 @@ class Visitor {
   /// User ID is any non-empty unique string identifying the user (such as an
   /// email address or an username).
   final String? userId;
-
-  Visitor({this.id, this.forcedId, this.userId})
-      : assert(userId == null || userId.isNotEmpty, 'userId must not be empty'),
-        assert(
-          forcedId == null || forcedId.length == 16,
-          'forcedId must be 16 characters',
-        );
 }

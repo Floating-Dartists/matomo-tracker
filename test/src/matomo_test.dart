@@ -120,8 +120,9 @@ void main() {
 
     test('it should be able to resume', () async {
       final matomoTracker = await getInitializedMatomoTracker();
-      matomoTracker.pause();
-      matomoTracker.resume();
+      matomoTracker
+        ..pause()
+        ..resume();
       expect(matomoTracker.timer.isActive, true);
     });
 
@@ -141,7 +142,7 @@ void main() {
 
     matomoTracker.trackDimensions(matomoTrackerDimensions);
     expect(matomoTracker.queue.length, queueLength + 1);
-    matomoTracker.dispatchEvents();
+    await matomoTracker.dispatchEvents();
     expect(matomoTracker.queue.length, 0);
   });
 
