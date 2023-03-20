@@ -1,13 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsStorage implements LocalStorage {
-  SharedPreferences? _prefs;
-
   static const kFirstVisit = 'matomo_first_visit';
   static const kVisitCount = 'matomo_visit_count';
   static const kVisitorId = 'matomo_visitor_id';
   static const kOptOut = 'matomo_opt_out';
+
+  SharedPreferences? _prefs;
+
+  @visibleForTesting
+  set prefs(SharedPreferences prefs) => _prefs = prefs;
 
   Future<SharedPreferences> _getSharedPrefs() async {
     _prefs ??= await SharedPreferences.getInstance();
