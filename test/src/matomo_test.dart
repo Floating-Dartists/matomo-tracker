@@ -8,21 +8,24 @@ import '../ressources/utils/matomo_tracker_initialization.dart';
 import '../ressources/utils/matomo_tracker_setup.dart';
 import '../ressources/utils/matomo_tracker_tracking.dart';
 import '../ressources/utils/mock_platform_info.dart';
+import '../ressources/utils/uninitialized_test_util.dart';
 
 void main() {
   setUp(matomoTrackerSetup);
 
   // this test should be the first one to launch, because once the MatomoTracker
   // is initialized, it will not be possible reinitialize it
-  test('it should throw AssertionError if we initialize with wrong visitorId',
-      () async {
-    await expectLater(
-      () => getInitializedMatomoTracker(
-        visitorId: matomoTrackerWrongVisitorId,
-      ),
-      throwsAssertionError,
-    );
-  });
+  test(
+    'it should throw ArgumentError if we initialize with wrong visitorId',
+    () async {
+      await expectLater(
+        () => getInitializedMatomoTracker(
+          visitorId: matomoTrackerWrongVisitorId,
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    },
+  );
 
   group(
     'initialize',
@@ -169,10 +172,34 @@ void main() {
       },
     );
 
-    testTracking('it should be able to trackScreenWithName', (tracker) async {
-      tracker.trackScreenWithName(
-        widgetName: matomoTrackerMockWidget.toStringShort(),
-        eventName: matomoTrackerEvenName,
+    group('trackScreenWithName', () {
+      uninitializedTest(
+        (tracker) => tracker.trackScreenWithName(
+          widgetName: matomoTrackerMockWidget.toStringShort(),
+          eventName: matomoTrackerEvenName,
+        ),
+      );
+
+      testTracking('it should be able to trackScreenWithName', (tracker) async {
+        tracker.trackScreenWithName(
+          widgetName: matomoTrackerMockWidget.toStringShort(),
+          eventName: matomoTrackerEvenName,
+        );
+      });
+
+      test(
+        'should throw ArgumentError if currentScreenId lenght != 6 ',
+        () async {
+          final matomoTracker = await getInitializedMatomoTracker();
+          await expectLater(
+            () => matomoTracker.trackScreenWithName(
+              widgetName: matomoTrackerMockWidget.toStringShort(),
+              eventName: matomoTrackerEvenName,
+              currentScreenId: '',
+            ),
+            throwsA(isA<ArgumentError>()),
+          );
+        },
       );
     });
 
@@ -214,11 +241,15 @@ void main() {
     });
   });
 
-  test('it should be able to set visitor userId', () async {
-    final matomoTracker = await getInitializedMatomoTracker();
-    matomoTracker.setVisitorUserId(userId);
+  group('setVisitorUserId', () {
+    uninitializedTest((tracker) => tracker.setVisitorUserId(userId));
 
-    expect(matomoTracker.visitor.userId, userId);
+    test('it should be able to set visitor userId', () async {
+      final matomoTracker = await getInitializedMatomoTracker();
+      matomoTracker.setVisitorUserId(userId);
+
+      expect(matomoTracker.visitor.userId, userId);
+    });
   });
 
   group('userAgent', () {

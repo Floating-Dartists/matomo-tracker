@@ -43,6 +43,8 @@ class MatomoTracker {
   late Visitor _visitor;
 
   void setVisitorUserId(String? userId) {
+    _initializationCheck();
+
     _visitor = Visitor(
       id: _visitor.id,
       forcedId: _visitor.forcedId,
@@ -96,10 +98,14 @@ class MatomoTracker {
     PlatformInfo? platformInfo,
     bool cookieLess = false,
   }) async {
-    assert(
-      visitorId == null || visitorId.length == 16,
-      'visitorId must be 16 characters',
-    );
+    if (visitorId != null && visitorId.length != 16) {
+      throw ArgumentError.value(
+        visitorId,
+        'visitorId',
+        'The visitorId must be 16 characters long',
+      );
+    }
+
     this.siteId = siteId;
     this.url = url;
     _dequeueInterval = dequeueInterval;
@@ -226,14 +232,12 @@ class MatomoTracker {
     }
   }
 
-  bool? get optOut => _optOut;
-
   Future<void> setOptOut({required bool optOut}) async {
     _optOut = optOut;
     await _localStorage.setOptOut(optOut: optOut);
   }
 
-  bool get optout => _optOut;
+  bool get optOut => _optOut;
 
   /// Clear the following data from the local storage:
   ///
@@ -322,7 +326,16 @@ class MatomoTracker {
     String? path,
     Map<String, String>? dimensions,
   }) {
-    assert(currentScreenId == null || currentScreenId.length == 6);
+    _initializationCheck();
+
+    if (currentScreenId != null && currentScreenId.length != 6) {
+      throw ArgumentError.value(
+        currentScreenId,
+        'currentScreenId',
+        'The currentScreenId must be 6 characters long.',
+      );
+    }
+
     this.currentScreenId = currentScreenId ?? randomAlphaNumeric(6);
     return _track(
       MatomoEvent(
@@ -340,6 +353,8 @@ class MatomoTracker {
     double? revenue,
     Map<String, String>? dimensions,
   }) {
+    _initializationCheck();
+
     return _track(
       MatomoEvent(
         tracker: this,
@@ -404,6 +419,8 @@ class MatomoTracker {
     num? discountAmount, {
     Map<String, String>? dimensions,
   }) {
+    _initializationCheck();
+
     return _track(
       MatomoEvent(
         tracker: this,
@@ -428,6 +445,8 @@ class MatomoTracker {
     num? discountAmount, {
     Map<String, String>? dimensions,
   }) {
+    _initializationCheck();
+
     return _track(
       MatomoEvent(
         tracker: this,
@@ -448,6 +467,8 @@ class MatomoTracker {
     String? link, {
     Map<String, String>? dimensions,
   }) {
+    _initializationCheck();
+
     return _track(
       MatomoEvent(
         tracker: this,
@@ -480,6 +501,12 @@ class MatomoTracker {
           }
         }
       });
+    }
+  }
+
+  void _initializationCheck() {
+    if (!_initialized) {
+      throw const UninitializedMatomoInstanceException();
     }
   }
 }
