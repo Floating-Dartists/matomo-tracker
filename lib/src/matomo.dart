@@ -96,7 +96,6 @@ class MatomoTracker {
     LocalStorage? localStorage,
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
-    bool cookieLess = false,
   }) async {
     if (visitorId != null && visitorId.length != 16) {
       throw ArgumentError.value(
@@ -113,11 +112,9 @@ class MatomoTracker {
     _localStorage = localStorage ?? SharedPrefsStorage();
     _platformInfo = platformInfo ?? PlatformInfo.instance;
 
-    final localVisitorId = cookieLess
-        ? null
-        : visitorId ??
-            await _localStorage.getVisitorId() ??
-            const Uuid().v4().replaceAll('-', '').substring(0, 16);
+    final localVisitorId = visitorId ??
+        await _localStorage.getVisitorId() ??
+        const Uuid().v4().replaceAll('-', '').substring(0, 16);
     _visitor = Visitor(id: localVisitorId, userId: localVisitorId);
 
     _tokenAuth = tokenAuth;
@@ -144,9 +141,7 @@ class MatomoTracker {
       unawaited(_localStorage.setFirstVisit(now));
 
       // Save the visitorId for future visits.
-      if (localVisitorId != null) {
-        unawaited(_localStorage.setVisitorId(localVisitorId));
-      }
+      unawaited(_localStorage.setVisitorId(localVisitorId));
     }
 
     final localVisitorCount = await _localStorage.getVisitCount();
