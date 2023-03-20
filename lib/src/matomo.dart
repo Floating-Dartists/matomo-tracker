@@ -7,6 +7,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
+import 'package:matomo_tracker/src/local_storage/local_storage.dart';
+import 'package:matomo_tracker/src/local_storage/shared_prefs_storage.dart';
 import 'package:matomo_tracker/src/logger.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
@@ -17,7 +19,6 @@ import 'package:matomo_tracker/src/visitor.dart';
 import 'package:matomo_tracker/utils/lock.dart' as sync;
 import 'package:matomo_tracker/utils/random_alpha_numeric.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class MatomoTracker {
@@ -26,11 +27,6 @@ class MatomoTracker {
   MatomoTracker();
 
   MatomoTracker._internal();
-
-  static const kFirstVisit = 'matomo_first_visit';
-  static const kVisitCount = 'matomo_visit_count';
-  static const kVisitorId = 'matomo_visitor_id';
-  static const kOptOut = 'matomo_opt_out';
 
   final log = Logger('Matomo');
   late final PlatformInfo _platformInfo;
@@ -47,8 +43,11 @@ class MatomoTracker {
   late Visitor _visitor;
 
   void setVisitorUserId(String? userId) {
-    _visitor =
-        Visitor(id: _visitor.id, forcedId: _visitor.forcedId, userId: userId);
+    _visitor = Visitor(
+      id: _visitor.id,
+      forcedId: _visitor.forcedId,
+      userId: userId,
+    );
   }
 
   /// The user agent is used to detect the operating system and browser used.
@@ -67,9 +66,9 @@ class MatomoTracker {
   bool _initialized = false;
   bool get initialized => _initialized;
 
-  bool _optout = false;
+  bool _optOut = false;
 
-  SharedPreferences? _prefs;
+  late final LocalStorage _localStorage;
 
   @visibleForTesting
   final queue = Queue<MatomoEvent>();
@@ -92,9 +91,10 @@ class MatomoTracker {
     String? contentBaseUrl,
     int dequeueInterval = 10,
     String? tokenAuth,
-    SharedPreferences? prefs,
+    LocalStorage? localStorage,
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
+    bool cookieLess = false,
   }) async {
     assert(
       visitorId == null || visitorId.length == 16,
@@ -104,13 +104,15 @@ class MatomoTracker {
     this.url = url;
     _dequeueInterval = dequeueInterval;
     _lock = sync.Lock();
-    _prefs = prefs ?? await SharedPreferences.getInstance();
+    _localStorage = localStorage ?? SharedPrefsStorage();
     _platformInfo = platformInfo ?? PlatformInfo.instance;
 
-    final aVisitorId = visitorId ??
-        _prefs?.getString(kVisitorId) ??
-        const Uuid().v4().replaceAll('-', '').substring(0, 16);
-    _visitor = Visitor(id: aVisitorId, userId: aVisitorId);
+    final localVisitorId = cookieLess
+        ? null
+        : visitorId ??
+            await _localStorage.getVisitorId() ??
+            const Uuid().v4().replaceAll('-', '').substring(0, 16);
+    _visitor = Visitor(id: localVisitorId, userId: localVisitorId);
 
     _tokenAuth = tokenAuth;
     _dispatcher = MatomoDispatcher(url, tokenAuth);
@@ -119,33 +121,37 @@ class MatomoTracker {
     userAgent = await getUserAgent();
 
     // Screen Resolution
-    screenResolution =
-        Size(window.physicalSize.width, window.physicalSize.height);
+    screenResolution = Size(
+      window.physicalSize.width,
+      window.physicalSize.height,
+    );
 
     // Initialize Session Information
     final now = clock.now().toUtc();
     DateTime firstVisit = now;
     int visitCount = 1;
 
-    final localFirstVisit = _prefs?.getInt(kFirstVisit);
+    final localFirstVisit = await _localStorage.getFirstVisit();
     if (localFirstVisit != null) {
-      firstVisit = DateTime.fromMillisecondsSinceEpoch(
-        localFirstVisit,
-        isUtc: true,
-      );
+      firstVisit = localFirstVisit;
     } else {
-      unawaited(_prefs?.setInt(kFirstVisit, now.millisecondsSinceEpoch));
+      unawaited(_localStorage.setFirstVisit(now));
 
       // Save the visitorId for future visits.
-      unawaited(_prefs?.setString(kVisitorId, aVisitorId));
+      if (localVisitorId != null) {
+        unawaited(_localStorage.setVisitorId(localVisitorId));
+      }
     }
 
-    final localVisitorCount = _prefs?.getInt(kVisitCount) ?? 0;
+    final localVisitorCount = await _localStorage.getVisitCount();
     visitCount += localVisitorCount;
-    unawaited(_prefs?.setInt(kVisitCount, visitCount));
+    unawaited(_localStorage.setVisitCount(visitCount));
 
-    session =
-        Session(firstVisit: firstVisit, lastVisit: now, visitCount: visitCount);
+    session = Session(
+      firstVisit: firstVisit,
+      lastVisit: now,
+      visitCount: visitCount,
+    );
 
     if (contentBaseUrl != null) {
       contentBase = contentBaseUrl;
@@ -157,18 +163,15 @@ class MatomoTracker {
       contentBase = 'https://${effectivePackageInfo.packageName}';
     }
 
-    if (_prefs!.containsKey(kOptOut)) {
-      _optout = _prefs?.getBool(kOptOut) ?? false;
-    } else {
-      unawaited(_prefs?.setBool(kOptOut, _optout));
-    }
+    _optOut = await _localStorage.getOptOut();
+    unawaited(_localStorage.setOptOut(optOut: _optOut));
 
     log.fine(
       'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=$userAgent',
     );
     _initialized = true;
 
-    timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
+    timer = Timer.periodic(Duration(seconds: _dequeueInterval), (_) {
       _dequeue();
     });
   }
@@ -223,26 +226,22 @@ class MatomoTracker {
     }
   }
 
-  bool? get optOut => _optout;
+  bool? get optOut => _optOut;
 
-  Future<void> setOptOut({required bool optout}) async {
-    _optout = optout;
-    await _prefs?.setBool(kOptOut, _optout);
+  Future<void> setOptOut({required bool optOut}) async {
+    _optOut = optOut;
+    await _localStorage.setOptOut(optOut: optOut);
   }
 
-  bool getOptOut() => _prefs?.getBool(kOptOut) ?? false;
+  bool get optout => _optOut;
 
-  /// Clear the following data from the SharedPreferences:
+  /// Clear the following data from the local storage:
   ///
   /// - First visit
   /// - Number of visits
   /// - Visitor ID
   void clear() {
-    if (_prefs != null) {
-      _prefs!.remove(kFirstVisit);
-      _prefs!.remove(kVisitCount);
-      _prefs!.remove(kVisitorId);
-    }
+    _localStorage.clear();
   }
 
   /// Cancel the timer which checks the queued events to send. (This will not
@@ -472,7 +471,7 @@ class MatomoTracker {
     if (!_lock.locked) {
       return _lock.synchronized(() async {
         final events = List<MatomoEvent>.from(queue);
-        if (!_optout) {
+        if (!_optOut) {
           final hasSucceeded = await _dispatcher.sendBatch(events);
           if (hasSucceeded) {
             // As the operation is asynchronous we need to be sure to remove

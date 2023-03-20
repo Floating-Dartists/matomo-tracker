@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:matomo_tracker/matomo_tracker.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../ressources/mock/data.dart';
@@ -34,7 +33,7 @@ void main() {
 
       tearDown(() {
         // We reset shared preferences to avoid side effects between tests
-        reset(mockSharedPreferences);
+        reset(mockLocalStorage);
       });
       testInitialization(
         'it should be able to initialize',
@@ -55,16 +54,13 @@ void main() {
         'it should be able to get localFirstVisit from local storage',
         init: () {
           when(
-            () => mockSharedPreferences.getInt(MatomoTracker.kFirstVisit),
-          ).thenReturn(matomoTrackerLocalFirstVisist);
+            mockLocalStorage.getFirstVisit,
+          ).thenAnswer((_) async => matomoTrackerLocalFirstVisist);
         },
         [
-          (tracker, fixedDateTime) => expect(
+          (tracker, _) => expect(
                 tracker.session.firstVisit,
-                DateTime.fromMillisecondsSinceEpoch(
-                  matomoTrackerLocalFirstVisist,
-                  isUtc: true,
-                ),
+                matomoTrackerLocalFirstVisist,
               ),
         ],
       );
@@ -89,17 +85,17 @@ void main() {
   group('OptOut', () {
     test('it should be able to set opt out', () async {
       final matomoTracker = await getInitializedMatomoTracker();
-      await matomoTracker.setOptOut(optout: true);
+      await matomoTracker.setOptOut(optOut: true);
 
-      verify(() => mockSharedPreferences.setBool(MatomoTracker.kOptOut, true));
+      verify(() => mockLocalStorage.setOptOut(optOut: true));
       expect(matomoTracker.optOut, true);
     });
 
     test('it should be able to get optOut from local db', () async {
       final matomoTracker = await getInitializedMatomoTracker();
-      matomoTracker.getOptOut();
+      matomoTracker.optOut;
 
-      verify(() => mockSharedPreferences.getBool(MatomoTracker.kOptOut));
+      verify(mockLocalStorage.getOptOut);
     });
   });
 
@@ -130,9 +126,7 @@ void main() {
       final matomoTracker = await getInitializedMatomoTracker();
       matomoTracker.clear();
 
-      verify(() => mockSharedPreferences.remove(MatomoTracker.kFirstVisit));
-      verify(() => mockSharedPreferences.remove(MatomoTracker.kVisitCount));
-      verify(() => mockSharedPreferences.remove(MatomoTracker.kVisitorId));
+      verify(mockLocalStorage.clear);
     });
   });
 
