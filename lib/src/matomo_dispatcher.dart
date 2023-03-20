@@ -31,14 +31,17 @@ class MatomoDispatcher {
       final statusCode = response.statusCode;
       event.tracker.log.fine(' <- $statusCode');
     } catch (e) {
-      event.tracker.log.fine(' <- $e');
+      event.tracker.log.severe(message: ' <- $e', error: e);
     }
   }
 
-  Future<void> sendBatch(List<MatomoEvent> events) async {
-    if (events.isEmpty) {
-      return;
-    }
+  /// Sends a batch of events to the Matomo server.
+  ///
+  /// The events are sent in a single request.
+  ///
+  /// Returns `true` if the batch was sent successfully.
+  Future<bool> sendBatch(List<MatomoEvent> events) async {
+    if (events.isEmpty) return true;
 
     final userAgent = events.first.tracker.userAgent;
     final headers = <String, String>{
@@ -59,8 +62,14 @@ class MatomoDispatcher {
       );
       final statusCode = response.statusCode;
       events.first.tracker.log.fine(' <- $statusCode');
+
+      return true;
     } catch (e) {
-      events.first.tracker.log.fine(' <- $e');
+      events.first.tracker.log.severe(
+        message: ' <- $e',
+        error: e,
+      );
+      return false;
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:clock/clock.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/logger.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
@@ -63,7 +64,9 @@ class MatomoTracker {
   /// specific page view.
   String? currentScreenId;
 
-  bool initialized = false;
+  bool _initialized = false;
+  bool get initialized => _initialized;
+
   bool _optout = false;
 
   SharedPreferences? _prefs;
@@ -80,7 +83,7 @@ class MatomoTracker {
 
   String? get getAuthToken => _tokenAuth;
 
-  late int _dequeueInterval;
+  int _dequeueInterval = 10;
 
   Future<void> initialize({
     required int siteId,
@@ -163,7 +166,7 @@ class MatomoTracker {
     log.fine(
       'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=$userAgent',
     );
-    initialized = true;
+    _initialized = true;
 
     timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
       _dequeue();
@@ -250,15 +253,13 @@ class MatomoTracker {
 
   // Pause tracker
   void pause() {
-    if (initialized) {
-      timer.cancel();
-      _dequeue();
-    }
+    timer.cancel();
+    _dequeue();
   }
 
   // Resume tracker
   void resume() {
-    if (initialized && !timer.isActive) {
+    if (!timer.isActive) {
       timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
         _dequeue();
       });
@@ -266,10 +267,8 @@ class MatomoTracker {
   }
 
   /// Iterate on the events in the queue and send them to Matomo.
-  void dispatchEvents() {
-    if (initialized) {
-      _dequeue();
-    }
+  FutureOr<void> dispatchEvents() {
+    return _dequeue();
   }
 
   /// This will register an event with [trackScreenWithName] by using the
@@ -463,15 +462,23 @@ class MatomoTracker {
     queue.add(event);
   }
 
-  void _dequeue() {
-    assert(initialized);
+  FutureOr<void> _dequeue() {
+    if (!_initialized) {
+      throw const UninitializedMatomoInstanceException();
+    }
+
     log.finest('Processing queue ${queue.length}');
+
     if (!_lock.locked) {
-      _lock.synchronized(() {
+      return _lock.synchronized(() async {
         final events = List<MatomoEvent>.from(queue);
-        queue.clear();
         if (!_optout) {
-          _dispatcher.sendBatch(events);
+          final hasSucceeded = await _dispatcher.sendBatch(events);
+          if (hasSucceeded) {
+            // As the operation is asynchronous we need to be sure to remove
+            // only the events that were sent in the batch.
+            queue.removeWhere(events.contains);
+          }
         }
       });
     }
