@@ -178,7 +178,7 @@ Now the `initialize()` method takes a `LocalStorage? localStorage` instead of a 
 
 By default it will use an implementation of [shared_preferences](https://pub.dev/packages/shared_preferences) with the class `SharedPrefsStorage`, but you can provide your own implementation of `LocalStorage` to use a different package.
 
-### Old
+### Before
 
 ```dart
 final myPrefs = await SharedPreferences.getInstance();
@@ -190,7 +190,7 @@ await MatomoTracker.instance.initialize(
 );
 ```
 
-### New
+### After
 
 ```dart
 class MyLocalStorage implements LocalStorage {
@@ -205,6 +205,15 @@ await MatomoTracker.instance.initialize(
     siteId: siteId,
     url: 'https://example.com/matomo.php',
     localStorage: myStorage,
+);
+```
+
+**Note that if you weren't using a custom instance of `SharedPreferences` before, you don't need to change anything. The default behavior still works.**
+
+```dart
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/matomo.php',
 );
 ```
 
