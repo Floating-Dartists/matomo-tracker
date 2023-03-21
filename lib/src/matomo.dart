@@ -86,6 +86,13 @@ class MatomoTracker {
 
   int _dequeueInterval = 10;
 
+  /// Initialize the tracker.
+  ///
+  /// This method must be called before any other method. Otherwise they might
+  /// throw an [UninitializedMatomoInstanceException].
+  ///
+  /// The [siteId] should have a length of 16 characters otherwise an
+  /// [ArgumentError] will be thrown.
   Future<void> initialize({
     required int siteId,
     required String url,
