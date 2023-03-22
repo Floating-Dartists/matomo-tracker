@@ -26,7 +26,7 @@ Future<MatomoTracker> getInitializedMatomoTracker({
   await matomoTracker.initialize(
     url: matomoTrackerUrl,
     siteId: matomoTrackerSiteId,
-    prefs: mockSharedPreferences,
+    localStorage: mockLocalStorage,
     packageInfo: mockPackageInfo,
     visitorId: visitorId,
     contentBaseUrl: contentBaseUrl,

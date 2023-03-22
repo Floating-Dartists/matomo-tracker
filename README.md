@@ -15,6 +15,19 @@ Forked from the package [matomo](https://pub.dev/packages/matomo) by [poitch](ht
 
 A fully cross-platform wrap of the Matomo tracking client for Flutter, using the [Matomo Tracking API](https://developer.matomo.org/api-reference/tracking-api).
 
+# Summary
+
+- [Documentation](#documentation)
+  - [Getting Started](#getting-started)
+  - [Using userId](#using-userid)
+  - [Opting Out](#opting-out)
+  - [Using Dimensions](#using-dimensions)
+- [Migration Guide](#migration-guide)
+    - [v3.0.0](#v300)
+- [Contributors](#contributors)
+
+# Documentation
+
 ## Getting Started
 
 As early as possible in your application, you need to configure the Matomo Tracker to pass the URL endpoint of your instance and your Site ID.
@@ -157,7 +170,54 @@ MatomoTracker.instance.trackScreenWithName(
     );
 ```
 
-## Contributors
+# Migration Guide
+
+## v3.0.0
+
+Now the `initialize()` method takes a `LocalStorage? localStorage` instead of a `SharedPreferences? prefs` as its parameter to override the persistent data implementation.
+
+By default it will use an implementation of [shared_preferences](https://pub.dev/packages/shared_preferences) with the class `SharedPrefsStorage`, but you can provide your own implementation of `LocalStorage` to use a different package.
+
+### Before
+
+```dart
+final myPrefs = await SharedPreferences.getInstance();
+
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/matomo.php',
+    prefs: myPrefs,
+);
+```
+
+### After
+
+```dart
+class MyLocalStorage implements LocalStorage {
+    MyLocalStorage();
+
+    // ...
+}
+
+final myStorage = MyLocalStorage();
+
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/matomo.php',
+    localStorage: myStorage,
+);
+```
+
+**Note that if you weren't using a custom instance of `SharedPreferences` before, you don't need to change anything. The default behavior still works.**
+
+```dart
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/matomo.php',
+);
+```
+
+# Contributors
 
 <!-- readme: contributors -start -->
 <table>
