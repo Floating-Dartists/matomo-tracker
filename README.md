@@ -22,6 +22,7 @@ A fully cross-platform wrap of the Matomo tracking client for Flutter, using the
   - [Using userId](#using-userid)
   - [Opting Out](#opting-out)
   - [Using Dimensions](#using-dimensions)
+  - [Cookieless Tracking](#cookieless-tracking)
 - [Migration Guide](#migration-guide)
     - [v3.0.0](#v300)
 - [Contributors](#contributors)
@@ -169,6 +170,20 @@ MatomoTracker.instance.trackScreenWithName(
       dimensions: {'dimension1': '0.0.1'}
     );
 ```
+
+## Cookieless Tracking
+
+If you want to use cookieless tracking, you can use the `cookieless` property in the `initialize` method.
+
+```dart
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/matomo.php',
+    cookieless: true,
+);
+```
+
+When using cookieless tracking, neither the user_id nor the first_visit will be sent or saved locally.
 
 # Migration Guide
 
