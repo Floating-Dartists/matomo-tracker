@@ -16,3 +16,11 @@ class UninitializedMatomoInstanceException extends MatomoException {
               'MatomoTracker has not been initialized properly, call the method initialize() first.',
         );
 }
+
+class AlreadyInitializedMatomoInstanceException extends MatomoException {
+  const AlreadyInitializedMatomoInstanceException()
+      : super(
+          message: 'MatomoTracker has already been initialized. '
+              'You can check the initialize property to see if it has been initialized.',
+        );
+}

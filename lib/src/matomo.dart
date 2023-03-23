@@ -69,6 +69,14 @@ class MatomoTracker {
   bool get initialized => _initialized;
 
   bool _optOut = false;
+  bool get optOut => _optOut;
+  Future<void> setOptOut({required bool optOut}) async {
+    _optOut = optOut;
+    await _localStorage.setOptOut(optOut: optOut);
+  }
+
+  bool _cookieless = false;
+  bool get cookieless => _cookieless;
 
   late final LocalStorage _localStorage;
 
@@ -91,6 +99,9 @@ class MatomoTracker {
   /// This method must be called before any other method. Otherwise they might
   /// throw an [UninitializedMatomoInstanceException].
   ///
+  /// If the tracker is already initialized, an
+  /// [AlreadyInitializedMatomoInstanceException] will be thrown.
+  ///
   /// The [siteId] should have a length of 16 characters otherwise an
   /// [ArgumentError] will be thrown.
   Future<void> initialize({
@@ -103,7 +114,12 @@ class MatomoTracker {
     LocalStorage? localStorage,
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
+    bool cookieless = false,
   }) async {
+    if (_initialized) {
+      throw const AlreadyInitializedMatomoInstanceException();
+    }
+
     if (visitorId != null && visitorId.length != 16) {
       throw ArgumentError.value(
         visitorId,
@@ -118,6 +134,7 @@ class MatomoTracker {
     _lock = sync.Lock();
     _localStorage = localStorage ?? SharedPrefsStorage();
     _platformInfo = platformInfo ?? PlatformInfo.instance;
+    _cookieless = cookieless;
 
     final localVisitorId = visitorId ??
         await _localStorage.getVisitorId() ??
@@ -141,14 +158,14 @@ class MatomoTracker {
     DateTime firstVisit = now;
     int visitCount = 1;
 
-    final localFirstVisit = await _localStorage.getFirstVisit();
+    final localFirstVisit = await _getFirstVisit();
     if (localFirstVisit != null) {
       firstVisit = localFirstVisit;
     } else {
-      unawaited(_localStorage.setFirstVisit(now));
+      unawaited(_saveFirstVisit(now));
 
       // Save the visitorId for future visits.
-      unawaited(_localStorage.setVisitorId(localVisitorId));
+      unawaited(_saveVisitorId(localVisitorId));
     }
 
     final localVisitorCount = await _localStorage.getVisitCount();
@@ -233,13 +250,6 @@ class MatomoTracker {
       return 'Unknown';
     }
   }
-
-  Future<void> setOptOut({required bool optOut}) async {
-    _optOut = optOut;
-    await _localStorage.setOptOut(optOut: optOut);
-  }
-
-  bool get optOut => _optOut;
 
   /// Clear the following data from the local storage:
   ///
@@ -510,5 +520,23 @@ class MatomoTracker {
     if (!_initialized) {
       throw const UninitializedMatomoInstanceException();
     }
+  }
+
+  Future<void> _saveFirstVisit(DateTime firstVisit) async {
+    if (_cookieless) return;
+
+    await _localStorage.setFirstVisit(firstVisit);
+  }
+
+  Future<DateTime?> _getFirstVisit() async {
+    if (_cookieless) return null;
+
+    return _localStorage.getFirstVisit();
+  }
+
+  Future<void> _saveVisitorId(String visitorId) async {
+    if (_cookieless) return;
+
+    await _localStorage.setVisitorId(visitorId);
   }
 }
