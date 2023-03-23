@@ -523,12 +523,14 @@ class MatomoTracker {
   }
 
   Future<void> _saveVisitorId(String? visitorId) async {
-    if (_cookieless || visitorId == null) return;
+    if (visitorId == null) return;
 
     await _localStorage.setVisitorId(visitorId);
   }
 
   Future<String?> _getVisitorId() async {
+    /// The check is needed here as we don't want to create a new visitor id
+    /// with Uuid if the user has opted out.
     if (_cookieless) return null;
 
     final localId = await _localStorage.getVisitorId();
