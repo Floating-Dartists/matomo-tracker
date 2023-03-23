@@ -29,11 +29,7 @@ class MatomoTracker {
 
   MatomoTracker._internal();
 
-  Logger _log = Logger('Matomo');
-  Logger get log => _log;
-
-  @visibleForTesting
-  set log(Logger logger) => _log = logger;
+  final log = Logger('Matomo');
 
   late final PlatformInfo _platformInfo;
 
