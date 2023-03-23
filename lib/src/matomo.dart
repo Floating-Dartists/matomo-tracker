@@ -268,6 +268,7 @@ class MatomoTracker {
   /// clear the queue.)
   void dispose() {
     timer.cancel();
+    log.clearListeners();
   }
 
   // Pause tracker

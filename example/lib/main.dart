@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
     MatomoTracker.instance.initialize(
       siteId: 1,
       url: 'https://analytics.example.com/matomo.php',
+      verbose: true,
     );
   }
   // This widget is the root of your application.
