@@ -100,10 +100,13 @@ const matomoTrackerEventCategory = 'eventCategory';
 const matomoTrackerAction = 'action';
 const matomoTrackerDimensions = <String, String>{};
 const matomoTrackerSearchKeyword = 'searchKeyword';
-const matomoTrackerVisiterId = '1234567890123456'; // 16 characters
+const matomoTrackerVisitorId = '1234567890123456'; // 16 characters
 const matomoTrackerUserAgent = 'userAgent';
 const matomoTrackerTokenAuth = 'tokenAuth';
-const matomoTrackerLocalFirstVisist = 1640979000000;
+final matomoTrackerLocalFirstVisist = DateTime.fromMillisecondsSinceEpoch(
+  1640979000000,
+  isUtc: true,
+);
 const matomoTrackerCurrentScreenId = '123456'; // 6 characters
 
 // DeviceInfoPlugin

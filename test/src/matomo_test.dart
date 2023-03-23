@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:matomo_tracker/matomo_tracker.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../ressources/mock/data.dart';
@@ -9,21 +8,24 @@ import '../ressources/utils/matomo_tracker_initialization.dart';
 import '../ressources/utils/matomo_tracker_setup.dart';
 import '../ressources/utils/matomo_tracker_tracking.dart';
 import '../ressources/utils/mock_platform_info.dart';
+import '../ressources/utils/uninitialized_test_util.dart';
 
 void main() {
   setUp(matomoTrackerSetup);
 
   // this test should be the first one to launch, because once the MatomoTracker
   // is initialized, it will not be possible reinitialize it
-  test('it should throw AssertionError if we initialize with wrong visitorId',
-      () async {
-    await expectLater(
-      () => getInitializedMatomoTracker(
-        visitorId: matomoTrackerWrongVisitorId,
-      ),
-      throwsAssertionError,
-    );
-  });
+  test(
+    'it should throw ArgumentError if we initialize with wrong visitorId',
+    () async {
+      await expectLater(
+        () => getInitializedMatomoTracker(
+          visitorId: matomoTrackerWrongVisitorId,
+        ),
+        throwsA(isA<ArgumentError>()),
+      );
+    },
+  );
 
   group(
     'initialize',
@@ -34,7 +36,7 @@ void main() {
 
       tearDown(() {
         // We reset shared preferences to avoid side effects between tests
-        reset(mockSharedPreferences);
+        reset(mockLocalStorage);
       });
       testInitialization(
         'it should be able to initialize',
@@ -55,16 +57,13 @@ void main() {
         'it should be able to get localFirstVisit from local storage',
         init: () {
           when(
-            () => mockSharedPreferences.getInt(MatomoTracker.kFirstVisit),
-          ).thenReturn(matomoTrackerLocalFirstVisist);
+            mockLocalStorage.getFirstVisit,
+          ).thenAnswer((_) async => matomoTrackerLocalFirstVisist);
         },
         [
-          (tracker, fixedDateTime) => expect(
+          (tracker, _) => expect(
                 tracker.session.firstVisit,
-                DateTime.fromMillisecondsSinceEpoch(
-                  matomoTrackerLocalFirstVisist,
-                  isUtc: true,
-                ),
+                matomoTrackerLocalFirstVisist,
               ),
         ],
       );
@@ -89,17 +88,17 @@ void main() {
   group('OptOut', () {
     test('it should be able to set opt out', () async {
       final matomoTracker = await getInitializedMatomoTracker();
-      await matomoTracker.setOptOut(optout: true);
+      await matomoTracker.setOptOut(optOut: true);
 
-      verify(() => mockSharedPreferences.setBool(MatomoTracker.kOptOut, true));
+      verify(() => mockLocalStorage.setOptOut(optOut: true));
       expect(matomoTracker.optOut, true);
     });
 
     test('it should be able to get optOut from local db', () async {
       final matomoTracker = await getInitializedMatomoTracker();
-      matomoTracker.getOptOut();
+      matomoTracker.optOut;
 
-      verify(() => mockSharedPreferences.getBool(MatomoTracker.kOptOut));
+      verify(mockLocalStorage.getOptOut);
     });
   });
 
@@ -130,9 +129,7 @@ void main() {
       final matomoTracker = await getInitializedMatomoTracker();
       matomoTracker.clear();
 
-      verify(() => mockSharedPreferences.remove(MatomoTracker.kFirstVisit));
-      verify(() => mockSharedPreferences.remove(MatomoTracker.kVisitCount));
-      verify(() => mockSharedPreferences.remove(MatomoTracker.kVisitorId));
+      verify(mockLocalStorage.clear);
     });
   });
 
@@ -175,10 +172,34 @@ void main() {
       },
     );
 
-    testTracking('it should be able to trackScreenWithName', (tracker) async {
-      tracker.trackScreenWithName(
-        widgetName: matomoTrackerMockWidget.toStringShort(),
-        eventName: matomoTrackerEvenName,
+    group('trackScreenWithName', () {
+      uninitializedTest(
+        (tracker) => tracker.trackScreenWithName(
+          widgetName: matomoTrackerMockWidget.toStringShort(),
+          eventName: matomoTrackerEvenName,
+        ),
+      );
+
+      testTracking('it should be able to trackScreenWithName', (tracker) async {
+        tracker.trackScreenWithName(
+          widgetName: matomoTrackerMockWidget.toStringShort(),
+          eventName: matomoTrackerEvenName,
+        );
+      });
+
+      test(
+        'should throw ArgumentError if currentScreenId lenght != 6 ',
+        () async {
+          final matomoTracker = await getInitializedMatomoTracker();
+          await expectLater(
+            () => matomoTracker.trackScreenWithName(
+              widgetName: matomoTrackerMockWidget.toStringShort(),
+              eventName: matomoTrackerEvenName,
+              currentScreenId: '',
+            ),
+            throwsA(isA<ArgumentError>()),
+          );
+        },
       );
     });
 
@@ -220,11 +241,15 @@ void main() {
     });
   });
 
-  test('it should be able to set visitor userId', () async {
-    final matomoTracker = await getInitializedMatomoTracker();
-    matomoTracker.setVisitorUserId(userId);
+  group('setVisitorUserId', () {
+    uninitializedTest((tracker) => tracker.setVisitorUserId(userId));
 
-    expect(matomoTracker.visitor.userId, userId);
+    test('it should be able to set visitor userId', () async {
+      final matomoTracker = await getInitializedMatomoTracker();
+      matomoTracker.setVisitorUserId(userId);
+
+      expect(matomoTracker.visitor.userId, userId);
+    });
   });
 
   group('userAgent', () {
