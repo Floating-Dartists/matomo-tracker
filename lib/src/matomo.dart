@@ -7,6 +7,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
+import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:matomo_tracker/src/local_storage/shared_prefs_storage.dart';
 import 'package:matomo_tracker/src/logger.dart';
@@ -22,7 +23,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
 class MatomoTracker {
-  /// This is only used for testing purpose, because testing singleton is hard
+  /// This is only used for testing purpose, because testing singleton is hard.
   @visibleForTesting
   MatomoTracker();
 
@@ -69,6 +70,14 @@ class MatomoTracker {
   bool get initialized => _initialized;
 
   bool _optOut = false;
+  bool get optOut => _optOut;
+  Future<void> setOptOut({required bool optOut}) async {
+    _optOut = optOut;
+    await _localStorage.setOptOut(optOut: optOut);
+  }
+
+  bool _cookieless = false;
+  bool get cookieless => _cookieless;
 
   late final LocalStorage _localStorage;
 
@@ -91,8 +100,15 @@ class MatomoTracker {
   /// This method must be called before any other method. Otherwise they might
   /// throw an [UninitializedMatomoInstanceException].
   ///
+  /// If the tracker is already initialized, an
+  /// [AlreadyInitializedMatomoInstanceException] will be thrown.
+  ///
   /// The [siteId] should have a length of 16 characters otherwise an
   /// [ArgumentError] will be thrown.
+  ///
+  /// If [cookieless] is set to true, a [CookielessStorage] instance will be
+  /// used. This means that the first_visit and the user_id will be stored in
+  /// memory and will be lost when the app is closed.
   Future<void> initialize({
     required int siteId,
     required String url,
@@ -103,7 +119,12 @@ class MatomoTracker {
     LocalStorage? localStorage,
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
+    bool cookieless = false,
   }) async {
+    if (_initialized) {
+      throw const AlreadyInitializedMatomoInstanceException();
+    }
+
     if (visitorId != null && visitorId.length != 16) {
       throw ArgumentError.value(
         visitorId,
@@ -116,16 +137,18 @@ class MatomoTracker {
     this.url = url;
     _dequeueInterval = dequeueInterval;
     _lock = sync.Lock();
-    _localStorage = localStorage ?? SharedPrefsStorage();
     _platformInfo = platformInfo ?? PlatformInfo.instance;
-
-    final localVisitorId = visitorId ??
-        await _localStorage.getVisitorId() ??
-        const Uuid().v4().replaceAll('-', '').substring(0, 16);
-    _visitor = Visitor(id: localVisitorId, userId: localVisitorId);
-
+    _cookieless = cookieless;
     _tokenAuth = tokenAuth;
     _dispatcher = MatomoDispatcher(url, tokenAuth);
+
+    final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
+    _localStorage = cookieless
+        ? CookielessStorage(storage: effectiveLocalStorage)
+        : effectiveLocalStorage;
+
+    final localVisitorId = visitorId ?? await _getVisitorId();
+    _visitor = Visitor(id: localVisitorId, userId: localVisitorId);
 
     // User agent
     userAgent = await getUserAgent();
@@ -148,7 +171,7 @@ class MatomoTracker {
       unawaited(_localStorage.setFirstVisit(now));
 
       // Save the visitorId for future visits.
-      unawaited(_localStorage.setVisitorId(localVisitorId));
+      unawaited(_saveVisitorId(localVisitorId));
     }
 
     final localVisitorCount = await _localStorage.getVisitCount();
@@ -234,21 +257,8 @@ class MatomoTracker {
     }
   }
 
-  Future<void> setOptOut({required bool optOut}) async {
-    _optOut = optOut;
-    await _localStorage.setOptOut(optOut: optOut);
-  }
-
-  bool get optOut => _optOut;
-
-  /// Clear the following data from the local storage:
-  ///
-  /// - First visit
-  /// - Number of visits
-  /// - Visitor ID
-  void clear() {
-    _localStorage.clear();
-  }
+  /// {@macro local_storage.clear}
+  void clear() => _localStorage.clear();
 
   /// Cancel the timer which checks the queued events to send. (This will not
   /// clear the queue.)
@@ -510,5 +520,20 @@ class MatomoTracker {
     if (!_initialized) {
       throw const UninitializedMatomoInstanceException();
     }
+  }
+
+  Future<void> _saveVisitorId(String? visitorId) async {
+    if (visitorId == null) return;
+
+    await _localStorage.setVisitorId(visitorId);
+  }
+
+  Future<String?> _getVisitorId() async {
+    /// The check is needed here as we don't want to create a new visitor id
+    /// with Uuid if the user has opted out.
+    if (_cookieless) return null;
+
+    final localId = await _localStorage.getVisitorId();
+    return localId ?? const Uuid().v4().replaceAll('-', '').substring(0, 16);
   }
 }
