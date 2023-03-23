@@ -29,7 +29,12 @@ class MatomoTracker {
 
   MatomoTracker._internal();
 
-  final log = Logger('Matomo');
+  Logger _log = Logger('Matomo');
+  Logger get log => _log;
+
+  @visibleForTesting
+  set log(Logger logger) => _log = logger;
+
   late final PlatformInfo _platformInfo;
 
   late MatomoDispatcher _dispatcher;
@@ -120,6 +125,7 @@ class MatomoTracker {
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
     bool cookieless = false,
+    bool verbose = false,
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -132,6 +138,8 @@ class MatomoTracker {
         'The visitorId must be 16 characters long',
       );
     }
+
+    log.enabled = verbose;
 
     this.siteId = siteId;
     this.url = url;

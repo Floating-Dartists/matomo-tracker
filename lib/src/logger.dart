@@ -1,9 +1,13 @@
 import 'dart:developer' as dev;
 
+import 'package:clock/clock.dart';
+
 class Logger {
   Logger([this.name = '']);
 
   final String name;
+
+  bool enabled = false;
 
   void finest(Object? message) => log(Level.finest, message);
 
@@ -28,9 +32,11 @@ class Logger {
     Object? error,
     StackTrace? stackTrace,
   }) {
+    if (!enabled) return;
+
     dev.log(
       message.toString(),
-      time: DateTime.now(),
+      time: clock.now(),
       level: level.value,
       name: name,
       error: error,
