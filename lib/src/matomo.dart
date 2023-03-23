@@ -7,6 +7,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
+import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:matomo_tracker/src/local_storage/shared_prefs_storage.dart';
 import 'package:matomo_tracker/src/logger.dart';
@@ -22,7 +23,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
 class MatomoTracker {
-  /// This is only used for testing purpose, because testing singleton is hard
+  /// This is only used for testing purpose, because testing singleton is hard.
   @visibleForTesting
   MatomoTracker();
 
@@ -104,6 +105,10 @@ class MatomoTracker {
   ///
   /// The [siteId] should have a length of 16 characters otherwise an
   /// [ArgumentError] will be thrown.
+  ///
+  /// If [cookieless] is set to true, a [CookielessStorage] instance will be
+  /// used. This means that the first_visit and the user_id will be stored in
+  /// memory and will be lost when the app is closed.
   Future<void> initialize({
     required int siteId,
     required String url,
@@ -132,17 +137,18 @@ class MatomoTracker {
     this.url = url;
     _dequeueInterval = dequeueInterval;
     _lock = sync.Lock();
-    _localStorage = localStorage ?? SharedPrefsStorage();
     _platformInfo = platformInfo ?? PlatformInfo.instance;
     _cookieless = cookieless;
-
-    final localVisitorId = visitorId ??
-        await _localStorage.getVisitorId() ??
-        const Uuid().v4().replaceAll('-', '').substring(0, 16);
-    _visitor = Visitor(id: localVisitorId, userId: localVisitorId);
-
     _tokenAuth = tokenAuth;
     _dispatcher = MatomoDispatcher(url, tokenAuth);
+
+    final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
+    _localStorage = cookieless
+        ? CookielessStorage(storage: effectiveLocalStorage)
+        : effectiveLocalStorage;
+
+    final localVisitorId = visitorId ?? await _getVisitorId();
+    _visitor = Visitor(id: localVisitorId, userId: localVisitorId);
 
     // User agent
     userAgent = await getUserAgent();
@@ -158,11 +164,11 @@ class MatomoTracker {
     DateTime firstVisit = now;
     int visitCount = 1;
 
-    final localFirstVisit = await _getFirstVisit();
+    final localFirstVisit = await _localStorage.getFirstVisit();
     if (localFirstVisit != null) {
       firstVisit = localFirstVisit;
     } else {
-      unawaited(_saveFirstVisit(now));
+      unawaited(_localStorage.setFirstVisit(now));
 
       // Save the visitorId for future visits.
       unawaited(_saveVisitorId(localVisitorId));
@@ -251,14 +257,8 @@ class MatomoTracker {
     }
   }
 
-  /// Clear the following data from the local storage:
-  ///
-  /// - First visit
-  /// - Number of visits
-  /// - Visitor ID
-  void clear() {
-    _localStorage.clear();
-  }
+  /// {@macro local_storage.clear}
+  void clear() => _localStorage.clear();
 
   /// Cancel the timer which checks the queued events to send. (This will not
   /// clear the queue.)
@@ -522,21 +522,16 @@ class MatomoTracker {
     }
   }
 
-  Future<void> _saveFirstVisit(DateTime firstVisit) async {
-    if (_cookieless) return;
-
-    await _localStorage.setFirstVisit(firstVisit);
-  }
-
-  Future<DateTime?> _getFirstVisit() async {
-    if (_cookieless) return null;
-
-    return _localStorage.getFirstVisit();
-  }
-
-  Future<void> _saveVisitorId(String visitorId) async {
-    if (_cookieless) return;
+  Future<void> _saveVisitorId(String? visitorId) async {
+    if (_cookieless || visitorId == null) return;
 
     await _localStorage.setVisitorId(visitorId);
+  }
+
+  Future<String?> _getVisitorId() async {
+    if (_cookieless) return null;
+
+    final localId = await _localStorage.getVisitorId();
+    return localId ?? const Uuid().v4().replaceAll('-', '').substring(0, 16);
   }
 }
