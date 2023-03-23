@@ -10,7 +10,7 @@ import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:matomo_tracker/src/local_storage/shared_prefs_storage.dart';
-import 'package:matomo_tracker/src/logger.dart';
+import 'package:matomo_tracker/src/logger/logger.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
@@ -135,7 +135,7 @@ class MatomoTracker {
       );
     }
 
-    log.enabled = verbose;
+    log.setLogging(enabled: verbose);
 
     this.siteId = siteId;
     this.url = url;
