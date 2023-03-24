@@ -10,7 +10,8 @@ import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:matomo_tracker/src/local_storage/shared_prefs_storage.dart';
-import 'package:matomo_tracker/src/logger.dart';
+import 'package:matomo_tracker/src/logger/log_record.dart';
+import 'package:matomo_tracker/src/logger/logger.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
@@ -30,6 +31,7 @@ class MatomoTracker {
   MatomoTracker._internal();
 
   final log = Logger('Matomo');
+
   late final PlatformInfo _platformInfo;
 
   late MatomoDispatcher _dispatcher;
@@ -120,6 +122,7 @@ class MatomoTracker {
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
     bool cookieless = false,
+    Level verbosityLevel = Level.off,
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -132,6 +135,8 @@ class MatomoTracker {
         'The visitorId must be 16 characters long',
       );
     }
+
+    log.setLogging(level: verbosityLevel);
 
     this.siteId = siteId;
     this.url = url;
@@ -264,6 +269,7 @@ class MatomoTracker {
   /// clear the queue.)
   void dispose() {
     timer.cancel();
+    log.clearListeners();
   }
 
   // Pause tracker

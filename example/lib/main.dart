@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
+import 'package:logging/logging.dart' as log;
 import 'package:matomo_tracker/matomo_tracker.dart';
 
 void main() {
@@ -9,8 +9,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key) {
-    Logger.root.level = Level.FINEST;
-    Logger.root.onRecord.listen((LogRecord rec) {
+    log.Logger.root.level = log.Level.FINEST;
+    log.Logger.root.onRecord.listen((log.LogRecord rec) {
       debugPrint(
         '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}',
       );
@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
     MatomoTracker.instance.initialize(
       siteId: 1,
       url: 'https://analytics.example.com/matomo.php',
+      verbosityLevel: Level.all,
     );
   }
   // This widget is the root of your application.
