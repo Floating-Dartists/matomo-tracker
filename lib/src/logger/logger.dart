@@ -4,6 +4,8 @@ import 'dart:developer' as dev;
 import 'package:clock/clock.dart';
 import 'package:matomo_tracker/src/logger/log_record.dart';
 
+const _defaultLevel = Level.info;
+
 class Logger {
   Logger([this.name = '']);
 
@@ -12,8 +14,11 @@ class Logger {
   StreamController<LogRecord>? _controller;
   StreamSubscription<LogRecord>? _subscription;
 
+  Level _level = _defaultLevel;
+  set level(Level level) => _level = level;
+
   void finest(Object? message) {
-    _controller?.add(
+    _publish(
       LogRecord(
         level: Level.finest,
         time: clock.now(),
@@ -23,7 +28,7 @@ class Logger {
   }
 
   void fine(Object? message) {
-    _controller?.add(
+    _publish(
       LogRecord(
         level: Level.fine,
         time: clock.now(),
@@ -37,7 +42,7 @@ class Logger {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    _controller?.add(
+    _publish(
       LogRecord(
         level: Level.severe,
         time: clock.now(),
@@ -48,13 +53,9 @@ class Logger {
     );
   }
 
-  void setLogging({required bool enabled}) {
+  void setLogging({required Level level}) {
     _subscription?.cancel();
-    if (!enabled) {
-      clearListeners();
-      return;
-    }
-
+    _level = level;
     _subscription = onRecord.listen((record) {
       dev.log(
         record.message.toString(),
@@ -65,6 +66,12 @@ class Logger {
         stackTrace: record.stackTrace,
       );
     });
+  }
+
+  void _publish(LogRecord record) {
+    if (record.level.value >= _level.value) {
+      _controller?.add(record);
+    }
   }
 
   Stream<LogRecord> get onRecord => _getStream();

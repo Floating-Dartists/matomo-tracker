@@ -19,7 +19,7 @@ void main() {
           final sub = logger.onRecord.listen(records.add);
 
           logger
-            ..setLogging(enabled: true)
+            ..setLogging(level: Level.all)
             ..fine('fine')
             ..finest('finest')
             ..severe(message: 'severe');
@@ -55,7 +55,7 @@ void main() {
       final sub = logger.onRecord.listen(records.add);
 
       logger
-        ..setLogging(enabled: false)
+        ..setLogging(level: Level.off)
         ..fine('fine')
         ..finest('finest')
         ..severe(message: 'severe');

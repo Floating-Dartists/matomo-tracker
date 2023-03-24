@@ -35,9 +35,12 @@ class LogRecord {
 }
 
 enum Level {
+  all(0),
   finest(300),
   fine(500),
-  severe(1000);
+  info(800),
+  severe(1000),
+  off(2000);
 
   const Level(this.value);
 

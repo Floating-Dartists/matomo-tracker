@@ -10,6 +10,7 @@ import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:matomo_tracker/src/local_storage/shared_prefs_storage.dart';
+import 'package:matomo_tracker/src/logger/log_record.dart';
 import 'package:matomo_tracker/src/logger/logger.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
@@ -121,7 +122,7 @@ class MatomoTracker {
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
     bool cookieless = false,
-    bool verbose = false,
+    Level verbosityLevel = Level.off,
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -135,7 +136,7 @@ class MatomoTracker {
       );
     }
 
-    log.setLogging(enabled: verbose);
+    log.setLogging(level: verbosityLevel);
 
     this.siteId = siteId;
     this.url = url;
