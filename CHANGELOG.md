@@ -9,8 +9,6 @@
   * Keep failed event request in queue (offline tracking) [#51](https://github.com/Floating-Dartists/matomo-tracker/issues/51) 
   * You can now make your own `LocalStorage` implementation
   * Added a `verbosityLevel` flag to manage the logged messages
-* Bumped device_info_plus to `8.1.0`
-* Bumped package_info_plus to `3.0.3`
 
 ## [2.0.0]
 
