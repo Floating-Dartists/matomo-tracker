@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.0]
+
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v300) section to learn about breaking changes in this version.**
+
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
+  * Added [cookieless tracking](https://github.com/Floating-Dartists/matomo-tracker#cookieless-tracking)
+  * Keep failed event request in queue (offline tracking) [#51](https://github.com/Floating-Dartists/matomo-tracker/issues/51) 
+  * You can now make your own `LocalStorage` implementation
+  * Added a `verbosityLevel` flag to manage the logged messages
+* Bumped device_info_plus to `8.1.0`
+* Bumped package_info_plus to `3.0.3`
+
 ## [2.0.0]
 
 * **Breaking Change**: Removed `name` and `widgetName` arguments from `trackEvent` method
