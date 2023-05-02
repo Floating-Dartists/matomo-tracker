@@ -13,6 +13,7 @@ void main() {
     when(() => mockMatomoEvent.tracker).thenReturn(mockMatomoTracker);
     when(() => mockMatomoTracker.userAgent).thenReturn(null);
     when(() => mockMatomoTracker.log).thenReturn(Logger());
+    when(() => mockMatomoTracker.customHeaders).thenReturn({});
   });
 
   group('send', () {
