@@ -266,10 +266,10 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/krillefear">
-            <img src="https://avatars.githubusercontent.com/u/24619905?v=4" width="100;" alt="krillefear"/>
+        <a href="https://github.com/krille-chan">
+            <img src="https://avatars.githubusercontent.com/u/24619905?v=4" width="100;" alt="krille-chan"/>
             <br />
-            <sub><b>Krille Fear</b></sub>
+            <sub><b>Krille-chan</b></sub>
         </a>
     </td>
     <td align="center">

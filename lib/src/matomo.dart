@@ -10,7 +10,8 @@ import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:matomo_tracker/src/local_storage/shared_prefs_storage.dart';
-import 'package:matomo_tracker/src/logger.dart';
+import 'package:matomo_tracker/src/logger/log_record.dart';
+import 'package:matomo_tracker/src/logger/logger.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
@@ -30,6 +31,7 @@ class MatomoTracker {
   MatomoTracker._internal();
 
   final log = Logger('Matomo');
+
   late final PlatformInfo _platformInfo;
 
   late MatomoDispatcher _dispatcher;
@@ -55,6 +57,9 @@ class MatomoTracker {
 
   /// The user agent is used to detect the operating system and browser used.
   late final String? userAgent;
+
+  /// Custom http headers to add to each request.
+  late final Map<String, String> customHeaders;
 
   /// URL for the current action.
   late final String contentBase;
@@ -120,6 +125,8 @@ class MatomoTracker {
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
     bool cookieless = false,
+    Level verbosityLevel = Level.off,
+    Map<String, String> customHeaders = const {},
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -133,8 +140,11 @@ class MatomoTracker {
       );
     }
 
+    log.setLogging(level: verbosityLevel);
+
     this.siteId = siteId;
     this.url = url;
+    this.customHeaders = customHeaders;
     _dequeueInterval = dequeueInterval;
     _lock = sync.Lock();
     _platformInfo = platformInfo ?? PlatformInfo.instance;
@@ -264,6 +274,7 @@ class MatomoTracker {
   /// clear the queue.)
   void dispose() {
     timer.cancel();
+    log.clearListeners();
   }
 
   // Pause tracker

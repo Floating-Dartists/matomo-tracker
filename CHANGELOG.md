@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.1.0]
+
+* Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
+  * feat: Allow to set custom http headers [#59](https://github.com/Floating-Dartists/matomo-tracker/pull/59)
+
+## [3.0.0]
+
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v300) section to learn about breaking changes in this version.**
+
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
+  * Added [cookieless tracking](https://github.com/Floating-Dartists/matomo-tracker#cookieless-tracking)
+  * Keep failed event request in queue (offline tracking) [#51](https://github.com/Floating-Dartists/matomo-tracker/issues/51) 
+  * You can now make your own `LocalStorage` implementation
+  * Added a `verbosityLevel` flag to manage the logged messages
+
 ## [2.0.0]
 
 * **Breaking Change**: Removed `name` and `widgetName` arguments from `trackEvent` method
