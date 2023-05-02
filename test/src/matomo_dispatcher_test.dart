@@ -7,6 +7,9 @@ import '../ressources/mock/data.dart';
 import '../ressources/mock/mock.dart';
 
 void main() {
+  const headerKey = 'foo';
+  const headerValue = 'bar';
+
   setUpAll(() {
     registerFallbackValue(Uri());
     when(mockMatomoEvent.toMap).thenReturn({});
@@ -50,6 +53,30 @@ void main() {
       );
 
       await expectLater(matomoDispatcher.send(mockMatomoEvent), completes);
+    });
+
+    test('should use customHeaders from the tracker', () async {
+      when(() => mockMatomoTracker.customHeaders).thenReturn({
+        headerKey: headerValue,
+      });
+
+      final matomoDispatcher = MatomoDispatcher(
+        matomoDispatcherBaseUrl,
+        matomoDispatcherToken,
+        httpClient: mockHttpClient,
+      );
+
+      await matomoDispatcher.send(mockMatomoEvent);
+
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(
+            named: 'headers',
+            that: containsPair(headerKey, headerValue),
+          ),
+        ),
+      );
     });
   });
 
@@ -170,6 +197,30 @@ void main() {
     expect(
       uri.queryParameters[MatomoDispatcher.tokenAuthUriKey],
       matomoDispatcherToken,
+    );
+  });
+
+  test('should use customHeaders from the tracker', () async {
+    when(() => mockMatomoTracker.customHeaders).thenReturn({
+      headerKey: headerValue,
+    });
+
+    final matomoDispatcher = MatomoDispatcher(
+      matomoDispatcherBaseUrl,
+      matomoDispatcherToken,
+      httpClient: mockHttpClient,
+    );
+
+    await matomoDispatcher.send(mockMatomoEvent);
+
+    verify(
+      () => mockHttpClient.post(
+        any(),
+        headers: any(
+          named: 'headers',
+          that: containsPair(headerKey, headerValue),
+        ),
+      ),
     );
   });
 }
