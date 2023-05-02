@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.1.0]
+
+* Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
+  * feat: Allow to set custom http headers [#59](https://github.com/Floating-Dartists/matomo-tracker/pull/59)
+
 ## [3.0.0]
 
 **Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v300) section to learn about breaking changes in this version.**

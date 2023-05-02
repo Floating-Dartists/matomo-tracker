@@ -46,6 +46,7 @@ class MatomoDispatcher {
     final userAgent = events.first.tracker.userAgent;
     final headers = <String, String>{
       if (!kIsWeb && userAgent != null) userAgentHeaderKeys: userAgent,
+      ...events.first.tracker.customHeaders
     };
 
     final batch = {
