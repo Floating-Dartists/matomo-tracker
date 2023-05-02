@@ -4,6 +4,8 @@
 
 * Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
   * feat: Allow to set custom http headers [#59](https://github.com/Floating-Dartists/matomo-tracker/pull/59)
+* Contribution from [TesteurManiak](https://github.com/TesteurManiak)
+  * fix: Added custom headers to `sendBatch` and added test cases [#60](https://github.com/Floating-Dartists/matomo-tracker/pull/60)
 
 ## [3.0.0]
 
