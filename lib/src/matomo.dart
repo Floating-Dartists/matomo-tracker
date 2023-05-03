@@ -58,6 +58,9 @@ class MatomoTracker {
   /// The user agent is used to detect the operating system and browser used.
   late final String? userAgent;
 
+  /// Custom http headers to add to each request.
+  late final Map<String, String> customHeaders;
+
   /// URL for the current action.
   late final String contentBase;
 
@@ -123,6 +126,7 @@ class MatomoTracker {
     PlatformInfo? platformInfo,
     bool cookieless = false,
     Level verbosityLevel = Level.off,
+    Map<String, String> customHeaders = const {},
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -140,6 +144,7 @@ class MatomoTracker {
 
     this.siteId = siteId;
     this.url = url;
+    this.customHeaders = customHeaders;
     _dequeueInterval = dequeueInterval;
     _lock = sync.Lock();
     _platformInfo = platformInfo ?? PlatformInfo.instance;

@@ -22,6 +22,7 @@ class MatomoDispatcher {
   Future<void> send(MatomoEvent event) async {
     final headers = <String, String>{
       if (!kIsWeb) 'User-Agent': 'Dart Matomo Tracker',
+      ...event.tracker.customHeaders,
     };
 
     final uri = buildUriForEvent(event);
@@ -46,6 +47,7 @@ class MatomoDispatcher {
     final userAgent = events.first.tracker.userAgent;
     final headers = <String, String>{
       if (!kIsWeb && userAgent != null) userAgentHeaderKeys: userAgent,
+      ...events.first.tracker.customHeaders,
     };
 
     final batch = {
