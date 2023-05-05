@@ -5,25 +5,34 @@ import 'package:matomo_tracker/matomo_tracker.dart';
 @optionalTypeArgs
 mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   /// {@template traceableClientMixin.traceName}
-  /// Equivalent to an event action. (e.g. `'Created HomePage'`)
+  /// Equivalent to an event action. (e.g. `'Created HomePage'`).
+  ///
+  /// This corresponds with `action_name`.
   /// {@endtemplate}
   @protected
   String get traceName => 'Created widget ${widget.toStringShort()}';
 
   /// {@template traceableClientMixin.traceTitle}
-  /// Equivalent to an event name. (e.g. `'HomePage'`)
+  /// Equivalent to an event name. (e.g. `'HomePage'`).
+  ///
+  /// This corresponds with `e_n`.
   /// {@endtemplate}
   @protected
   String get traceTitle;
 
   /// {@template traceableClientMixin.widgetId}
   /// A 6 character unique ID. If `null`, a random id will be generated.
+  ///
+  /// This corresponds with `pv_id`.
   /// {@endtemplate}
   @protected
   String? widgetId;
 
   /// {@template traceableClientMixin.path}
-  /// Path to the widget. (e.g. `'/home'`)
+  /// Path to the widget. (e.g. `'/home'`).
+  ///
+  /// This will be combined with [MatomoTracker.contentBase]. The combination
+  /// corresponds with `url`.
   /// {@endtemplate}
   @protected
   String? path;

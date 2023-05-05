@@ -49,6 +49,7 @@ await MatomoTracker.instance.initialize(
     visitorId: '2589631479517535',
 );
 ```
+Note that this Visitor ID should not be confused with the User ID which is explained below!
 
 To track views simply add `TraceableClientMixin` on your `State`:
 
@@ -79,6 +80,9 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   String get traceName => 'Created HomePage'; // optional
 
   @override
+  String get path => '/home'; // optional
+
+  @override
   String get traceTitle => widget.title;
 }
 ```
@@ -95,6 +99,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return TraceableWidget(
       traceName: 'Created HomePage', // optional
+      path: '/home', // optional
       traceTitle: title,
       child: Scaffold(
         appBar: AppBar(
@@ -170,6 +175,8 @@ MatomoTracker.instance.trackScreenWithName(
       dimensions: {'dimension1': '0.0.1'}
     );
 ```
+
+The naming of the dimensions is important and explained in more detail in the documentation of [`trackDimensions`](https://pub.dev/documentation/matomo_tracker/latest/matomo_tracker/MatomoTracker/trackDimensions.html).
 
 ## Cookieless Tracking
 
