@@ -338,6 +338,13 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/EPNW-Eric">
+            <img src="https://avatars.githubusercontent.com/u/123490368?v=4" width="100;" alt="EPNW-Eric"/>
+            <br />
+            <sub><b>Null</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/lukaslihotzki">
             <img src="https://avatars.githubusercontent.com/u/10326063?v=4" width="100;" alt="lukaslihotzki"/>
             <br />
