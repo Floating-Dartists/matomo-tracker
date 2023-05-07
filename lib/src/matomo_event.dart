@@ -110,7 +110,7 @@ class MatomoEvent {
     final pvId = screenId;
     final actionName = action;
     final url =
-        path != null ? '${tracker.contentBase}/$path' : tracker.contentBase;
+        path != null ? '${tracker.contentBase}${path.startsWith('/') ? '' : '/'}$path' : tracker.contentBase; 
     final idgoal = goalId;
     final aRevenue = revenue;
     final eC = eventCategory;
@@ -126,6 +126,7 @@ class MatomoEvent {
     final ua = tracker.userAgent;
     final country = window.locale.countryCode;
     final dims = dimensions ?? {};
+
 
     return {
       // Required parameters
