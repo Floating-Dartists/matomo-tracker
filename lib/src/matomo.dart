@@ -328,9 +328,9 @@ class MatomoTracker {
   ///
   /// - `eventName`: The name of the event. This corresponds with `e_n`.
   ///
-  /// - `currentScreenId`: A 6 character unique ID that identifies which actions
+  /// - `pvId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random id will be
-  /// generated. This corresponds with `pv_id`.
+  /// generated.
   ///
   /// - `path`: A string that identifies the path of the screen. If not
   /// `null`, it will be combined to [contentBase] to create a URL. This combination
@@ -340,21 +340,19 @@ class MatomoTracker {
   void trackScreen(
     BuildContext context, {
     required String eventName,
-    String? currentScreenId,
+    String? pvId,
     String? path,
     Map<String, String>? dimensions,
   }) {
-    if (currentScreenId != null) {
-      this.currentScreenId = currentScreenId;
+    if (pvId != null) {
+      currentScreenId = pvId;
     }
     final actionName = context.widget.toStringShort();
-
-    _validateDimension(dimensions);
 
     trackScreenWithName(
       actionName: actionName,
       eventName: eventName,
-      currentScreenId: currentScreenId,
+      pvId: pvId,
       path: path,
       dimensions: dimensions,
     );
@@ -363,14 +361,14 @@ class MatomoTracker {
   /// Register an event with [eventName] as the event's name and [widgetName] as
   /// the event's action.
   ///
-  /// - `widgetName`: Equivalent to the event action, here used to identify the
-  /// screen with a proper name. This corresponds with `action_name`.
+  /// - `actionName`: Equivalent to the event action, here used to identify the
+  /// screen with a proper name.
   ///
   /// - `eventName`: The name of the event. This corresponds with `e_n`.
   ///
   /// - `currentScreenId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random id will be
-  /// generated. This corresponds with `pv_id`.
+  /// generated.
   ///
   /// - `path`: A string that identifies the path of the screen. If not
   /// `null`, it will be combined to [contentBase] to create a URL. This combination
@@ -380,21 +378,21 @@ class MatomoTracker {
   void trackScreenWithName({
     required String actionName,
     required String eventName,
-    String? currentScreenId,
+    String? pvId,
     String? path,
     Map<String, String>? dimensions,
   }) {
     _initializationCheck();
 
-    if (currentScreenId != null && currentScreenId.length != 6) {
+    if (pvId != null && pvId.length != 6) {
       throw ArgumentError.value(
-        currentScreenId,
-        'currentScreenId',
+        pvId,
+        'pvId',
         'The currentScreenId must be 6 characters long.',
       );
     }
 
-    this.currentScreenId = currentScreenId ?? randomAlphaNumeric(6);
+    currentScreenId = pvId ?? randomAlphaNumeric(6);
     _validateDimension(dimensions);
     return _track(
       MatomoEvent(
@@ -638,11 +636,19 @@ class MatomoTracker {
     }
     for (final dimension in dimensions.keys) {
       if (!dimension.startsWith('dimension')) {
-        throw ArgumentError('Invalid custom dimension name $dimension!');
+        throw ArgumentError.value(
+          dimension,
+          'dimension',
+          'Invalid custom dimension name!',
+        );
       }
       final index = int.tryParse(dimension.substring('dimension'.length));
       if (index == null || index < 1 || index > 999) {
-        throw ArgumentError('Invalid custom dimension name $dimension!');
+        throw ArgumentError.value(
+          dimension,
+          'dimension',
+          'Invalid custom dimension name!',
+        );
       }
     }
   }

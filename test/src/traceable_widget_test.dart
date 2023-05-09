@@ -18,7 +18,7 @@ void main() {
     final queueLength = matomoTracker.queue.length;
 
     await tester.pumpWidget(
-      const TraceableWidget(traceTitle: 'test', child: SizedBox()),
+      const TraceableWidget(eventName: 'test', child: SizedBox()),
     );
 
     final traceableWidgetFinder = find.byType(TraceableWidget);

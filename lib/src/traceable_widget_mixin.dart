@@ -10,13 +10,13 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   @protected
   String get actionName => 'Created widget ${widget.toStringShort()}';
 
-  /// {@template traceableClientMixin.traceTitle}
+  /// {@template traceableClientMixin.eventName}
   /// Equivalent to an event name. (e.g. `'HomePage'`).
   ///
   /// This corresponds with `e_n`.
   /// {@endtemplate}
   @protected
-  String get traceTitle;
+  String get eventName;
 
   /// {@template traceableClientMixin.widgetId}
   /// A 6 character unique ID. If `null`, a random id will be generated.
@@ -52,8 +52,8 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   void _startTracking() {
     tracker.trackScreenWithName(
       actionName: actionName,
-      eventName: traceTitle,
-      currentScreenId: widgetId,
+      eventName: eventName,
+      pvId: widgetId,
       path: path,
     );
   }

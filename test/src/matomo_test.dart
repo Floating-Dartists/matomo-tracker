@@ -22,7 +22,7 @@ void main() {
         () => getInitializedMatomoTracker(
           visitorId: matomoTrackerWrongVisitorId,
         ),
-        throwsA(isA<ArgumentError>()),
+        throwsArgumentError,
       );
     },
   );
@@ -164,7 +164,7 @@ void main() {
         tracker.trackScreen(
           mockBuildContext,
           eventName: matomoTrackerEvenName,
-          currentScreenId: matomoTrackerCurrentScreenId,
+          pvId: matomoTrackerCurrentScreenId,
         );
       },
       extraExpectations: (tracker) {
@@ -195,9 +195,9 @@ void main() {
             () => matomoTracker.trackScreenWithName(
               actionName: matomoTrackerMockWidget.toStringShort(),
               eventName: matomoTrackerEvenName,
-              currentScreenId: '',
+              pvId: '',
             ),
-            throwsA(isA<ArgumentError>()),
+            throwsArgumentError,
           );
         },
       );
