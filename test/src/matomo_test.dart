@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:matomo_tracker/src/event_info.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../ressources/mock/data.dart';
@@ -151,7 +152,8 @@ void main() {
 
         tracker.trackScreen(
           mockBuildContext,
-          eventName: matomoTrackerEvenName,
+          eventName: matomoTrackerEventName,
+          eventCategory: matomoTrackerEventCategory,
         );
       },
     );
@@ -163,7 +165,8 @@ void main() {
 
         tracker.trackScreen(
           mockBuildContext,
-          eventName: matomoTrackerEvenName,
+          eventName: matomoTrackerEventName,
+          eventCategory: matomoTrackerEventCategory,
           pvId: matomoTrackerCurrentScreenId,
         );
       },
@@ -174,16 +177,23 @@ void main() {
 
     group('trackScreenWithName', () {
       uninitializedTest(
-        (tracker) => tracker.trackScreenWithName(
-          actionName: matomoTrackerMockWidget.toStringShort(),
-          eventName: matomoTrackerEvenName,
-        ),
+        (tracker) {
+          final action = matomoTrackerMockWidget.toStringShort();
+
+          tracker.trackScreenWithName(
+            actionName: action,
+            eventInfo: EventInfo(
+              category: matomoEventCategory,
+              action: action,
+              name: matomoTrackerEventName,
+            ),
+          );
+        },
       );
 
-      testTracking('it should be able to trackScreenWithName', (tracker) async {
+      testTracking('it should be able to trackScreenWithName', (tracker) {
         tracker.trackScreenWithName(
           actionName: matomoTrackerMockWidget.toStringShort(),
-          eventName: matomoTrackerEvenName,
         );
       });
 
@@ -191,10 +201,10 @@ void main() {
         'should throw ArgumentError if currentScreenId lenght != 6 ',
         () async {
           final matomoTracker = await getInitializedMatomoTracker();
+
           await expectLater(
             () => matomoTracker.trackScreenWithName(
               actionName: matomoTrackerMockWidget.toStringShort(),
-              eventName: matomoTrackerEvenName,
               pvId: '',
             ),
             throwsArgumentError,

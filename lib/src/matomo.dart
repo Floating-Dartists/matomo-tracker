@@ -6,6 +6,7 @@ import 'package:clock/clock.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
@@ -26,7 +27,8 @@ import 'package:uuid/uuid.dart';
 /// Implementation of the Matomo [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api).
 ///
 /// If this documentation refers to a correspondence with a parameter, check out
-/// the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api) documentation for more information on that parameter.
+/// the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api)
+/// documentation for more information on that parameter.
 class MatomoTracker {
   /// This is only used for testing purpose, because testing singleton is hard.
   @visibleForTesting
@@ -340,6 +342,7 @@ class MatomoTracker {
   void trackScreen(
     BuildContext context, {
     required String eventName,
+    required String eventCategory,
     String? pvId,
     String? path,
     Map<String, String>? dimensions,
@@ -351,7 +354,11 @@ class MatomoTracker {
 
     trackScreenWithName(
       actionName: actionName,
-      eventName: eventName,
+      eventInfo: EventInfo(
+        category: eventCategory,
+        action: actionName,
+        name: eventName,
+      ),
       pvId: pvId,
       path: path,
       dimensions: dimensions,
@@ -364,10 +371,10 @@ class MatomoTracker {
   /// - `actionName`: Equivalent to the event action, here used to identify the
   /// screen with a proper name.
   ///
-  /// - `eventName`: The name of the event. This corresponds with `e_n`.
+  /// - `eventInfo`: Additional data for the event send.
   ///
   /// - `pvId`: A 6 character unique ID that identifies which actions
-  /// were performed on a specific page view. If `null`, a random id will be
+  /// were performed on a specific page view. If `null`, a random ID will be
   /// generated.
   ///
   /// - `path`: A string that identifies the path of the screen. If not
@@ -377,7 +384,7 @@ class MatomoTracker {
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreenWithName({
     required String actionName,
-    required String eventName,
+    EventInfo? eventInfo,
     String? pvId,
     String? path,
     Map<String, String>? dimensions,
@@ -397,7 +404,7 @@ class MatomoTracker {
     return _track(
       MatomoEvent(
         tracker: this,
-        eventName: eventName,
+        eventInfo: eventInfo,
         action: actionName,
         path: path,
         dimensions: dimensions,
@@ -430,8 +437,8 @@ class MatomoTracker {
 
   /// Tracks an event.
   ///
-  /// [eventCategory] corresponds with `e_c`, [action] with `e_a`, [eventName] with `e_n`
-  /// and [eventValue] with `e_v`.
+  /// [eventCategory] corresponds with `e_c`, [action] with `e_a`, [eventName]
+  /// with `e_n` and [eventValue] with `e_v`.
   ///
   /// Here are some typical examples for what each parameter usually describes:
   /// - `eventCategory`: Videos, Music, Games...
@@ -443,7 +450,7 @@ class MatomoTracker {
     required String eventCategory,
     required String action,
     String? eventName,
-    int? eventValue,
+    num? eventValue,
     Map<String, String>? dimensions,
   }) {
     _validateDimension(dimensions);
@@ -451,10 +458,12 @@ class MatomoTracker {
       MatomoEvent(
         tracker: this,
         action: action,
-        eventAction: action,
-        eventName: eventName,
-        eventCategory: eventCategory,
-        eventValue: eventValue,
+        eventInfo: EventInfo(
+          category: eventCategory,
+          action: action,
+          name: eventName,
+          value: eventValue,
+        ),
         dimensions: dimensions,
       ),
     );

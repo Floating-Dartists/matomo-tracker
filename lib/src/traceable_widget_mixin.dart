@@ -18,6 +18,14 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   @protected
   String get eventName;
 
+  /// {@template traceableClientMixin.eventCategory}
+  /// Equivalent to an event category. (eg. Videos, Music, Games...).
+  ///
+  /// This corresponds with `e_c`.
+  /// {@endtemplate}
+  @protected
+  String get eventCategory => 'Tracking widget';
+
   /// {@template traceableClientMixin.pvId}
   /// A 6 character unique ID. If `null`, a random id will be generated.
   /// {@endtemplate}
@@ -50,7 +58,11 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   void _startTracking() {
     tracker.trackScreenWithName(
       actionName: actionName,
-      eventName: eventName,
+      eventInfo: EventInfo(
+        category: eventCategory,
+        action: actionName,
+        name: eventName,
+      ),
       pvId: pvId,
       path: path,
     );
