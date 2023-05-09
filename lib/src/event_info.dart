@@ -66,12 +66,13 @@ class EventInfo {
 
   Map<String, String> toMap() {
     final localName = name;
+    final localValue = value;
 
     return <String, String>{
       'e_c': category,
       'e_a': action,
       if (localName != null) 'e_n': localName,
-      if (value != null) 'e_v': '$value',
+      if (localValue != null) 'e_v': localValue.toString(),
     };
   }
 }
