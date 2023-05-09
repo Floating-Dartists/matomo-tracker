@@ -160,10 +160,12 @@ MatomoTracker.instance.trackDimensions({
 
 ```dart
 MatomoTracker.instance.trackEvent(
-    action: 'eventAction',
-    eventCategory: 'eventCategory',
-    eventName: 'eventName',
-    eventValue: 18,
+    eventInfo: EventInfo(
+        category: "eventCategory",
+        action: "eventAction",
+        name: "eventName",
+        value: 18,
+    ),
     dimensions: {'dimension2':'guest-user'}
 );
 ```
