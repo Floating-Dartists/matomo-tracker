@@ -9,8 +9,9 @@ const sessionVisitCount = 1;
 
 // Visitor
 const visitorId = 'visitorId';
-const forceId = '1234567890123456'; // 16 characters
-const wrongForceId = '1234';
+const cid = '1234567890123456'; // 16 characters
+const wrongCid = '1234';
+const wrongCharacterCid = '123456789012345g';
 const userId = 'userId';
 
 // TrackingOrderItem

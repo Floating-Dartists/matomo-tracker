@@ -4,47 +4,59 @@ import 'package:matomo_tracker/matomo_tracker.dart';
 import '../ressources/mock/data.dart';
 
 void main() {
-  test('it should be able to create Visitor', () async {
+  test('it should be able to create Visitor', () {
     final visitor = Visitor(
       id: visitorId,
-      forcedId: forceId,
+      cid: cid,
       userId: userId,
     );
 
     expect(visitor.id, visitorId);
-    expect(visitor.forcedId, forceId);
+    expect(visitor.cid, cid);
     expect(visitor.userId, userId);
   });
 
-  test('it should throw if forceId is not 16 characters', () async {
-    Visitor getVisitorWithWrongForceId() {
+  test('it should throw if cid is not 16 characters', () {
+    Visitor getVisitorWithWrongCid() {
       return Visitor(
         id: visitorId,
-        forcedId: wrongForceId,
+        cid: wrongCid,
         userId: userId,
       );
     }
 
-    expect(getVisitorWithWrongForceId, throwsAssertionError);
+    expect(getVisitorWithWrongCid, throwsArgumentError);
   });
 
-  test('it should throw if userId is null or empty', () async {
+  test('it should throw if userId is null or empty', () {
     Visitor getVisitorWithNullUserId() {
       return Visitor(
         id: visitorId,
-        forcedId: wrongForceId,
+        cid: wrongCid,
       );
     }
 
     Visitor getVisitorWithEmptyUserId() {
       return Visitor(
         id: visitorId,
-        forcedId: wrongForceId,
+        cid: wrongCid,
         userId: '',
       );
     }
 
-    expect(getVisitorWithNullUserId, throwsAssertionError);
-    expect(getVisitorWithEmptyUserId, throwsAssertionError);
+    expect(getVisitorWithNullUserId, throwsArgumentError);
+    expect(getVisitorWithEmptyUserId, throwsArgumentError);
+  });
+
+  test('it should throw if cid contains invalid characters', () {
+    Visitor getVisitorWithWrongCid() {
+      return Visitor(
+        id: visitorId,
+        cid: wrongCharacterCid,
+        userId: userId,
+      );
+    }
+
+    expect(getVisitorWithWrongCid, throwsArgumentError);
   });
 }

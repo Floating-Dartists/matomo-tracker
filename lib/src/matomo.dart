@@ -50,7 +50,7 @@ class MatomoTracker {
   /// The url of the Matomo endpoint.
   ///
   /// E.g.: `https://example.com/matomo.php`
-  /// 
+  ///
   /// Should not be confused with the `url` tracking parameter
   /// which is constructed by combining [contentBase] with a `path`
   /// (e.g. in [trackScreenWithName]).
@@ -69,7 +69,7 @@ class MatomoTracker {
 
     _visitor = Visitor(
       id: _visitor.id,
-      forcedId: _visitor.forcedId,
+      cid: _visitor.cid,
       userId: userId,
     );
   }
@@ -81,7 +81,7 @@ class MatomoTracker {
   late final Map<String, String> customHeaders;
 
   /// URL for the current action.
-  /// 
+  ///
   /// For the tracking of screens (e.g. with [trackScreenWithName]) this is combined
   /// with the `path` parameter to create the tracked `url`.
   late final String contentBase;

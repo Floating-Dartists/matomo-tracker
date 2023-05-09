@@ -105,7 +105,7 @@ class MatomoEvent {
 
   Map<String, String> toMap() {
     final id = tracker.visitor.id;
-    final cid = tracker.visitor.forcedId;
+    final cid = tracker.visitor.cid;
     final uid = tracker.visitor.userId;
     final pvId = screenId;
     final actionName = action;
