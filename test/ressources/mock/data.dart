@@ -19,6 +19,14 @@ const trackingOrderItemPrice = 1.0;
 const trackingOrderItemQuantity = 1;
 
 // MatomoEvent
+const matomoCampaignName = 'name';
+const matomoCampaignKeyword = 'keyword';
+const matomoCampaignSource = 'source';
+const matomoCampaignMedium = 'medium';
+const matomoCampaignContent = 'content';
+const matomoCampaignId = 'id';
+const matomoCampaignGroup = 'group';
+const matomoCampaignPlacement = 'placement';
 const matomoEventPath = 'path';
 const matomoEventAction = 'action';
 const matomoEventCategory = 'eventCategory';
@@ -43,7 +51,10 @@ Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "idsite": "1",
       "rec": "1",
       "action_name": "action",
-      "url": "contentBase/path",
+      "url":
+          "contentBase/path?mtm_campaign=name&mtm_keyword=keyword&mtm_source=source&mtm_medium=medium&mtm_content=content&mtm_cid=id&mtm_group=group&mtm_placement=placement",
+      "_rcn": "name",
+      "_rck": "keyword",
       "_id": "visitorId",
       "apiv": "1",
       "_idvc": "1",
@@ -132,4 +143,19 @@ final wantedEventMapFull = <String, String>{
   'e_a': matomoEventAction,
   'e_n': matomoEventName,
   'e_v': matomoEventValue.toString(),
+};
+
+// Campaign
+final wantedCampaignMap = <String, String>{
+  'mtm_campaign': matomoCampaignName,
+};
+final wantedCampaignMapFull = <String, String>{
+  'mtm_campaign': matomoCampaignName,
+  'mtm_keyword': matomoCampaignKeyword,
+  'mtm_source': matomoCampaignSource,
+  'mtm_medium': matomoCampaignMedium,
+  'mtm_content': matomoCampaignContent,
+  'mtm_cid': matomoCampaignId,
+  'mtm_group': matomoCampaignGroup,
+  'mtm_placement': matomoCampaignPlacement,
 };

@@ -11,6 +11,7 @@ class TraceableWidget extends StatefulWidget {
     this.pvId,
     this.path,
     this.dimensions,
+    this.campaign,
     this.tracker,
   });
 
@@ -22,6 +23,9 @@ class TraceableWidget extends StatefulWidget {
 
   /// {@macro traceableClientMixin.path}
   final String? path;
+
+  /// {@macro traceableClientMixin.campaign}
+  final Campaign? campaign;
 
   /// {@macro traceableClientMixin.dimensions}
   final Map<String, String>? dimensions;
@@ -50,6 +54,9 @@ class _TraceableWidgetState extends State<TraceableWidget>
 
   @override
   String? get path => widget.path;
+
+  @override
+  Campaign? get campaign => widget.campaign;
 
   @override
   Map<String, String>? get dimensions => widget.dimensions;

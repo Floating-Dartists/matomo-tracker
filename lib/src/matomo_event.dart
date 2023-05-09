@@ -24,6 +24,7 @@ class MatomoEvent {
     this.searchCategory,
     this.searchCount,
     this.link,
+    this.campaign,
     this.dimensions,
   })  :
         // we use clock.now instead of DateTime.now to make testing easier
@@ -73,6 +74,8 @@ class MatomoEvent {
 
   final String? link;
 
+  final Campaign? campaign;
+
   // The dimensions associated with the event
   final Map<String, String>? dimensions;
 
@@ -81,8 +84,17 @@ class MatomoEvent {
     final uid = tracker.visitor.uid;
     final pvId = screenId;
     final actionName = action;
-    final url =
-        path != null ? '${tracker.contentBase}/$path' : tracker.contentBase;
+    final camp = campaign;
+    final campKeyword = camp?.keyword;
+    final uri = Uri.parse(
+      path != null ? '${tracker.contentBase}/$path' : tracker.contentBase,
+    );
+    final url = uri.replace(
+      queryParameters: {
+        if (camp != null) ...camp.toMap(),
+        ...uri.queryParameters,
+      },
+    ).toString();
     final idgoal = goalId;
     final aRevenue = revenue;
     final event = eventInfo;
@@ -94,7 +106,7 @@ class MatomoEvent {
     final ecDt = discountAmount;
     final ua = tracker.userAgent;
     final country = window.locale.countryCode;
-    final dims = dimensions ?? {};
+    final dims = dimensions;
 
     return {
       // Required parameters
@@ -104,6 +116,8 @@ class MatomoEvent {
       // Recommended parameters
       if (actionName != null) 'action_name': actionName,
       'url': url,
+      if (camp != null) '_rcn': camp.name,
+      if (campKeyword != null) '_rck': campKeyword,
       if (id != null) '_id': id,
       'rand': '${Random().nextInt(1000000000)}',
       'apiv': '1',
@@ -149,6 +163,8 @@ class MatomoEvent {
 
       // Other parameters (require authentication via `token_auth`)
       'cdt': _date.toIso8601String(),
-    }..addAll(dims);
+
+      if (dims != null) ...dims,
+    };
   }
 }
