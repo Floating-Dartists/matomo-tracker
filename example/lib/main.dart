@@ -2,26 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart' as log;
 import 'package:matomo_tracker/matomo_tracker.dart';
 
-void main() {
+// See the docker folder for instructions on how to get a
+// test Matomo instance running
+const _matomoEndpoint = 'http://localhost:8765/matomo.php';
+const _sideId = 1;
+const _testUserId = 'Nelson Pandela';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  _setupLogger();
+  await MatomoTracker.instance.initialize(
+    siteId: _sideId,
+    url: _matomoEndpoint,
+    verbosityLevel: Level.all,
+  );
+  MatomoTracker.instance.setVisitorUserId(_testUserId);
+  runApp(const MyApp());
+}
+
+void _setupLogger() {
+  log.Logger.root.level = log.Level.FINEST;
+  log.Logger.root.onRecord.listen((log.LogRecord rec) {
+    debugPrint(
+      '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}',
+    );
+  });
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key) {
-    log.Logger.root.level = log.Level.FINEST;
-    log.Logger.root.onRecord.listen((log.LogRecord rec) {
-      debugPrint(
-        '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}',
-      );
-    });
+  const MyApp({Key? key}) : super(key: key);
 
-    MatomoTracker.instance.initialize(
-      siteId: 1,
-      url: 'https://analytics.example.com/matomo.php',
-      verbosityLevel: Level.all,
-    );
-  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -41,21 +51,24 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-/// Send an event to Matomo on widget creation.
-class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
+/// Sends a page view to Matomo on widget creation by implementing TraceableClientMixin
+class MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   int _counter = 0;
 
   void _incrementCounter() {
     // Send an event to Matomo on tap.
+    // To signal that this event happend on this page, we use the
+    // pvId of the page.
     MatomoTracker.instance.trackEvent(
       eventInfo: EventInfo(
         category: 'Main',
         action: 'Click',
         name: 'IncrementCounter',
       ),
+      pvId: pvId,
     );
     setState(() {
       _counter++;
@@ -79,6 +92,19 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const OtherPage()));
+                  // Here we wait until we poped back to this page, then tell Matomo we
+                  // are here again by calling onReentry()
+                  onReentry();
+                },
+                child: const Text('Go to OtherPage'),
+              ),
+            )
           ],
         ),
       ),
@@ -91,5 +117,28 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   }
 
   @override
-  String get actionName => 'HomePage';
+  String get actionName => widget.title;
+
+  @override
+  String? get path => '/homepage';
+}
+
+class OtherPage extends StatelessWidget {
+  const OtherPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TraceableWidget(
+      path: '/otherpage',
+      actionName: 'Other Page',
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Other Page'),
+        ),
+        body: const Center(
+          child: Text('Welcome to the other page!'),
+        ),
+      ),
+    );
+  }
 }
