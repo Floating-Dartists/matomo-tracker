@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:matomo_tracker/matomo_tracker.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../ressources/mock/data.dart';
@@ -400,5 +401,52 @@ void main() {
         linuxPrettyName,
       );
     });
+  });
+
+  group('validateDimension', () {
+    final tracker = MatomoTracker();
+
+    test('should not do anything if dimensions is null', () {
+      tracker.validateDimension(null);
+    });
+
+    test('should not do anything if dimension keys are valid', () {
+      const dimensions = <String, String>{
+        "dimension1": "value1",
+        "dimension2": "value2",
+      };
+
+      tracker.validateDimension(dimensions);
+    });
+
+    test(
+      'should throw an ArgumentError if one of the keys does not start with "dimension"',
+      () {
+        const dimensions = <String, String>{
+          "dimension1": "value1",
+          "dim2": "value2",
+        };
+
+        expect(
+          () => tracker.validateDimension(dimensions),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      'should throw an ArgumentError if one of the keys index is invalid',
+      () {
+        const dimension = <String, String>{
+          "dimension1": "value1",
+          "dimension0": "value2",
+        };
+
+        expect(
+          () => tracker.validateDimension(dimension),
+          throwsArgumentError,
+        );
+      },
+    );
   });
 }
