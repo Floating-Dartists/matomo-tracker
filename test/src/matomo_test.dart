@@ -40,6 +40,7 @@ void main() {
         // We reset shared preferences to avoid side effects between tests
         reset(mockLocalStorage);
       });
+
       testInitialization(
         'it should be able to initialize',
         [
