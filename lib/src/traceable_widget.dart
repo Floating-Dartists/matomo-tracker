@@ -9,7 +9,7 @@ class TraceableWidget extends StatefulWidget {
     required this.child,
     required this.eventName,
     this.actionName,
-    this.widgetId,
+    this.pvId,
     this.path,
     this.tracker,
   });
@@ -20,8 +20,8 @@ class TraceableWidget extends StatefulWidget {
   /// {@macro traceableClientMixin.eventName}
   final String eventName;
 
-  /// {@macro traceableClientMixin.widgetId}
-  final String? widgetId;
+  /// {@macro traceableClientMixin.pvId}
+  final String? pvId;
 
   /// {@macro traceableClientMixin.path}
   final String? path;
@@ -49,7 +49,7 @@ class _TraceableWidgetState extends State<TraceableWidget>
   String get eventName => widget.eventName;
 
   @override
-  String? get widgetId => widget.widgetId;
+  String? get pvId => widget.pvId;
 
   @override
   String? get path => widget.path;

@@ -366,13 +366,13 @@ class MatomoTracker {
   ///
   /// - `eventName`: The name of the event. This corresponds with `e_n`.
   ///
-  /// - `currentScreenId`: A 6 character unique ID that identifies which actions
+  /// - `pvId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random id will be
   /// generated.
   ///
   /// - `path`: A string that identifies the path of the screen. If not
-  /// `null`, it will be combined to [contentBase] to create a URL. This combination
-  /// corresponds with `url`.
+  /// `null`, it will be combined to [contentBase] to create a URL. This
+  /// combination corresponds with `url`.
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreenWithName({

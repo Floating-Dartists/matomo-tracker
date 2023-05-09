@@ -18,13 +18,11 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   @protected
   String get eventName;
 
-  /// {@template traceableClientMixin.widgetId}
+  /// {@template traceableClientMixin.pvId}
   /// A 6 character unique ID. If `null`, a random id will be generated.
-  ///
-  /// This corresponds with `pv_id`.
   /// {@endtemplate}
   @protected
-  String? widgetId;
+  String? pvId;
 
   /// {@template traceableClientMixin.path}
   /// Path to the widget. (e.g. `'/home'`).
@@ -53,7 +51,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
     tracker.trackScreenWithName(
       actionName: actionName,
       eventName: eventName,
-      pvId: widgetId,
+      pvId: pvId,
       path: path,
     );
   }

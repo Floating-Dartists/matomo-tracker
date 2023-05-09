@@ -11,7 +11,7 @@
     * Renamed `userId` to `uid`
     * Renamed `TraceableClientMixin.traceName`, `TraceableWidget.traceName` and `trackScreenWithName.widgetName` to `actionName`
     * Renamed `TraceableClientMixin.traceTitle` and `TraceableWidget.traceTitle` to `eventName`
-    * Renamed `TraceableClientMixin.widgetId` to `pvId`
+    * Renamed `TraceableClientMixin.widgetId`, `TraceableWidget.widgetId` and `trackScreenWithName.currentScreenId` to `pvId`
 
 ## [3.1.0]
 
