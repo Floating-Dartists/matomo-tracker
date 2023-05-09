@@ -82,9 +82,6 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
 
   @override
   String get path => '/home'; // optional
-
-  @override
-  String get eventName => widget.title;
 }
 ```
 
@@ -101,7 +98,6 @@ class MyHomePage extends StatelessWidget {
     return TraceableWidget(
       actionName: 'Created HomePage', // optional
       path: '/home', // optional
-      eventName: title,
       child: Scaffold(
         appBar: AppBar(
           title: Text(title),
@@ -123,9 +119,12 @@ A value can be passed for events:
 
 ```dart
 MatomoTracker.instance.trackEvent(
-    name: 'eventName',
-    action: 'eventAction',
-    eventValue: 18,
+    eventInfo: EventInfo(
+        category: 'eventCategory',
+        name: 'eventName',
+        action: 'eventAction',
+        value: 18,
+    ),
 );
 ```
 
@@ -174,11 +173,8 @@ You can similarly track dimensions on Screen views with:
 
 ```dart
 MatomoTracker.instance.trackScreenWithName(
-    eventInfo: EventInfo(
-        category: "screen_view",
-        action: "view",
-        name: "Settings",
-    ),
+    actionName: "Settings",
+    path: "/settings",
     dimensions: {'dimension1': '0.0.1'}
 );
 ```
