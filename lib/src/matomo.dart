@@ -400,7 +400,7 @@ class MatomoTracker {
     }
 
     currentScreenId = pvId ?? randomAlphaNumeric(6);
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -424,7 +424,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -453,7 +453,7 @@ class MatomoTracker {
     num? eventValue,
     Map<String, String>? dimensions,
   }) {
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -480,7 +480,7 @@ class MatomoTracker {
   /// Also note that counting starts at 1 and NOT at 0 as opposed to what is stated
   /// in the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api) documentation.
   void trackDimensions(Map<String, String> dimensions) {
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -501,7 +501,7 @@ class MatomoTracker {
     int? searchCount,
     Map<String, String>? dimensions,
   }) {
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -526,7 +526,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -556,7 +556,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -582,7 +582,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -639,7 +639,8 @@ class MatomoTracker {
     return localId ?? const Uuid().v4().replaceAll('-', '').substring(0, 16);
   }
 
-  void _validateDimension(Map<String, String>? dimensions) {
+  @visibleForTesting
+  void validateDimension(Map<String, String>? dimensions) {
     if (dimensions == null) {
       return;
     }
