@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:matomo_tracker/src/campaign.dart';
 import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
 import 'package:mocktail/mocktail.dart';
@@ -21,6 +22,16 @@ void main() {
         action: matomoEventAction,
         name: matomoEventName,
         value: matomoEventValue,
+      ),
+      campaign: Campaign(
+        name: matomoCampaignName,
+        keyword: matomoCampaignKeyword,
+        source: matomoCampaignSource,
+        medium: matomoCampaignMedium,
+        content: matomoCampaignContent,
+        id: matomoCampaignId,
+        group: matomoCampaignGroup,
+        placement: matomoCampaignPlacement,
       ),
       goalId: matomoGoalId,
       link: matomoLink,
