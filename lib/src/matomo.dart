@@ -318,8 +318,8 @@ class MatomoTracker {
     return _dequeue();
   }
 
-  /// This will register an event with [trackScreenWithName] by using the
-  /// `context.widget.toStringShort()` value.
+  /// This will register a page view with [trackScreenWithName] by using the
+  /// `context.widget.toStringShort()` as `actionName` value.
   ///
   /// - `pvId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random id will be
@@ -346,10 +346,9 @@ class MatomoTracker {
     );
   }
 
-  /// Register an event with [eventName] as the event's name and [widgetName] as
-  /// the event's action.
+  /// Registers a page view.
   ///
-  /// - `actionName`: Equivalent to the event action, here used to identify the
+  /// - `actionName`: Equivalent to the page name, here used to identify the
   /// screen with a proper name.
   ///
   /// - `pvId`: A 6 character unique ID that identifies which actions
@@ -414,9 +413,13 @@ class MatomoTracker {
 
   /// Tracks an event.
   ///
+  /// To associate this event with a page view, set [pvId]
+  /// to the [pvId] of that page, e.g. [TraceableClientMixin.pvId].
+  ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackEvent({
     required EventInfo eventInfo,
+    String? pvId,
     Map<String, String>? dimensions,
   }) {
     validateDimension(dimensions);
@@ -424,6 +427,7 @@ class MatomoTracker {
       MatomoEvent(
         tracker: this,
         eventInfo: eventInfo,
+        screenId: pvId,
         dimensions: dimensions,
       ),
     );
