@@ -423,7 +423,6 @@ class MatomoTracker {
     return _track(
       MatomoEvent(
         tracker: this,
-        action: eventInfo.action,
         eventInfo: eventInfo,
         dimensions: dimensions,
       ),
