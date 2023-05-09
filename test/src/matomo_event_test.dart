@@ -140,7 +140,6 @@ void main() {
           .thenReturn(matomoTrackerContentBase);
       when(() => mockMatomoTracker.siteId).thenReturn(matomoTrackerSiteId);
       when(() => mockVisitor.id).thenReturn(visitorId);
-      when(() => mockVisitor.cid).thenReturn(cid);
       when(() => mockVisitor.userId).thenReturn(userId);
       when(mockTrackingOrderItem.toArray).thenReturn([]);
       when(() => mockSession.visitCount).thenReturn(sessionVisitCount);

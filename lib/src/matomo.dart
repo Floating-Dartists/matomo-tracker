@@ -69,7 +69,6 @@ class MatomoTracker {
 
     _visitor = Visitor(
       id: _visitor.id,
-      cid: _visitor.cid,
       userId: userId,
     );
   }

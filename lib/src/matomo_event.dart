@@ -105,7 +105,6 @@ class MatomoEvent {
 
   Map<String, String> toMap() {
     final id = tracker.visitor.id;
-    final cid = tracker.visitor.cid;
     final uid = tracker.visitor.userId;
     final pvId = screenId;
     final actionName = action;
@@ -154,7 +153,6 @@ class MatomoEvent {
       if (country != null && tracker.getAuthToken != null) 'country': country,
 
       if (uid != null) 'uid': uid,
-      if (cid != null) 'cid': cid,
 
       // Optional Action info (measure Page view, Outlink, Download, Site search)
       if (pvId != null) 'pv_id': pvId,
