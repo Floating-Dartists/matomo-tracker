@@ -41,6 +41,15 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   @protected
   String? path;
 
+  /// {@template traceableClientMixin.dimensions}
+  /// A Custom Dimension value for a specific Custom Dimension ID.
+  ///
+  /// If Custom Dimension ID is 2 use `dimension2=dimensionValue` to send a
+  /// value for this dimension.
+  /// {@endtemplate}
+  @protected
+  Map<String, String>? dimensions;
+
   /// {@template traceableClientMixin.tracker}
   /// Matomo instance used to send events.
   ///
@@ -57,7 +66,6 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
 
   void _startTracking() {
     tracker.trackScreenWithName(
-      actionName: actionName,
       eventInfo: EventInfo(
         category: eventCategory,
         action: actionName,
@@ -65,6 +73,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
       ),
       pvId: pvId,
       path: path,
+      dimensions: dimensions,
     );
   }
 }

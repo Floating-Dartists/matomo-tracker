@@ -51,9 +51,11 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   void _incrementCounter() {
     // Send an event to Matomo on tap.
     MatomoTracker.instance.trackEvent(
-      eventName: 'IncrementCounter',
-      action: 'Click',
-      eventCategory: 'Main',
+      eventInfo: EventInfo(
+        category: 'Main',
+        action: 'Click',
+        name: 'IncrementCounter',
+      ),
     );
     setState(() {
       _counter++;

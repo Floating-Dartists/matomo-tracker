@@ -144,7 +144,6 @@ class MatomoTracker {
     required int siteId,
     required String url,
     String? visitorId,
-    // TODO(TesteurManiak): Write test for this.
     String? uid,
     String? contentBaseUrl,
     int dequeueInterval = 10,
@@ -353,7 +352,6 @@ class MatomoTracker {
     final actionName = context.widget.toStringShort();
 
     trackScreenWithName(
-      actionName: actionName,
       eventInfo: EventInfo(
         category: eventCategory,
         action: actionName,
@@ -383,8 +381,7 @@ class MatomoTracker {
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreenWithName({
-    required String actionName,
-    EventInfo? eventInfo,
+    required EventInfo eventInfo,
     String? pvId,
     String? path,
     Map<String, String>? dimensions,
@@ -405,7 +402,7 @@ class MatomoTracker {
       MatomoEvent(
         tracker: this,
         eventInfo: eventInfo,
-        action: actionName,
+        action: eventInfo.action,
         path: path,
         dimensions: dimensions,
       ),
@@ -437,33 +434,17 @@ class MatomoTracker {
 
   /// Tracks an event.
   ///
-  /// [eventCategory] corresponds with `e_c`, [action] with `e_a`, [eventName]
-  /// with `e_n` and [eventValue] with `e_v`.
-  ///
-  /// Here are some typical examples for what each parameter usually describes:
-  /// - `eventCategory`: Videos, Music, Games...
-  /// - `action`: Play, Pause, Duration, Add Playlist, Downloaded, Clicked...
-  /// - `eventName`: Movie name, or Song name, or File name...
-  ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackEvent({
-    required String eventCategory,
-    required String action,
-    String? eventName,
-    num? eventValue,
+    required EventInfo eventInfo,
     Map<String, String>? dimensions,
   }) {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
-        action: action,
-        eventInfo: EventInfo(
-          category: eventCategory,
-          action: action,
-          name: eventName,
-          value: eventValue,
-        ),
+        action: eventInfo.action,
+        eventInfo: eventInfo,
         dimensions: dimensions,
       ),
     );

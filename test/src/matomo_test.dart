@@ -183,7 +183,6 @@ void main() {
           final action = matomoTrackerMockWidget.toStringShort();
 
           tracker.trackScreenWithName(
-            actionName: action,
             eventInfo: EventInfo(
               category: matomoEventCategory,
               action: action,
@@ -195,7 +194,10 @@ void main() {
 
       testTracking('it should be able to trackScreenWithName', (tracker) {
         tracker.trackScreenWithName(
-          actionName: matomoTrackerMockWidget.toStringShort(),
+          eventInfo: EventInfo(
+            category: matomoEventCategory,
+            action: matomoTrackerMockWidget.toStringShort(),
+          ),
         );
       });
 
@@ -206,7 +208,10 @@ void main() {
 
           await expectLater(
             () => matomoTracker.trackScreenWithName(
-              actionName: matomoTrackerMockWidget.toStringShort(),
+              eventInfo: EventInfo(
+                category: matomoEventCategory,
+                action: matomoTrackerMockWidget.toStringShort(),
+              ),
               pvId: '',
             ),
             throwsArgumentError,
@@ -223,8 +228,10 @@ void main() {
 
     testTracking('it should be able to trackEvent', (tracker) async {
       tracker.trackEvent(
-        eventCategory: matomoTrackerEventCategory,
-        action: matomoTrackerAction,
+        eventInfo: EventInfo(
+          category: matomoTrackerEventCategory,
+          action: matomoTrackerAction,
+        ),
       );
     });
 

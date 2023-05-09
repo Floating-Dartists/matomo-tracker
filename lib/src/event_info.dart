@@ -13,7 +13,6 @@
 ///
 /// Note: Strings filled with whitespace will be considered as (invalid) empty
 /// values.
-// TODO(TesteurManiak): Write the migration guide.
 class EventInfo {
   factory EventInfo({
     required String category,

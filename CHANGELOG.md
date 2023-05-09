@@ -1,17 +1,14 @@
 # Changelog
 
-## [4.x.x]
+## [4.0.0-dev.1]
+
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
 
 * Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
   * feat: Improved documentation and added verification on dimension keys [#63](https://github.com/Floating-Dartists/matomo-tracker/pull/63)
 * Contributions from [TesteurManiak](https://github.com/TesteurManiak)
   * fix: Added test cases for dimension key validation [#67](https://github.com/Floating-Dartists/matomo-tracker/pull/67)
-  * refactor:
-    * Removed `forcedId`
-    * Renamed `userId` to `uid`
-    * Renamed `TraceableClientMixin.traceName`, `TraceableWidget.traceName` and `trackScreenWithName.widgetName` to `actionName`
-    * Renamed `TraceableClientMixin.traceTitle` and `TraceableWidget.traceTitle` to `eventName`
-    * Renamed `TraceableClientMixin.widgetId`, `TraceableWidget.widgetId` and `trackScreenWithName.currentScreenId` to `pvId`
+  * refactor: Renamed some variables to be more explicit with the Matomo API, added an `EventInfo` class to manage accurately additional data send with an event, added support for custom dimensions to `TraceableMixin` and `TraceableWidget` [#68](https://github.com/Floating-Dartists/matomo-tracker/pull/68)
 
 ## [3.1.0]
 

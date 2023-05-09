@@ -24,6 +24,7 @@ A fully cross-platform wrap of the Matomo tracking client for Flutter, using the
   - [Using Dimensions](#using-dimensions)
   - [Cookieless Tracking](#cookieless-tracking)
 - [Migration Guide](#migration-guide)
+    - [v4.0.0](#v400)
     - [v3.0.0](#v300)
 - [Contributors](#contributors)
 
@@ -159,8 +160,9 @@ MatomoTracker.instance.trackDimensions({
 
 ```dart
 MatomoTracker.instance.trackEvent(
-    name: 'eventName',
     action: 'eventAction',
+    eventCategory: 'eventCategory',
+    eventName: 'eventName',
     eventValue: 18,
     dimensions: {'dimension2':'guest-user'}
 );
@@ -170,10 +172,13 @@ You can similarly track dimensions on Screen views with:
 
 ```dart
 MatomoTracker.instance.trackScreenWithName(
-      widgetName: "Settings",
-      eventName: "screen_view",
-      dimensions: {'dimension1': '0.0.1'}
-    );
+    eventInfo: EventInfo(
+        category: "screen_view",
+        action: "view",
+        name: "Settings",
+    ),
+    dimensions: {'dimension1': '0.0.1'}
+);
 ```
 
 The naming of the dimensions is important and explained in more detail in the documentation of [`trackDimensions`](https://pub.dev/documentation/matomo_tracker/latest/matomo_tracker/MatomoTracker/trackDimensions.html).
@@ -193,6 +198,15 @@ await MatomoTracker.instance.initialize(
 When using cookieless tracking, neither the user_id nor the first_visit will be sent or saved locally.
 
 # Migration Guide
+
+## v4.0.0
+
+* `forcedId` property has been removed as it was never used. You should rely on the user ID instead.
+* Occurences of `userId` have been renamed to `uid`.
+* Occurences of `traceName` and `widgetName` have been renamed to `actionName`.
+* Occurences of `traceTitle` have been renamed to `eventName`.
+* Occurences of `widgetId` have been renamed to `pvId`.
+* An object of type `EventInfo` has been added, it has the following properties: `category`, `action`, `name` and `value`, use it instead of passing the event name, action and value as separate parameters.
 
 ## v3.0.0
 
