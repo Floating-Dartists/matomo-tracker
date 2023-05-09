@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:matomo_tracker/matomo_tracker.dart';
+import 'package:matomo_tracker/utils/random_alpha_numeric.dart';
 
 final matomoObserver = RouteObserver<ModalRoute<void>>();
 
-/// Register a `trackScreenWithName` on this widget.
+/// Register a [MatomoTracker.trackScreenWithName] on this widget.
 @optionalTypeArgs
 mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
     implements RouteAware {
   /// {@template traceableClientMixin.actionName}
-  /// Equivalent to an event action. (e.g. `'Created HomePage'`).
+  /// Equivalent to the page name. (e.g. `'HomePage'`).
   /// {@endtemplate}
   @protected
   String get actionName => 'Created widget ${widget.toStringShort()}';
 
   /// {@template traceableClientMixin.pvId}
-  /// A 6 character unique ID. If `null`, a random id will be generated.
+  /// A 6 character unique ID.
+  ///
+  /// The default implementation will generate one on widget creation.
   /// {@endtemplate}
   @protected
-  String? pvId;
+  String get pvId => _pvId;
+  String _pvId = randomAlphaNumeric(6);
 
   /// {@template traceableClientMixin.path}
   /// Path to the widget. (e.g. `'/home'`).
@@ -40,6 +44,8 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   ///
   /// If Custom Dimension ID is 2 use `dimension2=dimensionValue` to send a
   /// value for this dimension.
+  /// 
+  /// For additional remarks see [MatomoTracker.trackDimensions].
   /// {@endtemplate}
   @protected
   Map<String, String>? dimensions;
@@ -92,5 +98,22 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
       campaign: campaign,
       dimensions: dimensions,
     );
+  }
+
+  /// Should be called if a [Navigator.pop]s back to this page.
+  ///
+  /// This will than trigger an action to tell Matomo that the
+  /// app is back on this page.
+  ///
+  /// If you do not consider this a new page view in your apps logic,
+  /// you should set [updatePvId] to `false` to tell the widget to keep
+  /// the old [pvId]. If you overworte the [pvId] getter, this has no
+  /// effect.
+  @protected
+  void onReentry({bool updatePvId = true}) {
+    if (updatePvId) {
+      _pvId = randomAlphaNumeric(6);
+    }
+    _startTracking();
   }
 }
