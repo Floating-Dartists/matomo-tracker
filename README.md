@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   }
 
   @override
-  String get traceName => 'Created HomePage'; // optional
+  String get actionName => 'Created HomePage'; // optional
 
   @override
   String get path => '/home'; // optional
@@ -98,7 +98,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TraceableWidget(
-      traceName: 'Created HomePage', // optional
+      actionName: 'Created HomePage', // optional
       path: '/home', // optional
       traceTitle: title,
       child: Scaffold(

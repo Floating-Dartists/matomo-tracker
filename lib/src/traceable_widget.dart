@@ -8,14 +8,14 @@ class TraceableWidget extends StatefulWidget {
     super.key,
     required this.child,
     required this.traceTitle,
-    this.traceName,
+    this.actionName,
     this.widgetId,
     this.path,
     this.tracker,
   });
 
-  /// {@macro traceableClientMixin.traceName}
-  final String? traceName;
+  /// {@macro traceableClientMixin.actionName}
+  final String? actionName;
 
   /// {@macro traceableClientMixin.traceTitle}
   final String traceTitle;
@@ -43,7 +43,7 @@ class _TraceableWidgetState extends State<TraceableWidget>
   }
 
   @override
-  String get actionName => widget.traceName ?? super.actionName;
+  String get actionName => widget.actionName ?? super.actionName;
 
   @override
   String get traceTitle => widget.traceTitle;

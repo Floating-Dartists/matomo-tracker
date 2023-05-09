@@ -6,7 +6,9 @@
   * feat: Improved documentation and added verification on dimension keys [#63](https://github.com/Floating-Dartists/matomo-tracker/pull/63)
 * Contributions from [TesteurManiak](https://github.com/TesteurManiak)
   * fix: Added test cases for dimension key validation [#67](https://github.com/Floating-Dartists/matomo-tracker/pull/67)
-  * refactor: Removed `forcedId` (unused), renamed `userId` to `uid`, renamed `TraceableClientMixin.traceName` and `trackScreenWithName.widgetName` to `actionName`
+  * refactor:
+    * Removed `forcedId`
+    * Renamed `userId` to `uid`, renamed `TraceableClientMixin.traceName`, `TraceableWidget.traceName` and `trackScreenWithName.widgetName` to `actionName`
 
 ## [3.1.0]
 
