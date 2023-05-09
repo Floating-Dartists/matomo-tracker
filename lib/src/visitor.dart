@@ -1,21 +1,25 @@
 class Visitor {
   factory Visitor({
     String? id,
-    String? userId,
+    String? uid,
+    // TODO: remove in v4.0.0
+    @Deprecated('Use uid instead') String? userId,
   }) {
-    if (userId != null && userId.isEmpty) {
-      throw ArgumentError('Must not be empty', 'userId');
+    final localUid = userId ?? uid;
+
+    if (localUid != null && localUid.isEmpty) {
+      throw ArgumentError('Must not be empty', 'uid');
     }
 
     return Visitor._(
       id: id,
-      userId: userId,
+      uid: localUid,
     );
   }
 
   Visitor._({
     this.id,
-    this.userId,
+    this.uid,
   });
 
   /// The unique visitor ID, must be a 16 characters hexadecimal string.
@@ -25,9 +29,12 @@ class Visitor {
   /// track visits, but the unique visitors metric might be less accurate.
   final String? id;
 
-  /// User ID is any non-empty unique string identifying the user (such as an
-  /// email address or an username).
-  ///
-  /// Corresponds with the `uid` parameter.
-  final String? userId;
+  /// [User ID](https://matomo.org/guide/reports/user-ids/) is any non-empty
+  /// unique string identifying the user (such as an email address or an
+  /// username).
+  final String? uid;
+
+  // TODO: remove in v4.0.0
+  @Deprecated('Use uid instead')
+  String? get userId => uid;
 }

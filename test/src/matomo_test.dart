@@ -242,13 +242,13 @@ void main() {
   });
 
   group('setVisitorUserId', () {
-    uninitializedTest((tracker) => tracker.setVisitorUserId(userId));
+    uninitializedTest((tracker) => tracker.setVisitorUserId(uid));
 
     test('it should be able to set visitor userId', () async {
       final matomoTracker = await getInitializedMatomoTracker();
-      matomoTracker.setVisitorUserId(userId);
+      matomoTracker.setVisitorUserId(uid);
 
-      expect(matomoTracker.visitor.userId, userId);
+      expect(matomoTracker.visitor.uid, uid);
     });
   });
 

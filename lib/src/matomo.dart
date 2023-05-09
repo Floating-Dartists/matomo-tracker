@@ -60,16 +60,16 @@ class MatomoTracker {
   Visitor get visitor => _visitor;
   late Visitor _visitor;
 
-  /// Sets the user id (which corresponds with the `uid` parameter).
+  /// Sets the [User ID](https://matomo.org/guide/reports/user-ids/).
   ///
   /// This should not be confused with the [visitorId] of the [initialize]
   /// call (which corresponds with the `_id` parameter).
-  void setVisitorUserId(String? userId) {
+  void setVisitorUserId(String? uid) {
     _initializationCheck();
 
     _visitor = Visitor(
       id: _visitor.id,
-      userId: userId,
+      uid: uid,
     );
   }
 
@@ -142,6 +142,8 @@ class MatomoTracker {
     required int siteId,
     required String url,
     String? visitorId,
+    // TODO(TesteurManiak): Write test for this.
+    String? uid,
     String? contentBaseUrl,
     int dequeueInterval = 10,
     String? tokenAuth,
@@ -182,7 +184,7 @@ class MatomoTracker {
         : effectiveLocalStorage;
 
     final localVisitorId = visitorId ?? await _getVisitorId();
-    _visitor = Visitor(id: localVisitorId, userId: localVisitorId);
+    _visitor = Visitor(id: localVisitorId, uid: uid);
 
     // User agent
     userAgent = await getUserAgent();

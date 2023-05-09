@@ -7,28 +7,21 @@ void main() {
   test('it should be able to create Visitor', () {
     final visitor = Visitor(
       id: visitorId,
-      userId: userId,
+      uid: uid,
     );
 
     expect(visitor.id, visitorId);
-    expect(visitor.userId, userId);
+    expect(visitor.uid, uid);
   });
 
-  test('it should throw if userId is null or empty', () {
-    Visitor getVisitorWithNullUserId() {
-      return Visitor(
-        id: visitorId,
-      );
-    }
-
+  test('it should throw if userId is empty', () {
     Visitor getVisitorWithEmptyUserId() {
       return Visitor(
         id: visitorId,
-        userId: '',
+        uid: '',
       );
     }
 
-    expect(getVisitorWithNullUserId, throwsArgumentError);
     expect(getVisitorWithEmptyUserId, throwsArgumentError);
   });
 }

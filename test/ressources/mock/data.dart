@@ -9,7 +9,7 @@ const sessionVisitCount = 1;
 
 // Visitor
 const visitorId = 'visitorId';
-const userId = 'userId';
+const uid = 'userId';
 
 // TrackingOrderItem
 const trackingOrderItemSku = 'skusku';
@@ -57,7 +57,6 @@ Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       if (userAgent != null) "ua": userAgent,
       "lang": "en_US",
       "uid": "userId",
-      "cid": "1234567890123456",
       "pv_id": "123456",
       "idgoal": "1",
       "e_c": "eventCategory",

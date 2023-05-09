@@ -140,7 +140,7 @@ void main() {
           .thenReturn(matomoTrackerContentBase);
       when(() => mockMatomoTracker.siteId).thenReturn(matomoTrackerSiteId);
       when(() => mockVisitor.id).thenReturn(visitorId);
-      when(() => mockVisitor.userId).thenReturn(userId);
+      when(() => mockVisitor.uid).thenReturn(uid);
       when(mockTrackingOrderItem.toArray).thenReturn([]);
       when(() => mockSession.visitCount).thenReturn(sessionVisitCount);
       when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
@@ -158,7 +158,7 @@ void main() {
         eventMap.remove('rand');
         wantedEvent.remove('rand');
 
-        expect(mapEquals(wantedEvent, eventMap), true);
+        expect(mapEquals(wantedEvent, eventMap), isTrue);
       });
     });
 
@@ -179,7 +179,7 @@ void main() {
         eventMap.remove('rand');
         wantedEvent.remove('rand');
 
-        expect(mapEquals(wantedEvent, eventMap), true);
+        expect(mapEquals(wantedEvent, eventMap), isTrue);
       });
     });
   });
