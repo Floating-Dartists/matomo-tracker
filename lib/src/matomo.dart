@@ -50,7 +50,7 @@ class MatomoTracker {
   /// The url of the Matomo endpoint.
   ///
   /// E.g.: `https://example.com/matomo.php`
-  /// 
+  ///
   /// Should not be confused with the `url` tracking parameter
   /// which is constructed by combining [contentBase] with a `path`
   /// (e.g. in [trackScreenWithName]).
@@ -81,7 +81,7 @@ class MatomoTracker {
   late final Map<String, String> customHeaders;
 
   /// URL for the current action.
-  /// 
+  ///
   /// For the tracking of screens (e.g. with [trackScreenWithName]) this is combined
   /// with the `path` parameter to create the tracked `url`.
   late final String contentBase;
@@ -347,7 +347,7 @@ class MatomoTracker {
       this.currentScreenId = currentScreenId;
     }
     final widgetName = context.widget.toStringShort();
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     trackScreenWithName(
       widgetName: widgetName,
       eventName: eventName,
@@ -392,7 +392,7 @@ class MatomoTracker {
     }
 
     this.currentScreenId = currentScreenId ?? randomAlphaNumeric(6);
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -416,7 +416,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -445,7 +445,7 @@ class MatomoTracker {
     int? eventValue,
     Map<String, String>? dimensions,
   }) {
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -470,7 +470,7 @@ class MatomoTracker {
   /// Also note that counting starts at 1 and NOT at 0 as opposed to what is stated
   /// in the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api) documentation.
   void trackDimensions(Map<String, String> dimensions) {
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -491,7 +491,7 @@ class MatomoTracker {
     int? searchCount,
     Map<String, String>? dimensions,
   }) {
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -516,7 +516,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -546,7 +546,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -572,7 +572,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
-    _validateDimension(dimensions);
+    validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -629,7 +629,8 @@ class MatomoTracker {
     return localId ?? const Uuid().v4().replaceAll('-', '').substring(0, 16);
   }
 
-  void _validateDimension(Map<String, String>? dimensions) {
+  @visibleForTesting
+  void validateDimension(Map<String, String>? dimensions) {
     if (dimensions == null) {
       return;
     }
