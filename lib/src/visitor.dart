@@ -27,5 +27,7 @@ class Visitor {
 
   /// User ID is any non-empty unique string identifying the user (such as an
   /// email address or an username).
+  /// 
+  /// Corresponds with the `uid` parameter.
   final String? userId;
 }

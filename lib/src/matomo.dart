@@ -23,6 +23,10 @@ import 'package:matomo_tracker/utils/random_alpha_numeric.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
 
+/// Implementation of the Matomo [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api).
+///
+/// If this documentation refers to a correspondence with a parameter, check out
+/// the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api) documentation for more information on that parameter.
 class MatomoTracker {
   /// This is only used for testing purpose, because testing singleton is hard.
   @visibleForTesting
@@ -38,13 +42,28 @@ class MatomoTracker {
 
   static final instance = MatomoTracker._internal();
 
+  /// The ID of the website we're tracking a visit/action for.
+  ///
+  /// Corresponds with `idsite`.
   late final int siteId;
+
+  /// The url of the Matomo endpoint.
+  ///
+  /// E.g.: `https://example.com/matomo.php`
+  /// 
+  /// Should not be confused with the `url` tracking parameter
+  /// which is constructed by combining [contentBase] with a `path`
+  /// (e.g. in [trackScreenWithName]).
   late final String url;
   late final Session session;
 
   Visitor get visitor => _visitor;
   late Visitor _visitor;
 
+  /// Sets the user id (which corresponds with the `uid` parameter).
+  ///
+  /// This should not be confused with the [visitorId] of the [initialize]
+  /// call (which corresponds with the `_id` parameter).
   void setVisitorUserId(String? userId) {
     _initializationCheck();
 
@@ -62,6 +81,9 @@ class MatomoTracker {
   late final Map<String, String> customHeaders;
 
   /// URL for the current action.
+  /// 
+  /// For the tracking of screens (e.g. with [trackScreenWithName]) this is combined
+  /// with the `path` parameter to create the tracked `url`.
   late final String contentBase;
 
   /// The resolution of the device the visitor is using, eg **1280x1024**.
@@ -69,6 +91,8 @@ class MatomoTracker {
 
   /// 6 character unique ID that identifies which actions were performed on a
   /// specific page view.
+  ///
+  /// Corresponds with `pv_id`.
   String? currentScreenId;
 
   bool _initialized = false;
@@ -108,8 +132,9 @@ class MatomoTracker {
   /// If the tracker is already initialized, an
   /// [AlreadyInitializedMatomoInstanceException] will be thrown.
   ///
-  /// The [siteId] should have a length of 16 characters otherwise an
-  /// [ArgumentError] will be thrown.
+  /// The [visitorId] should have a length of 16 characters otherwise an
+  /// [ArgumentError] will be thrown. This parameter corresponds with the
+  /// `_id` and should not be confused with the user id `uid`.
   ///
   /// If [cookieless] is set to true, a [CookielessStorage] instance will be
   /// used. This means that the first_visit and the user_id will be stored in
@@ -300,14 +325,17 @@ class MatomoTracker {
   /// This will register an event with [trackScreenWithName] by using the
   /// `context.widget.toStringShort()` value.
   ///
-  /// - `eventName`: The name of the event.
+  /// - `eventName`: The name of the event. This corresponds with `e_n`.
   ///
   /// - `currentScreenId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random id will be
-  /// generated.
+  /// generated. This corresponds with `pv_id`.
   ///
   /// - `path`: A string that identifies the path of the screen. If not
-  /// `null`, it will be combined to [contentBase] to create a URL.
+  /// `null`, it will be combined to [contentBase] to create a URL. This combination
+  /// corresponds with `url`.
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
   void trackScreen(
     BuildContext context, {
     required String eventName,
@@ -319,6 +347,7 @@ class MatomoTracker {
       this.currentScreenId = currentScreenId;
     }
     final widgetName = context.widget.toStringShort();
+    _validateDimension(dimensions);
     trackScreenWithName(
       widgetName: widgetName,
       eventName: eventName,
@@ -332,16 +361,19 @@ class MatomoTracker {
   /// the event's action.
   ///
   /// - `widgetName`: Equivalent to the event action, here used to identify the
-  /// screen with a proper name.
+  /// screen with a proper name. This corresponds with `action_name`.
   ///
-  /// - `eventName`: The name of the event.
+  /// - `eventName`: The name of the event. This corresponds with `e_n`.
   ///
   /// - `currentScreenId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random id will be
-  /// generated.
+  /// generated. This corresponds with `pv_id`.
   ///
   /// - `path`: A string that identifies the path of the screen. If not
-  /// `null`, it will be combined to [contentBase] to create a URL.
+  /// `null`, it will be combined to [contentBase] to create a URL. This combination
+  /// corresponds with `url`.
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
   void trackScreenWithName({
     required String widgetName,
     required String eventName,
@@ -360,6 +392,7 @@ class MatomoTracker {
     }
 
     this.currentScreenId = currentScreenId ?? randomAlphaNumeric(6);
+    _validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -371,6 +404,11 @@ class MatomoTracker {
     );
   }
 
+  /// Tracks a conversion for a goal.
+  ///
+  /// The [goalId] corresponds with `idgoal` and [revenue] with `revenue`.
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
   void trackGoal(
     int goalId, {
     double? revenue,
@@ -378,6 +416,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
+    _validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -388,6 +427,17 @@ class MatomoTracker {
     );
   }
 
+  /// Tracks an event.
+  ///
+  /// [eventCategory] corresponds with `e_c`, [action] with `e_a`, [eventName] with `e_n`
+  /// and [eventValue] with `e_v`.
+  ///
+  /// Here are some typical examples for what each parameter usually describes:
+  /// - `eventCategory`: Videos, Music, Games...
+  /// - `action`: Play, Pause, Duration, Add Playlist, Downloaded, Clicked...
+  /// - `eventName`: Movie name, or Song name, or File name...
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
   void trackEvent({
     required String eventCategory,
     required String action,
@@ -395,6 +445,7 @@ class MatomoTracker {
     int? eventValue,
     Map<String, String>? dimensions,
   }) {
+    _validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -408,7 +459,18 @@ class MatomoTracker {
     );
   }
 
+  /// Tracks custom visit dimensions.
+  ///
+  /// The keys of the [dimensions] map correspond with the `dimension[1-999]` parameters.
+  /// This means that the keys MUST be named `dimension1`, `dimension2`, `...`.
+  ///
+  /// The keys of the [dimensions] map will be validated if they follow these rules, and if not, a
+  /// [ArgumentError] will be thrown.
+  ///
+  /// Also note that counting starts at 1 and NOT at 0 as opposed to what is stated
+  /// in the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api) documentation.
   void trackDimensions(Map<String, String> dimensions) {
+    _validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -417,12 +479,19 @@ class MatomoTracker {
     );
   }
 
+  /// Tracks a search.
+  ///
+  /// [searchKeyword] corresponds with `search`, [searchCategory] with `search_cat` and
+  /// [searchCount] with `search_count`.
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
   void trackSearch({
     required String searchKeyword,
     String? searchCategory,
     int? searchCount,
     Map<String, String>? dimensions,
   }) {
+    _validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -434,6 +503,9 @@ class MatomoTracker {
     );
   }
 
+  /// Tracks a cart update.
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
   void trackCartUpdate(
     List<TrackingOrderItem>? trackingOrderItems,
     num? subTotal,
@@ -444,6 +516,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
+    _validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -458,6 +531,9 @@ class MatomoTracker {
     );
   }
 
+  /// Tracks an order.
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
   void trackOrder(
     String? orderId,
     List<TrackingOrderItem>? trackingOrderItems,
@@ -470,6 +546,7 @@ class MatomoTracker {
   }) {
     _initializationCheck();
 
+    _validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -486,12 +563,16 @@ class MatomoTracker {
     );
   }
 
+  /// Tracks the click on an outgoing link.
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
   void trackOutlink(
     String? link, {
     Map<String, String>? dimensions,
   }) {
     _initializationCheck();
 
+    _validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
@@ -546,5 +627,20 @@ class MatomoTracker {
 
     final localId = await _localStorage.getVisitorId();
     return localId ?? const Uuid().v4().replaceAll('-', '').substring(0, 16);
+  }
+
+  void _validateDimension(Map<String, String>? dimensions) {
+    if (dimensions == null) {
+      return;
+    }
+    for (final dimension in dimensions.keys) {
+      if (!dimension.startsWith('dimension')) {
+        throw ArgumentError('Invalid custom dimension name $dimension!');
+      }
+      final index = int.tryParse(dimension.substring('dimension'.length));
+      if (index == null || index < 1 || index > 999) {
+        throw ArgumentError('Invalid custom dimension name $dimension!');
+      }
+    }
   }
 }
