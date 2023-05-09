@@ -347,10 +347,12 @@ class MatomoTracker {
     if (currentScreenId != null) {
       this.currentScreenId = currentScreenId;
     }
-    final widgetName = context.widget.toStringShort();
+    final actionName = context.widget.toStringShort();
+
     _validateDimension(dimensions);
+
     trackScreenWithName(
-      widgetName: widgetName,
+      actionName: actionName,
       eventName: eventName,
       currentScreenId: currentScreenId,
       path: path,
@@ -376,7 +378,7 @@ class MatomoTracker {
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreenWithName({
-    required String widgetName,
+    required String actionName,
     required String eventName,
     String? currentScreenId,
     String? path,
@@ -398,7 +400,7 @@ class MatomoTracker {
       MatomoEvent(
         tracker: this,
         eventName: eventName,
-        action: widgetName,
+        action: actionName,
         path: path,
         dimensions: dimensions,
       ),

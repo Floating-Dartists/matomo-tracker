@@ -175,14 +175,14 @@ void main() {
     group('trackScreenWithName', () {
       uninitializedTest(
         (tracker) => tracker.trackScreenWithName(
-          widgetName: matomoTrackerMockWidget.toStringShort(),
+          actionName: matomoTrackerMockWidget.toStringShort(),
           eventName: matomoTrackerEvenName,
         ),
       );
 
       testTracking('it should be able to trackScreenWithName', (tracker) async {
         tracker.trackScreenWithName(
-          widgetName: matomoTrackerMockWidget.toStringShort(),
+          actionName: matomoTrackerMockWidget.toStringShort(),
           eventName: matomoTrackerEvenName,
         );
       });
@@ -193,7 +193,7 @@ void main() {
           final matomoTracker = await getInitializedMatomoTracker();
           await expectLater(
             () => matomoTracker.trackScreenWithName(
-              widgetName: matomoTrackerMockWidget.toStringShort(),
+              actionName: matomoTrackerMockWidget.toStringShort(),
               eventName: matomoTrackerEvenName,
               currentScreenId: '',
             ),

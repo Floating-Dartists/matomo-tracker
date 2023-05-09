@@ -1,10 +1,18 @@
 # Changelog
 
+## [4.x.x]
+
+* Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
+  * feat: Improved documentation and added verification on dimension keys [#63](https://github.com/Floating-Dartists/matomo-tracker/pull/63)
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
+  * fix: Added test cases for dimension key validation [#67](https://github.com/Floating-Dartists/matomo-tracker/pull/67)
+  * refactor: Removed `forcedId` (unused), renamed `userId` to `uid`, renamed `TraceableClientMixin.traceName` and `trackScreenWithName.widgetName` to `actionName`
+
 ## [3.1.0]
 
 * Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
   * feat: Allow to set custom http headers [#59](https://github.com/Floating-Dartists/matomo-tracker/pull/59)
-* Contribution from [TesteurManiak](https://github.com/TesteurManiak)
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
   * fix: Added custom headers to `sendBatch` and added test cases [#60](https://github.com/Floating-Dartists/matomo-tracker/pull/60)
 
 ## [3.0.0]

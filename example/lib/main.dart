@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   }
 
   @override
-  String get traceName => 'Created HomePage';
+  String get actionName => 'Created HomePage';
 
   @override
   String get traceTitle => widget.title;

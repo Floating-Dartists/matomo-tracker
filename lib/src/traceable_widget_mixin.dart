@@ -10,7 +10,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   /// This corresponds with `action_name`.
   /// {@endtemplate}
   @protected
-  String get traceName => 'Created widget ${widget.toStringShort()}';
+  String get actionName => 'Created widget ${widget.toStringShort()}';
 
   /// {@template traceableClientMixin.traceTitle}
   /// Equivalent to an event name. (e.g. `'HomePage'`).
@@ -53,7 +53,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
 
   void _startTracking() {
     tracker.trackScreenWithName(
-      widgetName: traceName,
+      actionName: actionName,
       eventName: traceTitle,
       currentScreenId: widgetId,
       path: path,

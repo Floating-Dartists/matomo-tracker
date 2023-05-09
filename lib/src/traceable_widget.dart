@@ -43,7 +43,7 @@ class _TraceableWidgetState extends State<TraceableWidget>
   }
 
   @override
-  String get traceName => widget.traceName ?? super.traceName;
+  String get actionName => widget.traceName ?? super.actionName;
 
   @override
   String get traceTitle => widget.traceTitle;

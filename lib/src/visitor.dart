@@ -2,18 +2,14 @@ class Visitor {
   factory Visitor({
     String? id,
     String? uid,
-    // TODO: remove in v4.0.0
-    @Deprecated('Use uid instead') String? userId,
   }) {
-    final localUid = userId ?? uid;
-
-    if (localUid != null && localUid.isEmpty) {
+    if (uid != null && uid.isEmpty) {
       throw ArgumentError('Must not be empty', 'uid');
     }
 
     return Visitor._(
       id: id,
-      uid: localUid,
+      uid: uid,
     );
   }
 
@@ -33,8 +29,4 @@ class Visitor {
   /// unique string identifying the user (such as an email address or an
   /// username).
   final String? uid;
-
-  // TODO: remove in v4.0.0
-  @Deprecated('Use uid instead')
-  String? get userId => uid;
 }
