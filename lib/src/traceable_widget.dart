@@ -7,8 +7,6 @@ class TraceableWidget extends StatefulWidget {
   const TraceableWidget({
     super.key,
     required this.child,
-    required this.eventName,
-    this.eventCategory,
     this.actionName,
     this.pvId,
     this.path,
@@ -18,12 +16,6 @@ class TraceableWidget extends StatefulWidget {
 
   /// {@macro traceableClientMixin.actionName}
   final String? actionName;
-
-  /// {@macro traceableClientMixin.eventName}
-  final String eventName;
-
-  /// {@macro traceableClientMixin.eventCategory}
-  final String? eventCategory;
 
   /// {@macro traceableClientMixin.pvId}
   final String? pvId;
@@ -52,12 +44,6 @@ class _TraceableWidgetState extends State<TraceableWidget>
 
   @override
   String get actionName => widget.actionName ?? super.actionName;
-
-  @override
-  String get eventName => widget.eventName;
-
-  @override
-  String get eventCategory => widget.eventCategory ?? super.eventCategory;
 
   @override
   String? get pvId => widget.pvId;

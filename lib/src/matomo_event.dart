@@ -11,7 +11,7 @@ class MatomoEvent {
     this.path,
     this.action,
     this.eventInfo,
-    String? screenId,
+    this.screenId,
     this.goalId,
     this.orderId,
     this.trackingOrderItems,
@@ -28,7 +28,6 @@ class MatomoEvent {
   })  :
         // we use clock.now instead of DateTime.now to make testing easier
         _date = clock.now().toUtc(),
-        screenId = screenId ?? tracker.currentScreenId,
         assert(
           screenId == null || screenId.length == 6,
           'screenId has to be six characters long',

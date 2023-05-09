@@ -90,12 +90,6 @@ class MatomoTracker {
   /// The resolution of the device the visitor is using, eg **1280x1024**.
   late final Size screenResolution;
 
-  /// 6 character unique ID that identifies which actions were performed on a
-  /// specific page view.
-  ///
-  /// Corresponds with `pv_id`.
-  String? currentScreenId;
-
   bool _initialized = false;
   bool get initialized => _initialized;
 
@@ -327,8 +321,6 @@ class MatomoTracker {
   /// This will register an event with [trackScreenWithName] by using the
   /// `context.widget.toStringShort()` value.
   ///
-  /// - `eventName`: The name of the event. This corresponds with `e_n`.
-  ///
   /// - `pvId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random id will be
   /// generated.
@@ -340,23 +332,14 @@ class MatomoTracker {
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreen(
     BuildContext context, {
-    required String eventName,
-    required String eventCategory,
     String? pvId,
     String? path,
     Map<String, String>? dimensions,
   }) {
-    if (pvId != null) {
-      currentScreenId = pvId;
-    }
     final actionName = context.widget.toStringShort();
 
     trackScreenWithName(
-      eventInfo: EventInfo(
-        category: eventCategory,
-        action: actionName,
-        name: eventName,
-      ),
+      actionName: actionName,
       pvId: pvId,
       path: path,
       dimensions: dimensions,
@@ -369,8 +352,6 @@ class MatomoTracker {
   /// - `actionName`: Equivalent to the event action, here used to identify the
   /// screen with a proper name.
   ///
-  /// - `eventInfo`: Additional data for the event send.
-  ///
   /// - `pvId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random ID will be
   /// generated.
@@ -381,7 +362,7 @@ class MatomoTracker {
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreenWithName({
-    required EventInfo eventInfo,
+    required String actionName,
     String? pvId,
     String? path,
     Map<String, String>? dimensions,
@@ -392,19 +373,18 @@ class MatomoTracker {
       throw ArgumentError.value(
         pvId,
         'pvId',
-        'The currentScreenId must be 6 characters long.',
+        'The pvId must be 6 characters long.',
       );
     }
 
-    currentScreenId = pvId ?? randomAlphaNumeric(6);
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
-        eventInfo: eventInfo,
-        action: eventInfo.action,
+        action: actionName,
         path: path,
         dimensions: dimensions,
+        screenId: pvId ?? randomAlphaNumeric(6),
       ),
     );
   }
