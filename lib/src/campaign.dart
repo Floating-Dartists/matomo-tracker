@@ -1,3 +1,5 @@
+import 'package:matomo_tracker/src/assert.dart';
+
 /// Describes a campaign.
 ///
 /// Read more about [Campaign Tracking](https://matomo.org/faq/reports/what-is-campaign-tracking-and-why-it-is-important/).
@@ -16,69 +18,14 @@ class Campaign {
     String? group,
     String? placement,
   }) {
-    if (name.trim().isEmpty) {
-      throw ArgumentError.value(
-        name,
-        'name',
-        'Must not be empty or whitespace only.',
-      );
-    }
-
-    if (keyword != null && keyword.trim().isEmpty) {
-      throw ArgumentError.value(
-        keyword,
-        'keyword',
-        'Must not be empty or whitespace only.',
-      );
-    }
-
-    if (source != null && source.trim().isEmpty) {
-      throw ArgumentError.value(
-        source,
-        'source',
-        'Must not be empty or whitespace only.',
-      );
-    }
-
-    if (medium != null && medium.trim().isEmpty) {
-      throw ArgumentError.value(
-        medium,
-        'medium',
-        'Must not be empty or whitespace only.',
-      );
-    }
-
-    if (content != null && content.trim().isEmpty) {
-      throw ArgumentError.value(
-        content,
-        'content',
-        'Must not be empty or whitespace only.',
-      );
-    }
-
-    if (id != null && id.trim().isEmpty) {
-      throw ArgumentError.value(
-        id,
-        'id',
-        'Must not be empty or whitespace only.',
-      );
-    }
-
-    if (group != null && group.trim().isEmpty) {
-      throw ArgumentError.value(
-        group,
-        'group',
-        'Must not be empty or whitespace only.',
-      );
-    }
-
-    if (placement != null && placement.trim().isEmpty) {
-      throw ArgumentError.value(
-        placement,
-        'placement',
-        'Must not be empty or whitespace only.',
-      );
-    }
+    assertStringIsFilled(value: name, name: 'name');
+    assertStringIsFilled(value: keyword, name: 'keyword');
+    assertStringIsFilled(value: source, name: 'source');
+    assertStringIsFilled(value: medium, name: 'medium');
+    assertStringIsFilled(value: content, name: 'content');
+    assertStringIsFilled(value: id, name: 'id');
+    assertStringIsFilled(value: group, name: 'group');
+    assertStringIsFilled(value: placement, name: 'placement');
 
     return Campaign._(
       name: name,
