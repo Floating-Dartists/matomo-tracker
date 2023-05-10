@@ -1,3 +1,5 @@
+import 'package:matomo_tracker/src/assert.dart';
+
 /// Used to add context to the event send.
 ///
 /// - `category`: The event category. Must not be empty. (eg. Videos, Music,
@@ -20,29 +22,9 @@ class EventInfo {
     String? name,
     num? value,
   }) {
-    if (category.trim().isEmpty) {
-      throw ArgumentError.value(
-        category,
-        'category',
-        'Must not be empty or whitespace only.',
-      );
-    }
-
-    if (action.trim().isEmpty) {
-      throw ArgumentError.value(
-        action,
-        'action',
-        'Must not be empty or whitespace only.',
-      );
-    }
-
-    if (name != null && name.trim().isEmpty) {
-      throw ArgumentError.value(
-        name,
-        'name',
-        'Must not be empty or whitespace only.',
-      );
-    }
+    assertStringIsFilled(value: category, name: 'category');
+    assertStringIsFilled(value: action, name: 'action');
+    assertStringIsFilled(value: name, name: 'name');
 
     return EventInfo._(
       category: category,
