@@ -4,29 +4,17 @@ import 'package:matomo_tracker/matomo_tracker.dart';
 /// Register a `trackScreenWithName` on this widget.
 @optionalTypeArgs
 mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
-  /// {@template traceableClientMixin.traceName}
+  /// {@template traceableClientMixin.actionName}
   /// Equivalent to an event action. (e.g. `'Created HomePage'`).
-  ///
-  /// This corresponds with `action_name`.
   /// {@endtemplate}
   @protected
-  String get traceName => 'Created widget ${widget.toStringShort()}';
+  String get actionName => 'Created widget ${widget.toStringShort()}';
 
-  /// {@template traceableClientMixin.traceTitle}
-  /// Equivalent to an event name. (e.g. `'HomePage'`).
-  ///
-  /// This corresponds with `e_n`.
-  /// {@endtemplate}
-  @protected
-  String get traceTitle;
-
-  /// {@template traceableClientMixin.widgetId}
+  /// {@template traceableClientMixin.pvId}
   /// A 6 character unique ID. If `null`, a random id will be generated.
-  ///
-  /// This corresponds with `pv_id`.
   /// {@endtemplate}
   @protected
-  String? widgetId;
+  String? pvId;
 
   /// {@template traceableClientMixin.path}
   /// Path to the widget. (e.g. `'/home'`).
@@ -36,6 +24,15 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
   /// {@endtemplate}
   @protected
   String? path;
+
+  /// {@template traceableClientMixin.dimensions}
+  /// A Custom Dimension value for a specific Custom Dimension ID.
+  ///
+  /// If Custom Dimension ID is 2 use `dimension2=dimensionValue` to send a
+  /// value for this dimension.
+  /// {@endtemplate}
+  @protected
+  Map<String, String>? dimensions;
 
   /// {@template traceableClientMixin.tracker}
   /// Matomo instance used to send events.
@@ -53,10 +50,10 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
 
   void _startTracking() {
     tracker.trackScreenWithName(
-      widgetName: traceName,
-      eventName: traceTitle,
-      currentScreenId: widgetId,
+      actionName: actionName,
+      pvId: pvId,
       path: path,
+      dimensions: dimensions,
     );
   }
 }

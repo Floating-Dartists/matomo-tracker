@@ -12,6 +12,7 @@ import '../mock/mock.dart';
 /// static variable. You just have to pass `shouldForceCreation: false`.
 Future<MatomoTracker> getInitializedMatomoTracker({
   String? visitorId,
+  String? uid,
   String? contentBaseUrl,
   String? tokenAuth,
   PlatformInfo? platformInfo,
@@ -29,6 +30,7 @@ Future<MatomoTracker> getInitializedMatomoTracker({
     localStorage: mockLocalStorage,
     packageInfo: mockPackageInfo,
     visitorId: visitorId,
+    uid: uid,
     contentBaseUrl: contentBaseUrl,
     tokenAuth: tokenAuth,
     platformInfo: platformInfo,

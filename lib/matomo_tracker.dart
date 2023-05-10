@@ -1,5 +1,6 @@
 library matomo_tracker;
 
+export 'src/event_info.dart';
 export 'src/exceptions.dart';
 export 'src/local_storage/local_storage.dart';
 export 'src/logger/log_record.dart' show Level;

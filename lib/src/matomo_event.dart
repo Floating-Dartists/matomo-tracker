@@ -3,19 +3,15 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:clock/clock.dart';
-import 'package:matomo_tracker/src/matomo.dart';
-import 'package:matomo_tracker/src/tracking_order_item.dart';
+import 'package:matomo_tracker/matomo_tracker.dart';
 
 class MatomoEvent {
   MatomoEvent({
     required this.tracker,
     this.path,
     this.action,
-    this.eventCategory,
-    this.eventAction,
-    this.eventName,
-    this.eventValue,
-    String? screenId,
+    this.eventInfo,
+    this.screenId,
     this.goalId,
     this.orderId,
     this.trackingOrderItems,
@@ -32,23 +28,11 @@ class MatomoEvent {
   })  :
         // we use clock.now instead of DateTime.now to make testing easier
         _date = clock.now().toUtc(),
-        screenId = screenId ?? tracker.currentScreenId,
         assert(
           screenId == null || screenId.length == 6,
           'screenId has to be six characters long',
-        ),
-        assert(
-          eventCategory == null || eventCategory.isNotEmpty,
-          'eventCategory must not be empty',
-        ),
-        assert(
-          eventAction == null || eventAction.isNotEmpty,
-          'eventAction must not be empty',
-        ),
-        assert(
-          eventName == null || eventName.isNotEmpty,
-          'eventName must not be empty',
         );
+
   final MatomoTracker tracker;
   final String? path;
 
@@ -57,18 +41,7 @@ class MatomoEvent {
   /// Feedback** will create the Action **Feedback** in the category **Help**.
   final String? action;
 
-  /// The event category. Must not be empty. (eg. Videos, Music, Games...)
-  final String? eventCategory;
-
-  /// The event action. Must not be empty. (eg. Play, Pause, Duration, Add
-  /// Playlist, Downloaded, Clicked...)
-  final String? eventAction;
-
-  /// The event name. (eg. a Movie name, or Song name, or File name...)
-  final String? eventName;
-
-  /// The event value.
-  final num? eventValue;
+  final EventInfo? eventInfo;
 
   /// 6 character unique ID that identifies which actions were performed on a
   /// specific page view.
@@ -105,18 +78,14 @@ class MatomoEvent {
 
   Map<String, String> toMap() {
     final id = tracker.visitor.id;
-    final cid = tracker.visitor.forcedId;
-    final uid = tracker.visitor.userId;
+    final uid = tracker.visitor.uid;
     final pvId = screenId;
     final actionName = action;
     final url =
         path != null ? '${tracker.contentBase}/$path' : tracker.contentBase;
     final idgoal = goalId;
     final aRevenue = revenue;
-    final eC = eventCategory;
-    final eA = eventAction;
-    final eN = eventName;
-    final eV = eventValue;
+    final event = eventInfo;
     final ecId = orderId;
     final ecItems = trackingOrderItems;
     final ecSt = subTotal;
@@ -154,17 +123,13 @@ class MatomoEvent {
       if (country != null && tracker.getAuthToken != null) 'country': country,
 
       if (uid != null) 'uid': uid,
-      if (cid != null) 'cid': cid,
 
       // Optional Action info (measure Page view, Outlink, Download, Site search)
       if (pvId != null) 'pv_id': pvId,
       if (idgoal != null) 'idgoal': idgoal.toString(),
 
       // Optional Event Tracking info
-      if (eC != null) 'e_c': eC,
-      if (eA != null) 'e_a': eA,
-      if (eN != null) 'e_n': eN,
-      if (eV != null) 'e_v': eV.toString(),
+      if (event != null) ...event.toMap(),
 
       // Optional Ecommerce info
       if (ecId != null) 'ec_id': ecId,

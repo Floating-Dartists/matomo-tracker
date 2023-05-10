@@ -1,10 +1,20 @@
 # Changelog
 
+## [4.0.0-dev.1]
+
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
+
+* Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
+  * feat: Improved documentation and added verification on dimension keys [#63](https://github.com/Floating-Dartists/matomo-tracker/pull/63)
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
+  * fix: Added test cases for dimension key validation [#67](https://github.com/Floating-Dartists/matomo-tracker/pull/67)
+  * refactor: Renamed some variables to be more explicit with the Matomo API, added an `EventInfo` class to manage accurately additional data send with an event, added support for custom dimensions to `TraceableMixin` and `TraceableWidget` [#68](https://github.com/Floating-Dartists/matomo-tracker/pull/68)
+
 ## [3.1.0]
 
 * Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
   * feat: Allow to set custom http headers [#59](https://github.com/Floating-Dartists/matomo-tracker/pull/59)
-* Contribution from [TesteurManiak](https://github.com/TesteurManiak)
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
   * fix: Added custom headers to `sendBatch` and added test cases [#60](https://github.com/Floating-Dartists/matomo-tracker/pull/60)
 
 ## [3.0.0]

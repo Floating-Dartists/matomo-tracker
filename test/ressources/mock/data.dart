@@ -9,9 +9,7 @@ const sessionVisitCount = 1;
 
 // Visitor
 const visitorId = 'visitorId';
-const forceId = '1234567890123456'; // 16 characters
-const wrongForceId = '1234';
-const userId = 'userId';
+const uid = 'userId';
 
 // TrackingOrderItem
 const trackingOrderItemSku = 'skusku';
@@ -59,7 +57,6 @@ Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       if (userAgent != null) "ua": userAgent,
       "lang": "en_US",
       "uid": "userId",
-      "cid": "1234567890123456",
       "pv_id": "123456",
       "idgoal": "1",
       "e_c": "eventCategory",
@@ -93,7 +90,7 @@ const matomoTrackerUrl = 'https://example.com';
 const matomoTrackerContentBaseUrl = 'https://example.com';
 const matomoTrackerPackageName = 'packageName';
 const matomoTrackerWrongVisitorId = '1234'; // not 16 characters
-const matomoTrackerEvenName = 'eventName';
+const matomoTrackerEventName = 'eventName';
 const matomoTrackerMockWidget = MockWidget();
 const matomoTrackerGoalId = 1;
 const matomoTrackerEventCategory = 'eventCategory';
@@ -124,3 +121,15 @@ const macOsModel = 'macOsModel';
 const macOsKernelVersion = 'macOsKernelVersion';
 const macOsRelease = 'macOsRelease';
 const linuxPrettyName = 'linuxPrettyName';
+
+// EventInfo
+final wantedEventMap = <String, String>{
+  'e_c': matomoEventCategory,
+  'e_a': matomoEventAction,
+};
+final wantedEventMapFull = <String, String>{
+  'e_c': matomoEventCategory,
+  'e_a': matomoEventAction,
+  'e_n': matomoEventName,
+  'e_v': matomoEventValue.toString(),
+};

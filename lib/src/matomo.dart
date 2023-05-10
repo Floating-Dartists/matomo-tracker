@@ -6,6 +6,7 @@ import 'package:clock/clock.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
@@ -26,7 +27,8 @@ import 'package:uuid/uuid.dart';
 /// Implementation of the Matomo [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api).
 ///
 /// If this documentation refers to a correspondence with a parameter, check out
-/// the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api) documentation for more information on that parameter.
+/// the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api)
+/// documentation for more information on that parameter.
 class MatomoTracker {
   /// This is only used for testing purpose, because testing singleton is hard.
   @visibleForTesting
@@ -60,17 +62,16 @@ class MatomoTracker {
   Visitor get visitor => _visitor;
   late Visitor _visitor;
 
-  /// Sets the user id (which corresponds with the `uid` parameter).
+  /// Sets the [User ID](https://matomo.org/guide/reports/user-ids/).
   ///
   /// This should not be confused with the [visitorId] of the [initialize]
   /// call (which corresponds with the `_id` parameter).
-  void setVisitorUserId(String? userId) {
+  void setVisitorUserId(String? uid) {
     _initializationCheck();
 
     _visitor = Visitor(
       id: _visitor.id,
-      forcedId: _visitor.forcedId,
-      userId: userId,
+      uid: uid,
     );
   }
 
@@ -88,12 +89,6 @@ class MatomoTracker {
 
   /// The resolution of the device the visitor is using, eg **1280x1024**.
   late final Size screenResolution;
-
-  /// 6 character unique ID that identifies which actions were performed on a
-  /// specific page view.
-  ///
-  /// Corresponds with `pv_id`.
-  String? currentScreenId;
 
   bool _initialized = false;
   bool get initialized => _initialized;
@@ -143,6 +138,7 @@ class MatomoTracker {
     required int siteId,
     required String url,
     String? visitorId,
+    String? uid,
     String? contentBaseUrl,
     int dequeueInterval = 10,
     String? tokenAuth,
@@ -183,7 +179,7 @@ class MatomoTracker {
         : effectiveLocalStorage;
 
     final localVisitorId = visitorId ?? await _getVisitorId();
-    _visitor = Visitor(id: localVisitorId, userId: localVisitorId);
+    _visitor = Visitor(id: localVisitorId, uid: uid);
 
     // User agent
     userAgent = await getUserAgent();
@@ -325,11 +321,9 @@ class MatomoTracker {
   /// This will register an event with [trackScreenWithName] by using the
   /// `context.widget.toStringShort()` value.
   ///
-  /// - `eventName`: The name of the event. This corresponds with `e_n`.
-  ///
-  /// - `currentScreenId`: A 6 character unique ID that identifies which actions
+  /// - `pvId`: A 6 character unique ID that identifies which actions
   /// were performed on a specific page view. If `null`, a random id will be
-  /// generated. This corresponds with `pv_id`.
+  /// generated.
   ///
   /// - `path`: A string that identifies the path of the screen. If not
   /// `null`, it will be combined to [contentBase] to create a URL. This combination
@@ -338,20 +332,15 @@ class MatomoTracker {
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreen(
     BuildContext context, {
-    required String eventName,
-    String? currentScreenId,
+    String? pvId,
     String? path,
     Map<String, String>? dimensions,
   }) {
-    if (currentScreenId != null) {
-      this.currentScreenId = currentScreenId;
-    }
-    final widgetName = context.widget.toStringShort();
-    validateDimension(dimensions);
+    final actionName = context.widget.toStringShort();
+
     trackScreenWithName(
-      widgetName: widgetName,
-      eventName: eventName,
-      currentScreenId: currentScreenId,
+      actionName: actionName,
+      pvId: pvId,
       path: path,
       dimensions: dimensions,
     );
@@ -360,46 +349,42 @@ class MatomoTracker {
   /// Register an event with [eventName] as the event's name and [widgetName] as
   /// the event's action.
   ///
-  /// - `widgetName`: Equivalent to the event action, here used to identify the
-  /// screen with a proper name. This corresponds with `action_name`.
+  /// - `actionName`: Equivalent to the event action, here used to identify the
+  /// screen with a proper name.
   ///
-  /// - `eventName`: The name of the event. This corresponds with `e_n`.
-  ///
-  /// - `currentScreenId`: A 6 character unique ID that identifies which actions
-  /// were performed on a specific page view. If `null`, a random id will be
-  /// generated. This corresponds with `pv_id`.
+  /// - `pvId`: A 6 character unique ID that identifies which actions
+  /// were performed on a specific page view. If `null`, a random ID will be
+  /// generated.
   ///
   /// - `path`: A string that identifies the path of the screen. If not
-  /// `null`, it will be combined to [contentBase] to create a URL. This combination
-  /// corresponds with `url`.
+  /// `null`, it will be combined to [contentBase] to create a URL. This
+  /// combination corresponds with `url`.
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreenWithName({
-    required String widgetName,
-    required String eventName,
-    String? currentScreenId,
+    required String actionName,
+    String? pvId,
     String? path,
     Map<String, String>? dimensions,
   }) {
     _initializationCheck();
 
-    if (currentScreenId != null && currentScreenId.length != 6) {
+    if (pvId != null && pvId.length != 6) {
       throw ArgumentError.value(
-        currentScreenId,
-        'currentScreenId',
-        'The currentScreenId must be 6 characters long.',
+        pvId,
+        'pvId',
+        'The pvId must be 6 characters long.',
       );
     }
 
-    this.currentScreenId = currentScreenId ?? randomAlphaNumeric(6);
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
-        eventName: eventName,
-        action: widgetName,
+        action: actionName,
         path: path,
         dimensions: dimensions,
+        screenId: pvId ?? randomAlphaNumeric(6),
       ),
     );
   }
@@ -429,31 +414,16 @@ class MatomoTracker {
 
   /// Tracks an event.
   ///
-  /// [eventCategory] corresponds with `e_c`, [action] with `e_a`, [eventName] with `e_n`
-  /// and [eventValue] with `e_v`.
-  ///
-  /// Here are some typical examples for what each parameter usually describes:
-  /// - `eventCategory`: Videos, Music, Games...
-  /// - `action`: Play, Pause, Duration, Add Playlist, Downloaded, Clicked...
-  /// - `eventName`: Movie name, or Song name, or File name...
-  ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackEvent({
-    required String eventCategory,
-    required String action,
-    String? eventName,
-    int? eventValue,
+    required EventInfo eventInfo,
     Map<String, String>? dimensions,
   }) {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
         tracker: this,
-        action: action,
-        eventAction: action,
-        eventName: eventName,
-        eventCategory: eventCategory,
-        eventValue: eventValue,
+        eventInfo: eventInfo,
         dimensions: dimensions,
       ),
     );
@@ -636,11 +606,19 @@ class MatomoTracker {
     }
     for (final dimension in dimensions.keys) {
       if (!dimension.startsWith('dimension')) {
-        throw ArgumentError('Invalid custom dimension name $dimension!');
+        throw ArgumentError.value(
+          dimension,
+          'dimension',
+          'Invalid custom dimension name!',
+        );
       }
       final index = int.tryParse(dimension.substring('dimension'.length));
       if (index == null || index < 1 || index > 999) {
-        throw ArgumentError('Invalid custom dimension name $dimension!');
+        throw ArgumentError.value(
+          dimension,
+          'dimension',
+          'Invalid custom dimension name!',
+        );
       }
     }
   }

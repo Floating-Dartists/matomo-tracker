@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -13,12 +14,14 @@ void main() {
       tracker: mockMatomoTracker,
       path: matomoEventPath,
       action: matomoEventAction,
-      eventCategory: matomoEventCategory,
       dimensions: matomoEventDimension,
       discountAmount: matomoDiscountAmount,
-      eventAction: matomoEventAction,
-      eventValue: matomoEventValue,
-      eventName: matomoEventName,
+      eventInfo: EventInfo(
+        category: matomoEventCategory,
+        action: matomoEventAction,
+        name: matomoEventName,
+        value: matomoEventValue,
+      ),
       goalId: matomoGoalId,
       link: matomoLink,
       orderId: matomoOrderId,
@@ -40,12 +43,12 @@ void main() {
     expect(matomotoEvent.tracker, mockMatomoTracker);
     expect(matomotoEvent.path, matomoEventPath);
     expect(matomotoEvent.action, matomoEventAction);
-    expect(matomotoEvent.eventCategory, matomoEventCategory);
+    expect(matomotoEvent.eventInfo?.category, matomoEventCategory);
     expect(matomotoEvent.dimensions, matomoEventDimension);
     expect(matomotoEvent.discountAmount, matomoDiscountAmount);
-    expect(matomotoEvent.eventAction, matomoEventAction);
-    expect(matomotoEvent.eventValue, matomoEventValue);
-    expect(matomotoEvent.eventName, matomoEventName);
+    expect(matomotoEvent.eventInfo?.action, matomoEventAction);
+    expect(matomotoEvent.eventInfo?.value, matomoEventValue);
+    expect(matomotoEvent.eventInfo?.name, matomoEventName);
     expect(matomotoEvent.goalId, matomoGoalId);
     expect(matomotoEvent.link, matomoLink);
     expect(matomotoEvent.orderId, matomoOrderId);
@@ -81,50 +84,60 @@ void main() {
       );
 
       test(
-        'it should throw AssertionError if eventCategory is empty',
+        'it should throw ArgumentError if event category is empty',
         () {
           MatomoEvent getMatomoEventWithEmptyEventCategory() {
             return MatomoEvent(
               tracker: mockMatomoTracker,
-              eventCategory: '',
+              eventInfo: EventInfo(
+                category: '',
+                action: matomoEventAction,
+              ),
             );
           }
 
           expect(
             getMatomoEventWithEmptyEventCategory,
-            throwsAssertionError,
+            throwsArgumentError,
           );
         },
       );
 
       test(
-        'it should throw AssertionError if eventAction is empty',
+        'it should throw ArgumentError if event action is empty',
         () {
           MatomoEvent getMatomoEventWithEmptyEventAction() {
             return MatomoEvent(
               tracker: mockMatomoTracker,
-              eventAction: '',
+              eventInfo: EventInfo(
+                category: matomoEventCategory,
+                action: '',
+              ),
             );
           }
 
           expect(
             getMatomoEventWithEmptyEventAction,
-            throwsAssertionError,
+            throwsArgumentError,
           );
         },
       );
 
-      test('it should throw AssertionError if eventName is empty', () {
+      test('it should throw ArgumentError if event name is empty', () {
         MatomoEvent getMatomoEventWithEmptyEventName() {
           return MatomoEvent(
             tracker: mockMatomoTracker,
-            eventName: '',
+            eventInfo: EventInfo(
+              category: matomoEventCategory,
+              action: matomoEventAction,
+              name: '',
+            ),
           );
         }
 
         expect(
           getMatomoEventWithEmptyEventName,
-          throwsAssertionError,
+          throwsArgumentError,
         );
       });
     },
@@ -140,8 +153,7 @@ void main() {
           .thenReturn(matomoTrackerContentBase);
       when(() => mockMatomoTracker.siteId).thenReturn(matomoTrackerSiteId);
       when(() => mockVisitor.id).thenReturn(visitorId);
-      when(() => mockVisitor.forcedId).thenReturn(forceId);
-      when(() => mockVisitor.userId).thenReturn(userId);
+      when(() => mockVisitor.uid).thenReturn(uid);
       when(mockTrackingOrderItem.toArray).thenReturn([]);
       when(() => mockSession.visitCount).thenReturn(sessionVisitCount);
       when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
@@ -159,7 +171,7 @@ void main() {
         eventMap.remove('rand');
         wantedEvent.remove('rand');
 
-        expect(mapEquals(wantedEvent, eventMap), true);
+        expect(mapEquals(wantedEvent, eventMap), isTrue);
       });
     });
 
@@ -180,7 +192,7 @@ void main() {
         eventMap.remove('rand');
         wantedEvent.remove('rand');
 
-        expect(mapEquals(wantedEvent, eventMap), true);
+        expect(mapEquals(wantedEvent, eventMap), isTrue);
       });
     });
   });

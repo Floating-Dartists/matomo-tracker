@@ -7,24 +7,24 @@ class TraceableWidget extends StatefulWidget {
   const TraceableWidget({
     super.key,
     required this.child,
-    required this.traceTitle,
-    this.traceName,
-    this.widgetId,
+    this.actionName,
+    this.pvId,
     this.path,
+    this.dimensions,
     this.tracker,
   });
 
-  /// {@macro traceableClientMixin.traceName}
-  final String? traceName;
+  /// {@macro traceableClientMixin.actionName}
+  final String? actionName;
 
-  /// {@macro traceableClientMixin.traceTitle}
-  final String traceTitle;
-
-  /// {@macro traceableClientMixin.widgetId}
-  final String? widgetId;
+  /// {@macro traceableClientMixin.pvId}
+  final String? pvId;
 
   /// {@macro traceableClientMixin.path}
   final String? path;
+
+  /// {@macro traceableClientMixin.dimensions}
+  final Map<String, String>? dimensions;
 
   /// {@macro traceableClientMixin.tracker}
   final MatomoTracker? tracker;
@@ -43,16 +43,16 @@ class _TraceableWidgetState extends State<TraceableWidget>
   }
 
   @override
-  String get traceName => widget.traceName ?? super.traceName;
+  String get actionName => widget.actionName ?? super.actionName;
 
   @override
-  String get traceTitle => widget.traceTitle;
-
-  @override
-  String? get widgetId => widget.widgetId;
+  String? get pvId => widget.pvId;
 
   @override
   String? get path => widget.path;
+
+  @override
+  Map<String, String>? get dimensions => widget.dimensions;
 
   @override
   MatomoTracker get tracker => widget.tracker ?? super.tracker;
