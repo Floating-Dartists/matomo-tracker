@@ -9,7 +9,6 @@ const _testUserId = 'Nelson Pandela';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  _setupLogger();
   await MatomoTracker.instance.initialize(
     siteId: _sideId,
     url: _matomoEndpoint,
@@ -17,15 +16,6 @@ void main() async {
   );
   MatomoTracker.instance.setVisitorUserId(_testUserId);
   runApp(const MyApp());
-}
-
-void _setupLogger() {
-  log.Logger.root.level = log.Level.FINEST;
-  log.Logger.root.onRecord.listen((log.LogRecord rec) {
-    debugPrint(
-      '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}',
-    );
-  });
 }
 
 class MyApp extends StatelessWidget {
