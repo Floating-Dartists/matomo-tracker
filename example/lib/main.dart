@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart' as log;
 import 'package:matomo_tracker/matomo_tracker.dart';
 
 // See the docker folder for instructions on how to get a
@@ -10,7 +9,6 @@ const _testUserId = 'Nelson Pandela';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  _setupLogger();
   await MatomoTracker.instance.initialize(
     siteId: _sideId,
     url: _matomoEndpoint,
@@ -18,15 +16,6 @@ void main() async {
   );
   MatomoTracker.instance.setVisitorUserId(_testUserId);
   runApp(const MyApp());
-}
-
-void _setupLogger() {
-  log.Logger.root.level = log.Level.FINEST;
-  log.Logger.root.onRecord.listen((log.LogRecord rec) {
-    debugPrint(
-      '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}',
-    );
-  });
 }
 
 class MyApp extends StatelessWidget {
@@ -96,8 +85,12 @@ class MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: ElevatedButton(
                 onPressed: () async {
-                  await Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const OtherPage()));
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OtherPage(),
+                    ),
+                  );
                   // Here we wait until we poped back to this page, then tell Matomo we
                   // are here again by calling onReentry()
                   onReentry();
