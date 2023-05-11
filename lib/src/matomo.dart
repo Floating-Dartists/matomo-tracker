@@ -5,6 +5,7 @@ import 'package:clock/clock.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:matomo_tracker/src/campaign.dart';
 import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
@@ -329,11 +330,14 @@ class MatomoTracker {
   /// `null`, it will be combined to [contentBase] to create a URL. This combination
   /// corresponds with `url`.
   ///
+  /// - `campaign`: The campaign that lead to this page view.
+  ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreen(
     BuildContext context, {
     String? pvId,
     String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
   }) {
     final actionName = context.widget.toStringShort();
@@ -342,6 +346,7 @@ class MatomoTracker {
       actionName: actionName,
       pvId: pvId,
       path: path,
+      campaign: campaign,
       dimensions: dimensions,
     );
   }
@@ -360,11 +365,14 @@ class MatomoTracker {
   /// `null`, it will be combined to [contentBase] to create a URL. This
   /// combination corresponds with `url`.
   ///
+  /// - `campaign`: The campaign that lead to this page view.
+  ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackScreenWithName({
     required String actionName,
     String? pvId,
     String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
   }) {
     _initializationCheck();
@@ -383,6 +391,7 @@ class MatomoTracker {
         tracker: this,
         action: actionName,
         path: path,
+        campaign: campaign,
         dimensions: dimensions,
         screenId: pvId ?? randomAlphaNumeric(6),
       ),

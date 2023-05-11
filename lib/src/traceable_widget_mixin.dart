@@ -28,6 +28,13 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   @protected
   String? path;
 
+  /// {@template traceableClientMixin.campaign}
+  /// The campaign that lead to this interaction or `null` for a
+  /// default entry.
+  /// {@endtemplate}
+  @protected
+  Campaign? campaign;
+
   /// {@template traceableClientMixin.dimensions}
   /// A Custom Dimension value for a specific Custom Dimension ID.
   ///
@@ -82,6 +89,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
       actionName: actionName,
       pvId: pvId,
       path: path,
+      campaign: campaign,
       dimensions: dimensions,
     );
   }
