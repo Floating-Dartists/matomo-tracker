@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:matomo_tracker/matomo_tracker.dart';
 
+final matomoObserver = RouteObserver<ModalRoute<void>>();
+
 /// Register a `trackScreenWithName` on this widget.
 @optionalTypeArgs
-mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
+mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
+    implements RouteAware {
   /// {@template traceableClientMixin.actionName}
   /// Equivalent to an event action. (e.g. `'Created HomePage'`).
   /// {@endtemplate}
@@ -54,6 +57,32 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T> {
     super.initState();
     _startTracking();
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    matomoObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    matomoObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPop() {}
+
+  @override
+  void didPopNext() {
+    // TODO(EPNW-Eric): Add call to onReentry here
+  }
+
+  @override
+  void didPush() {}
+
+  @override
+  void didPushNext() {}
 
   void _startTracking() {
     tracker.trackScreenWithName(

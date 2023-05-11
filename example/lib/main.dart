@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart' as log;
 import 'package:matomo_tracker/matomo_tracker.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  await MatomoTracker.instance.initialize(
+    siteId: 1,
+    url: 'https://analytics.example.com/matomo.php',
+    verbosityLevel: Level.all,
+  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key) {
-    log.Logger.root.level = log.Level.FINEST;
-    log.Logger.root.onRecord.listen((log.LogRecord rec) {
-      debugPrint(
-        '[${rec.time}][${rec.level.name}][${rec.loggerName}] ${rec.message}',
-      );
-    });
+  const MyApp({super.key});
 
-    MatomoTracker.instance.initialize(
-      siteId: 1,
-      url: 'https://analytics.example.com/matomo.php',
-      verbosityLevel: Level.all,
-    );
-  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -31,6 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Matomo Example'),
+      navigatorObservers: [matomoObserver],
     );
   }
 }
@@ -79,6 +72,20 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OtherPage(),
+                    ),
+                  );
+                },
+                child: const Text('Go to OtherPage'),
+              ),
+            ),
           ],
         ),
       ),
@@ -92,4 +99,24 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
 
   @override
   String get actionName => 'HomePage';
+}
+
+class OtherPage extends StatelessWidget {
+  const OtherPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TraceableWidget(
+      path: '/otherpage',
+      actionName: 'Other Page',
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Other Page'),
+        ),
+        body: const Center(
+          child: Text('Welcome to the other page!'),
+        ),
+      ),
+    );
+  }
 }

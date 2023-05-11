@@ -1,12 +1,12 @@
 // ignore_for_file: invalid_use_of_protected_member
 
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/traceable_widget_mixin.dart';
 
 import '../ressources/utils/get_initialized_mamoto_tracker.dart';
 import '../ressources/utils/matomo_tracker_setup.dart';
+import '../ressources/utils/testable_app.dart';
 
 void main() {
   group('TraceableClientMixin', () {
@@ -20,7 +20,7 @@ void main() {
       (tester) async {
         const widget = _TestWidget();
 
-        await tester.pumpWidget(widget);
+        await tester.pumpWidget(const TestableApp(child: widget));
 
         final state = tester.state<_TestWidgetState>(find.byType(_TestWidget));
 
