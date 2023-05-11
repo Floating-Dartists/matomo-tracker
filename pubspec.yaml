@@ -24,7 +24,7 @@ dev_dependencies:
   fd_lints: ^1.0.2
   flutter_test:
     sdk: flutter
-  meta: ^1.8.0
+  meta: ^1.9.1
   mocktail: ^0.3.0
 
 flutter: null
