@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:ui';
 
 import 'package:clock/clock.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -185,9 +184,10 @@ class MatomoTracker {
     userAgent = await getUserAgent();
 
     // Screen Resolution
+    final physicalSize = PlatformDispatcher.instance.views.first.physicalSize;
     screenResolution = Size(
-      window.physicalSize.width,
-      window.physicalSize.height,
+      physicalSize.width,
+      physicalSize.height,
     );
 
     // Initialize Session Information
