@@ -93,7 +93,8 @@ class MatomoEvent {
     final ecSh = shippingCost;
     final ecDt = discountAmount;
     final ua = tracker.userAgent;
-    final country = window.locale.countryCode;
+    final locale = PlatformDispatcher.instance.locale;
+    final country = locale.countryCode;
     final dims = dimensions ?? {};
 
     return {
@@ -119,7 +120,7 @@ class MatomoEvent {
       's': _date.second.toString(),
       'cookie': '1',
       if (ua != null) 'ua': ua,
-      'lang': window.locale.toString(),
+      'lang': locale.toString(),
       if (country != null && tracker.getAuthToken != null) 'country': country,
 
       if (uid != null) 'uid': uid,
