@@ -9,6 +9,7 @@ class TraceableWidget extends StatefulWidget {
     required this.child,
     this.actionName,
     this.pvId,
+    this.updatePvIdAfterPop = true,
     this.path,
     this.dimensions,
     this.campaign,
@@ -20,6 +21,9 @@ class TraceableWidget extends StatefulWidget {
 
   /// {@macro traceableClientMixin.pvId}
   final String? pvId;
+
+  /// {@macro traceableClientMixin.updatePvIdAfterPop}
+  final bool updatePvIdAfterPop;
 
   /// {@macro traceableClientMixin.path}
   final String? path;
@@ -51,6 +55,9 @@ class _TraceableWidgetState extends State<TraceableWidget>
 
   @override
   String get pvId => widget.pvId ?? super.pvId;
+
+  @override
+  bool get updatePvIdAfterPop => widget.updatePvIdAfterPop;
 
   @override
   String? get path => widget.path;

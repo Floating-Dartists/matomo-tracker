@@ -133,23 +133,3 @@ class OtherPage extends StatelessWidget {
     );
   }
 }
-
-class OtherPage extends StatelessWidget {
-  const OtherPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return TraceableWidget(
-      path: '/otherpage',
-      actionName: 'Other Page',
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Other Page'),
-        ),
-        body: const Center(
-          child: Text('Welcome to the other page!'),
-        ),
-      ),
-    );
-  }
-}

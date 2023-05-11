@@ -15,13 +15,26 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   String get actionName => 'Created widget ${widget.toStringShort()}';
 
   /// {@template traceableClientMixin.pvId}
-  /// A 6 character unique ID.
+  /// A 6 character unique page view ID.
+  ///
+  /// Each unique ID represents one page view.
   ///
   /// The default implementation will generate one on widget creation.
   /// {@endtemplate}
   @protected
   String get pvId => _pvId;
   String _pvId = randomAlphaNumeric(6);
+
+  /// {@template traceableClientMixin.updatePvIdAfterPop}
+  /// Used to control if a [Navigator.pop] back to this page is considered
+  /// a new page view.
+  ///
+  /// If you do not consider this a new page view in your apps logic,
+  /// you should return `false` to tell the widget to keep the old [pvId].
+  /// If you overworte the [pvId] getter, this has no effect.
+  /// {@endtemplate}
+  @protected
+  bool get updatePvIdAfterPop => true;
 
   /// {@template traceableClientMixin.path}
   /// Path to the widget. (e.g. `'/home'`).
@@ -44,7 +57,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   ///
   /// If Custom Dimension ID is 2 use `dimension2=dimensionValue` to send a
   /// value for this dimension.
-  /// 
+  ///
   /// For additional remarks see [MatomoTracker.trackDimensions].
   /// {@endtemplate}
   @protected
@@ -61,7 +74,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   @override
   void initState() {
     super.initState();
-    _startTracking();
+    _track();
   }
 
   @override
@@ -81,7 +94,10 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
 
   @override
   void didPopNext() {
-    // TODO(EPNW-Eric): Add call to onReentry here
+    if (updatePvIdAfterPop) {
+      _pvId = randomAlphaNumeric(6);
+    }
+    _track();
   }
 
   @override
@@ -90,7 +106,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   @override
   void didPushNext() {}
 
-  void _startTracking() {
+  void _track() {
     tracker.trackScreenWithName(
       actionName: actionName,
       pvId: pvId,
@@ -98,22 +114,5 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
       campaign: campaign,
       dimensions: dimensions,
     );
-  }
-
-  /// Should be called if a [Navigator.pop]s back to this page.
-  ///
-  /// This will than trigger an action to tell Matomo that the
-  /// app is back on this page.
-  ///
-  /// If you do not consider this a new page view in your apps logic,
-  /// you should set [updatePvId] to `false` to tell the widget to keep
-  /// the old [pvId]. If you overworte the [pvId] getter, this has no
-  /// effect.
-  @protected
-  void onReentry({bool updatePvId = true}) {
-    if (updatePvId) {
-      _pvId = randomAlphaNumeric(6);
-    }
-    _startTracking();
   }
 }
