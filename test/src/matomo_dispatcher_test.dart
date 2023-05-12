@@ -159,6 +159,7 @@ void main() {
           named: 'headers',
           that: containsPair(headerKey, headerValue),
         ),
+        body: any(named: 'body'),
       ),
     );
   });
