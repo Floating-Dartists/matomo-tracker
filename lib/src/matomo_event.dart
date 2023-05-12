@@ -26,6 +26,7 @@ class MatomoEvent {
     this.link,
     this.campaign,
     this.dimensions,
+    this.newVisit,
   })  :
         // we use clock.now instead of DateTime.now to make testing easier
         _date = clock.now().toUtc(),
@@ -79,6 +80,53 @@ class MatomoEvent {
   // The dimensions associated with the event
   final Map<String, String>? dimensions;
 
+  final bool? newVisit;
+
+  MatomoEvent copyWith({
+    MatomoTracker? tracker,
+    String? path,
+    String? action,
+    EventInfo? eventInfo,
+    String? screenId,
+    int? goalId,
+    String? orderId,
+    List<TrackingOrderItem>? trackingOrderItems,
+    num? revenue,
+    num? subTotal,
+    num? taxAmount,
+    num? shippingCost,
+    num? discountAmount,
+    String? searchKeyword,
+    String? searchCategory,
+    int? searchCount,
+    String? link,
+    Campaign? campaign,
+    Map<String, String>? dimensions,
+    bool? newVisit,
+  }) =>
+      MatomoEvent(
+        tracker: tracker ?? this.tracker,
+        path: path ?? this.path,
+        action: action ?? this.action,
+        eventInfo: eventInfo ?? this.eventInfo,
+        screenId: screenId ?? this.screenId,
+        goalId: goalId ?? this.goalId,
+        orderId: orderId ?? this.orderId,
+        trackingOrderItems: trackingOrderItems ?? this.trackingOrderItems,
+        revenue: revenue ?? this.revenue,
+        subTotal: subTotal ?? this.subTotal,
+        taxAmount: taxAmount ?? this.taxAmount,
+        shippingCost: shippingCost ?? this.shippingCost,
+        discountAmount: discountAmount ?? this.discountAmount,
+        searchKeyword: searchKeyword ?? this.searchKeyword,
+        searchCategory: searchCategory ?? this.searchCategory,
+        searchCount: searchCount ?? this.searchCount,
+        link: link ?? this.link,
+        campaign: campaign ?? this.campaign,
+        dimensions: dimensions ?? this.dimensions,
+        newVisit: newVisit ?? this.newVisit,
+      );
+
   Map<String, String> toMap() {
     final id = tracker.visitor.id;
     final uid = tracker.visitor.uid;
@@ -108,11 +156,14 @@ class MatomoEvent {
     final dims = dimensions;
     final locale = PlatformDispatcher.instance.locale;
     final country = locale.countryCode;
+    final nV = newVisit;
 
     return {
       // Required parameters
       'idsite': tracker.siteId.toString(),
       'rec': '1',
+
+      if (nV != null && nV) 'new_visit': '1',
 
       // Recommended parameters
       if (actionName != null) 'action_name': actionName,

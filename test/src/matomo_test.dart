@@ -222,6 +222,15 @@ void main() {
     testTracking('it should be able to trackOutlink', (tracker) async {
       tracker.trackOutlink(null);
     });
+
+    test('it should be able to handle new_visit', () async {
+      final matomoTracker = await getInitializedMatomoTracker();
+
+      matomoTracker.trackDimensions(matomoTrackerDimensions);
+      expect(matomoTracker.queue.first.newVisit, true);
+      matomoTracker.trackDimensions(matomoTrackerDimensions);
+      expect(matomoTracker.queue.last.newVisit, null);
+    });
   });
 
   group('setVisitorUserId', () {
