@@ -119,6 +119,8 @@ class MatomoTracker {
 
   late final int _dequeueInterval;
 
+  late bool _newVisit;
+
   /// Initialize the tracker.
   ///
   /// This method must be called before any other method. Otherwise they might
@@ -126,6 +128,10 @@ class MatomoTracker {
   ///
   /// If the tracker is already initialized, an
   /// [AlreadyInitializedMatomoInstanceException] will be thrown.
+  ///
+  /// The [newVisit] parameter is used to mark this initialization the start
+  /// of a new visit. If set to `false` it is left to Matomo to decide if this
+  /// is a new visit or not.
   ///
   /// The [visitorId] should have a length of 16 characters otherwise an
   /// [ArgumentError] will be thrown. This parameter corresponds with the
@@ -137,6 +143,7 @@ class MatomoTracker {
   Future<void> initialize({
     required int siteId,
     required String url,
+    bool newVisit = true,
     String? visitorId,
     String? uid,
     String? contentBaseUrl,
@@ -172,6 +179,7 @@ class MatomoTracker {
     _cookieless = cookieless;
     _tokenAuth = tokenAuth;
     _dispatcher = MatomoDispatcher(url, tokenAuth);
+    _newVisit = newVisit;
 
     final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
     _localStorage = cookieless
@@ -566,7 +574,12 @@ class MatomoTracker {
   }
 
   void _track(MatomoEvent event) {
-    queue.add(event);
+    var ev = event;
+    if (_newVisit) {
+      ev = ev.copyWith(newVisit: true);
+      _newVisit = false;
+    }
+    queue.add(ev);
   }
 
   FutureOr<void> _dequeue() {
