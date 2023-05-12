@@ -45,6 +45,7 @@ void main() {
       subTotal: matomoSubTotal,
       taxAmount: matomoTaxAmount,
       trackingOrderItems: matomoTrackingOrderItems,
+      newVisit: matomoNewVisit,
     );
   }
 
@@ -72,6 +73,7 @@ void main() {
     expect(matomotoEvent.subTotal, matomoSubTotal);
     expect(matomotoEvent.taxAmount, matomoTaxAmount);
     expect(matomotoEvent.trackingOrderItems, matomoTrackingOrderItems);
+    expect(matomotoEvent.newVisit, matomoNewVisit);
   });
 
   group(
@@ -204,6 +206,107 @@ void main() {
         wantedEvent.remove('rand');
 
         expect(mapEquals(wantedEvent, eventMap), isTrue);
+      });
+    });
+  });
+
+  group('copyWith', () {
+    setUpAll(() {
+      when(() => mockMatomoTracker.visitor).thenReturn(mockVisitor);
+      when(() => mockMatomoTracker.session).thenReturn(mockSession);
+      when(() => mockMatomoTracker.screenResolution)
+          .thenReturn(matomoTrackerScreenResolution);
+      when(() => mockMatomoTracker.contentBase)
+          .thenReturn(matomoTrackerContentBase);
+      when(() => mockMatomoTracker.siteId).thenReturn(matomoTrackerSiteId);
+      when(() => mockVisitor.id).thenReturn(visitorId);
+      when(() => mockVisitor.uid).thenReturn(uid);
+      when(mockTrackingOrderItem.toArray).thenReturn([]);
+      when(() => mockSession.visitCount).thenReturn(sessionVisitCount);
+      when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
+      when(() => mockSession.firstVisit).thenReturn(sessionFirstVisite);
+    });
+
+    test('it should be able to create a unchanged copy', () {
+      final fixedDate = DateTime(2022).toUtc();
+
+      withClock(Clock.fixed(fixedDate), () {
+        final matomotoEvent = getCompleteMatomoEvent();
+        final unchangedCopy = matomotoEvent.copyWith();
+
+        expect(matomotoEvent.tracker, unchangedCopy.tracker);
+        expect(matomotoEvent.path, unchangedCopy.path);
+        expect(matomotoEvent.action, unchangedCopy.action);
+        expect(
+          matomotoEvent.eventInfo?.category,
+          unchangedCopy.eventInfo?.category,
+        );
+        expect(matomotoEvent.dimensions, unchangedCopy.dimensions);
+        expect(matomotoEvent.discountAmount, unchangedCopy.discountAmount);
+        expect(
+          matomotoEvent.eventInfo?.action,
+          unchangedCopy.eventInfo?.action,
+        );
+        expect(matomotoEvent.eventInfo?.value, unchangedCopy.eventInfo?.value);
+        expect(matomotoEvent.eventInfo?.name, unchangedCopy.eventInfo?.name);
+        expect(matomotoEvent.goalId, unchangedCopy.goalId);
+        expect(matomotoEvent.link, unchangedCopy.link);
+        expect(matomotoEvent.orderId, unchangedCopy.orderId);
+        expect(matomotoEvent.revenue, unchangedCopy.revenue);
+        expect(matomotoEvent.screenId, unchangedCopy.screenId);
+        expect(matomotoEvent.searchCategory, unchangedCopy.searchCategory);
+        expect(matomotoEvent.searchCount, unchangedCopy.searchCount);
+        expect(matomotoEvent.searchKeyword, unchangedCopy.searchKeyword);
+        expect(matomotoEvent.shippingCost, unchangedCopy.shippingCost);
+        expect(matomotoEvent.subTotal, unchangedCopy.subTotal);
+        expect(matomotoEvent.taxAmount, unchangedCopy.taxAmount);
+        expect(
+          matomotoEvent.trackingOrderItems,
+          unchangedCopy.trackingOrderItems,
+        );
+        expect(matomotoEvent.newVisit, unchangedCopy.newVisit);
+      });
+    });
+
+    test('it should be able to create a changed copy', () {
+      final fixedDate = DateTime(2022).toUtc();
+
+      withClock(Clock.fixed(fixedDate), () {
+        final matomotoEvent = getCompleteMatomoEvent();
+        final changedCopy =
+            matomotoEvent.copyWith(newVisit: matomoChangedNewVisit);
+
+        expect(matomotoEvent.tracker, changedCopy.tracker);
+        expect(matomotoEvent.path, changedCopy.path);
+        expect(matomotoEvent.action, changedCopy.action);
+        expect(
+          matomotoEvent.eventInfo?.category,
+          changedCopy.eventInfo?.category,
+        );
+        expect(matomotoEvent.dimensions, changedCopy.dimensions);
+        expect(matomotoEvent.discountAmount, changedCopy.discountAmount);
+        expect(
+          matomotoEvent.eventInfo?.action,
+          changedCopy.eventInfo?.action,
+        );
+        expect(matomotoEvent.eventInfo?.value, changedCopy.eventInfo?.value);
+        expect(matomotoEvent.eventInfo?.name, changedCopy.eventInfo?.name);
+        expect(matomotoEvent.goalId, changedCopy.goalId);
+        expect(matomotoEvent.link, changedCopy.link);
+        expect(matomotoEvent.orderId, changedCopy.orderId);
+        expect(matomotoEvent.revenue, changedCopy.revenue);
+        expect(matomotoEvent.screenId, changedCopy.screenId);
+        expect(matomotoEvent.searchCategory, changedCopy.searchCategory);
+        expect(matomotoEvent.searchCount, changedCopy.searchCount);
+        expect(matomotoEvent.searchKeyword, changedCopy.searchKeyword);
+        expect(matomotoEvent.shippingCost, changedCopy.shippingCost);
+        expect(matomotoEvent.subTotal, changedCopy.subTotal);
+        expect(matomotoEvent.taxAmount, changedCopy.taxAmount);
+        expect(
+          matomotoEvent.trackingOrderItems,
+          changedCopy.trackingOrderItems,
+        );
+        expect(matomoChangedNewVisit, changedCopy.newVisit);
       });
     });
   });
