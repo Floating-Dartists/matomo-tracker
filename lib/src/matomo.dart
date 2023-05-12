@@ -117,7 +117,7 @@ class MatomoTracker {
 
   String? get getAuthToken => _tokenAuth;
 
-  int _dequeueInterval = 10;
+  late final int _dequeueInterval;
 
   /// Initialize the tracker.
   ///

@@ -19,23 +19,6 @@ class MatomoDispatcher {
   static const tokenAuthUriKey = 'token_auth';
   static const userAgentHeaderKeys = 'User-Agent';
 
-  Future<void> send(MatomoEvent event) async {
-    final headers = <String, String>{
-      if (!kIsWeb) 'User-Agent': 'Dart Matomo Tracker',
-      ...event.tracker.customHeaders,
-    };
-
-    final uri = buildUriForEvent(event);
-    event.tracker.log.fine(' -> $uri');
-    try {
-      final response = await httpClient.post(uri, headers: headers);
-      final statusCode = response.statusCode;
-      event.tracker.log.fine(' <- $statusCode');
-    } catch (e) {
-      event.tracker.log.severe(message: ' <- $e', error: e);
-    }
-  }
-
   /// Sends a batch of events to the Matomo server.
   ///
   /// The events are sent in a single request.

@@ -19,67 +19,6 @@ void main() {
     when(() => mockMatomoTracker.customHeaders).thenReturn({});
   });
 
-  group('send', () {
-    test('it should be able to send MatomoEvent', () async {
-      when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
-          .thenAnswer((_) async => mockHttpResponse);
-      when(() => mockHttpResponse.statusCode).thenReturn(200);
-
-      final matomoDispatcher = MatomoDispatcher(
-        matomoDispatcherBaseUrl,
-        matomoDispatcherToken,
-        httpClient: mockHttpClient,
-      );
-
-      await matomoDispatcher.send(mockMatomoEvent);
-
-      verify(
-        () => mockHttpClient.post(
-          any(),
-          headers: any(named: 'headers'),
-        ),
-      );
-    });
-
-    test('it should not throw if something wrong happen in send', () async {
-      when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
-          .thenAnswer((_) async => throw Exception());
-      when(() => mockHttpResponse.statusCode).thenReturn(200);
-
-      final matomoDispatcher = MatomoDispatcher(
-        matomoDispatcherBaseUrl,
-        matomoDispatcherToken,
-        httpClient: mockHttpClient,
-      );
-
-      await expectLater(matomoDispatcher.send(mockMatomoEvent), completes);
-    });
-
-    test('should use customHeaders from the tracker', () async {
-      when(() => mockMatomoTracker.customHeaders).thenReturn({
-        headerKey: headerValue,
-      });
-
-      final matomoDispatcher = MatomoDispatcher(
-        matomoDispatcherBaseUrl,
-        matomoDispatcherToken,
-        httpClient: mockHttpClient,
-      );
-
-      await matomoDispatcher.send(mockMatomoEvent);
-
-      verify(
-        () => mockHttpClient.post(
-          any(),
-          headers: any(
-            named: 'headers',
-            that: containsPair(headerKey, headerValue),
-          ),
-        ),
-      );
-    });
-  });
-
   group('sendBatch', () {
     setUpAll(
       () {
@@ -211,7 +150,7 @@ void main() {
       httpClient: mockHttpClient,
     );
 
-    await matomoDispatcher.send(mockMatomoEvent);
+    await matomoDispatcher.sendBatch([mockMatomoEvent]);
 
     verify(
       () => mockHttpClient.post(
