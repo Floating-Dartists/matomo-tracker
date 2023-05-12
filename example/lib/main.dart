@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:matomo_tracker/matomo_tracker.dart';
 
-Future<void> main() async {
+// See the docker folder for instructions on how to get a
+// test Matomo instance running
+const _matomoEndpoint = 'http://localhost:8765/matomo.php';
+const _sideId = 1;
+const _testUserId = 'Nelson Pandela';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MatomoTracker.instance.initialize(
-    siteId: 1,
-    url: 'https://analytics.example.com/matomo.php',
+    siteId: _sideId,
+    url: _matomoEndpoint,
     verbosityLevel: Level.all,
   );
+  MatomoTracker.instance.setVisitorUserId(_testUserId);
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -34,21 +41,24 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-/// Send an event to Matomo on widget creation.
-class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
+/// Sends a page view to Matomo on widget creation by implementing TraceableClientMixin
+class MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   int _counter = 0;
 
   void _incrementCounter() {
     // Send an event to Matomo on tap.
+    // To signal that this event happend on this page, we use the
+    // pvId of the page.
     MatomoTracker.instance.trackEvent(
       eventInfo: EventInfo(
         category: 'Main',
         action: 'Click',
         name: 'IncrementCounter',
       ),
+      pvId: pvId,
     );
     setState(() {
       _counter++;
@@ -98,7 +108,10 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   }
 
   @override
-  String get actionName => 'HomePage';
+  String get actionName => widget.title;
+
+  @override
+  String? get path => '/homepage';
 }
 
 class OtherPage extends StatelessWidget {
