@@ -46,6 +46,7 @@ void main() {
       taxAmount: matomoTaxAmount,
       trackingOrderItems: matomoTrackingOrderItems,
       newVisit: matomoNewVisit,
+      ping: matomoPing,
     );
   }
 
@@ -265,6 +266,7 @@ void main() {
           unchangedCopy.trackingOrderItems,
         );
         expect(matomotoEvent.newVisit, unchangedCopy.newVisit);
+        expect(matomotoEvent.ping, unchangedCopy.ping);
       });
     });
 
@@ -307,6 +309,7 @@ void main() {
           changedCopy.trackingOrderItems,
         );
         expect(matomoChangedNewVisit, changedCopy.newVisit);
+        expect(matomotoEvent.ping, changedCopy.ping);
       });
     });
   });

@@ -109,7 +109,10 @@ class MatomoTracker {
   final queue = Queue<MatomoEvent>();
 
   @visibleForTesting
-  late Timer timer;
+  late Timer dequeueTimer;
+
+  @visibleForTesting
+  Timer? pingTimer;
 
   late sync.Lock _lock;
 
@@ -117,9 +120,13 @@ class MatomoTracker {
 
   String? get getAuthToken => _tokenAuth;
 
-  late final int _dequeueInterval;
+  late final Duration _dequeueInterval;
+
+  late final Duration? _pingInterval;
 
   late bool _newVisit;
+
+  MatomoEvent? _lastPageView;
 
   /// Initialize the tracker.
   ///
@@ -140,6 +147,11 @@ class MatomoTracker {
   /// If [cookieless] is set to true, a [CookielessStorage] instance will be
   /// used. This means that the first_visit and the user_id will be stored in
   /// memory and will be lost when the app is closed.
+  ///
+  /// The [pingInterval] is used to set the interval in which pings are
+  /// send to Matomo to circumvent the [last page viewtime issue](https://github.com/Floating-Dartists/matomo-tracker/issues/78).
+  /// To deactivate pings, set this to `null`. The default value is a good
+  /// compromise between accuracy and network traffic.
   Future<void> initialize({
     required int siteId,
     required String url,
@@ -147,7 +159,8 @@ class MatomoTracker {
     String? visitorId,
     String? uid,
     String? contentBaseUrl,
-    int dequeueInterval = 10,
+    Duration dequeueInterval = const Duration(seconds: 10),
+    Duration? pingInterval = const Duration(seconds: 30),
     String? tokenAuth,
     LocalStorage? localStorage,
     PackageInfo? packageInfo,
@@ -174,6 +187,7 @@ class MatomoTracker {
     this.url = url;
     this.customHeaders = customHeaders;
     _dequeueInterval = dequeueInterval;
+    _pingInterval = pingInterval;
     _lock = sync.Lock();
     _platformInfo = platformInfo ?? PlatformInfo.instance;
     _cookieless = cookieless;
@@ -242,9 +256,15 @@ class MatomoTracker {
     );
     _initialized = true;
 
-    timer = Timer.periodic(Duration(seconds: _dequeueInterval), (_) {
+    dequeueTimer = Timer.periodic(_dequeueInterval, (_) {
       _dequeue();
     });
+
+    if (pingInterval != null) {
+      pingTimer = Timer.periodic(pingInterval, (_) {
+        _ping();
+      });
+    }
   }
 
   @visibleForTesting
@@ -303,20 +323,31 @@ class MatomoTracker {
   /// Cancel the timer which checks the queued events to send. (This will not
   /// clear the queue.)
   void dispose() {
-    timer.cancel();
+    pingTimer?.cancel();
+    dequeueTimer.cancel();
     log.clearListeners();
   }
 
   // Pause tracker
   void pause() {
-    timer.cancel();
+    pingTimer?.cancel();
+    _ping();
+    dequeueTimer.cancel();
     _dequeue();
   }
 
   // Resume tracker
   void resume() {
-    if (!timer.isActive) {
-      timer = Timer.periodic(Duration(seconds: _dequeueInterval), (timer) {
+    final pingInterval = _pingInterval;
+    if (pingInterval != null) {
+      if (!(pingTimer?.isActive ?? false)) {
+        pingTimer = Timer.periodic(pingInterval, (_) {
+          _ping();
+        });
+      }
+    }
+    if (!dequeueTimer.isActive) {
+      dequeueTimer = Timer.periodic(_dequeueInterval, (timer) {
         _dequeue();
       });
     }
@@ -393,16 +424,16 @@ class MatomoTracker {
     }
 
     validateDimension(dimensions);
-    return _track(
-      MatomoEvent(
-        tracker: this,
-        action: actionName,
-        path: path,
-        campaign: campaign,
-        dimensions: dimensions,
-        screenId: pvId ?? randomAlphaNumeric(6),
-      ),
+    final lastPageView = MatomoEvent(
+      tracker: this,
+      action: actionName,
+      path: path,
+      campaign: campaign,
+      dimensions: dimensions,
+      screenId: pvId ?? randomAlphaNumeric(6),
     );
+    _lastPageView = lastPageView;
+    return _track(lastPageView);
   }
 
   /// Tracks a conversion for a goal.
@@ -580,6 +611,17 @@ class MatomoTracker {
       _newVisit = false;
     }
     queue.add(ev);
+  }
+
+  void _ping() {
+    final lastPageView = _lastPageView;
+    if (lastPageView != null) {
+      _track(
+        lastPageView.copyWith(
+          ping: true,
+        ),
+      );
+    }
   }
 
   FutureOr<void> _dequeue() {
