@@ -27,6 +27,7 @@ class MatomoEvent {
     this.campaign,
     this.dimensions,
     this.newVisit,
+    this.ping,
   })  :
         // we use clock.now instead of DateTime.now to make testing easier
         _date = clock.now().toUtc(),
@@ -82,6 +83,8 @@ class MatomoEvent {
 
   final bool? newVisit;
 
+  final bool? ping;
+
   MatomoEvent copyWith({
     MatomoTracker? tracker,
     String? path,
@@ -103,6 +106,7 @@ class MatomoEvent {
     Campaign? campaign,
     Map<String, String>? dimensions,
     bool? newVisit,
+    bool? ping,
   }) =>
       MatomoEvent(
         tracker: tracker ?? this.tracker,
@@ -125,6 +129,7 @@ class MatomoEvent {
         campaign: campaign ?? this.campaign,
         dimensions: dimensions ?? this.dimensions,
         newVisit: newVisit ?? this.newVisit,
+        ping: ping ?? this.ping,
       );
 
   Map<String, String> toMap() {
@@ -157,6 +162,7 @@ class MatomoEvent {
     final locale = PlatformDispatcher.instance.locale;
     final country = locale.countryCode;
     final nV = newVisit;
+    final p = ping;
 
     return {
       // Required parameters
@@ -164,6 +170,8 @@ class MatomoEvent {
       'rec': '1',
 
       if (nV != null && nV) 'new_visit': '1',
+
+      if (p != null && p) 'ping': '1',
 
       // Recommended parameters
       if (actionName != null) 'action_name': actionName,

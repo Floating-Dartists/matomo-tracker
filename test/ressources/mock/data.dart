@@ -29,6 +29,7 @@ const matomoCampaignGroup = 'group';
 const matomoCampaignPlacement = 'placement';
 const matomoNewVisit = false;
 const matomoChangedNewVisit = true;
+const matomoPing = false;
 const matomoEventPath = 'path';
 const matomoEventAction = 'action';
 const matomoEventCategory = 'eventCategory';

@@ -45,7 +45,8 @@ void main() {
         (tracker, _) => expect(tracker.url, matomoTrackerUrl),
         (tracker, _) => expect(tracker.siteId, matomoTrackerSiteId),
         (tracker, _) => expect(tracker.initialized, true),
-        (tracker, _) => expect(tracker.timer.isActive, true),
+        (tracker, _) => expect(tracker.dequeueTimer.isActive, true),
+        (tracker, _) => expect(tracker.pingTimer?.isActive, true),
         (tracker, fixedDateTime) =>
             expect(tracker.session.firstVisit, fixedDateTime.toUtc()),
         (tracker, fixedDateTime) =>
@@ -107,14 +108,16 @@ void main() {
       final matomoTracker = await getInitializedMatomoTracker();
       matomoTracker.dispose();
 
-      expect(matomoTracker.timer.isActive, false);
+      expect(matomoTracker.dequeueTimer.isActive, false);
+      expect(matomoTracker.pingTimer?.isActive, false);
     });
 
     test('it should be able to pause', () async {
       final matomoTracker = await getInitializedMatomoTracker();
       matomoTracker.pause();
 
-      expect(matomoTracker.timer.isActive, false);
+      expect(matomoTracker.dequeueTimer.isActive, false);
+      expect(matomoTracker.pingTimer?.isActive, false);
     });
 
     test('it should be able to resume', () async {
@@ -122,7 +125,8 @@ void main() {
       matomoTracker
         ..pause()
         ..resume();
-      expect(matomoTracker.timer.isActive, true);
+      expect(matomoTracker.dequeueTimer.isActive, true);
+      expect(matomoTracker.pingTimer?.isActive, true);
     });
 
     test('it should be able to clear localData', () async {
