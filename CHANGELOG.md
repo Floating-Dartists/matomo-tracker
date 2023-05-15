@@ -6,9 +6,14 @@
 
 * Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
   * feat: Improved documentation and added verification on dimension keys [#63](https://github.com/Floating-Dartists/matomo-tracker/pull/63)
+  * feat: Ping logic to measure accurately the time spent on the last page [#79](https://github.com/Floating-Dartists/matomo-tracker/pull/79)
+  * feat: New app launches start a new visit [#77](https://github.com/Floating-Dartists/matomo-tracker/pull/77)
+  * feat: Reentry logic to detect a pop navigation on a previous page [#74](https://github.com/Floating-Dartists/matomo-tracker/pull/74)
+  * feat: Added a `Campaign` object to manage campaign tracking [#72](https://github.com/Floating-Dartists/matomo-tracker/pull/72) 
 * Contributions from [TesteurManiak](https://github.com/TesteurManiak)
   * fix: Added test cases for dimension key validation [#67](https://github.com/Floating-Dartists/matomo-tracker/pull/67)
-  * refactor: Renamed some variables to be more explicit with the Matomo API, added an `EventInfo` class to manage accurately additional data send with an event, added support for custom dimensions to `TraceableMixin` and `TraceableWidget` [#68](https://github.com/Floating-Dartists/matomo-tracker/pull/68)
+  * fix: URLs have double slashs in the dashboard [#81](https://github.com/Floating-Dartists/matomo-tracker/pull/81)
+  * feat: Added an `EventInfo` class to manage accurately additional data send with an event, added support for custom dimensions to `TraceableMixin` and `TraceableWidget` [#68](https://github.com/Floating-Dartists/matomo-tracker/pull/68)
 
 ## [3.1.0]
 
