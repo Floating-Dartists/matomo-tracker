@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:clock/clock.dart';
 import 'package:matomo_tracker/matomo_tracker.dart';
+import 'package:matomo_tracker/utils/extensions.dart';
 
 class MatomoEvent {
   MatomoEvent({
@@ -139,8 +140,11 @@ class MatomoEvent {
     final actionName = action;
     final camp = campaign;
     final campKeyword = camp?.keyword;
+    final localPath = path;
     final uri = Uri.parse(
-      path != null ? '${tracker.contentBase}/$path' : tracker.contentBase,
+      localPath != null
+          ? '${tracker.contentBase}${localPath.prefixWithSlash()}'
+          : tracker.contentBase,
     );
     final url = uri.replace(
       queryParameters: {
