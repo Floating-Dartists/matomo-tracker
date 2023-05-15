@@ -143,7 +143,7 @@ class MatomoEvent {
     final localPath = path;
     final uri = Uri.parse(
       localPath != null
-          ? '${tracker.contentBase}/${localPath.prefixWithSlash()}'
+          ? '${tracker.contentBase}${localPath.prefixWithSlash()}'
           : tracker.contentBase,
     );
     final url = uri.replace(
