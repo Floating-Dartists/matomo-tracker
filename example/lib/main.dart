@@ -75,6 +75,9 @@ class MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ContentWidget(
+              pvId: pvId,
+            ),
             const Text(
               'You have pushed the button this many times:',
             ),
@@ -127,9 +130,80 @@ class OtherPage extends StatelessWidget {
           title: const Text('Other Page'),
         ),
         body: const Center(
-          child: Text('Welcome to the other page!'),
+          child: Text(
+            'Welcome to the other page!',
+          ),
         ),
       ),
+    );
+  }
+}
+
+class ContentWidget extends StatefulWidget {
+  final String? pvId;
+  const ContentWidget({
+    super.key,
+    this.pvId,
+  });
+
+  @override
+  State<ContentWidget> createState() => _ContentWidgetState();
+}
+
+class _ContentWidgetState extends State<ContentWidget> {
+  late bool _closed;
+  final Content _exampleContent = Content(
+    name: 'Matomo is great',
+    piece: 'banner',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _closed = false;
+    MatomoTracker.instance.trackContentImpression(
+      content: _exampleContent,
+      pvId: widget.pvId,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+        visible: !_closed,
+        child: Card(
+            color: Colors.blue,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: _close,
+                  icon: const Icon(
+                    Icons.close,
+                  ),
+                ),
+                const SizedBox(
+                  width: 200,
+                  height: 150,
+                  child: Center(
+                    child: Text(
+                      'Matomo is great!',
+                    ),
+                  ),
+                )
+              ],
+            )));
+  }
+
+  void _close() {
+    setState(() {
+      _closed = true;
+    });
+    MatomoTracker.instance.trackContentInteraction(
+      interaction: 'close',
+      content: _exampleContent,
+      pvId: widget.pvId,
     );
   }
 }
