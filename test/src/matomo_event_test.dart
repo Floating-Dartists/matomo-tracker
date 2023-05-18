@@ -2,6 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/campaign.dart';
+import 'package:matomo_tracker/src/content.dart';
 import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
 import 'package:mocktail/mocktail.dart';
@@ -33,6 +34,12 @@ void main() {
         group: matomoCampaignGroup,
         placement: matomoCampaignPlacement,
       ),
+      content: Content(
+        name: matomoContentName,
+        piece: matomoContentPiece,
+        target: matomoContentTarget,
+      ),
+      contentInteraction: matomoContentInteraction,
       goalId: matomoGoalId,
       link: matomoLink,
       orderId: matomoOrderId,
@@ -75,6 +82,10 @@ void main() {
     expect(matomotoEvent.taxAmount, matomoTaxAmount);
     expect(matomotoEvent.trackingOrderItems, matomoTrackingOrderItems);
     expect(matomotoEvent.newVisit, matomoNewVisit);
+    expect(matomotoEvent.content?.name, matomoContentName);
+    expect(matomotoEvent.content?.piece, matomoContentPiece);
+    expect(matomotoEvent.content?.target, matomoContentTarget);
+    expect(matomotoEvent.contentInteraction, matomoContentInteraction);
   });
 
   group(
@@ -267,6 +278,14 @@ void main() {
         );
         expect(matomotoEvent.newVisit, unchangedCopy.newVisit);
         expect(matomotoEvent.ping, unchangedCopy.ping);
+        expect(
+          matomotoEvent.content?.name,
+          unchangedCopy.content?.name,
+        );
+        expect(matomotoEvent.content?.piece, unchangedCopy.content?.piece);
+        expect(matomotoEvent.content?.target, unchangedCopy.content?.target);
+        expect(
+            matomotoEvent.contentInteraction, unchangedCopy.contentInteraction);
       });
     });
 
@@ -310,6 +329,14 @@ void main() {
         );
         expect(matomoChangedNewVisit, changedCopy.newVisit);
         expect(matomotoEvent.ping, changedCopy.ping);
+        expect(
+          matomotoEvent.content?.name,
+          changedCopy.content?.name,
+        );
+        expect(matomotoEvent.content?.piece, changedCopy.content?.piece);
+        expect(matomotoEvent.content?.target, changedCopy.content?.target);
+        expect(
+            matomotoEvent.contentInteraction, changedCopy.contentInteraction);
       });
     });
   });

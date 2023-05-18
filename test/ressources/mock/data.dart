@@ -27,6 +27,10 @@ const matomoCampaignContent = 'content';
 const matomoCampaignId = 'id';
 const matomoCampaignGroup = 'group';
 const matomoCampaignPlacement = 'placement';
+const matomoContentName = 'name';
+const matomoContentPiece = 'piece';
+const matomoContentTarget = 'target';
+const matomoContentInteraction = 'interaction';
 const matomoNewVisit = false;
 const matomoChangedNewVisit = true;
 const matomoPing = false;
@@ -77,6 +81,10 @@ Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "e_a": "action",
       "e_n": "eventName",
       "e_v": "1.0",
+      "c_n": "name",
+      "c_p": "piece",
+      "c_t": "target",
+      "c_i": "interaction",
       "ec_id": "orderId",
       "ec_items": "[[]]",
       "revenue": "1.0",
@@ -161,4 +169,14 @@ final wantedCampaignMapFull = <String, String>{
   'mtm_cid': matomoCampaignId,
   'mtm_group': matomoCampaignGroup,
   'mtm_placement': matomoCampaignPlacement,
+};
+
+// Content
+final wantedContentMap = <String, String>{
+  'c_n': matomoContentName,
+};
+final wantedContentMapFull = <String, String>{
+  'c_n': matomoContentName,
+  'c_p': matomoContentPiece,
+  'c_t': matomoContentTarget
 };
