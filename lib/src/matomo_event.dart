@@ -178,6 +178,7 @@ class MatomoEvent {
     final p = ping;
     final cont = content;
     final contInteraction = contentInteraction;
+    final ca = (event != null || content != null) && !(p ?? false);
 
     return {
       // Required parameters
@@ -187,6 +188,8 @@ class MatomoEvent {
       if (nV != null && nV) 'new_visit': '1',
 
       if (p != null && p) 'ping': '1',
+
+      if (ca) 'ca': '1',
 
       // Recommended parameters
       if (actionName != null) 'action_name': actionName,

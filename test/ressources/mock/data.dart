@@ -97,7 +97,8 @@ Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "search_count": "1",
       "link": "link",
       "cdt": now.toIso8601String(),
-      "dimension": "dimension"
+      "dimension": "dimension",
+      "ca": "1",
     };
 
 // MatomoDisptacher

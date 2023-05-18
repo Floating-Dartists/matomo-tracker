@@ -344,4 +344,38 @@ void main() {
       });
     });
   });
+  group('ca', () {
+    setUpAll(() {
+      when(() => mockMatomoTracker.visitor).thenReturn(mockVisitor);
+      when(() => mockMatomoTracker.session).thenReturn(mockSession);
+      when(() => mockMatomoTracker.screenResolution)
+          .thenReturn(matomoTrackerScreenResolution);
+      when(() => mockMatomoTracker.contentBase)
+          .thenReturn(matomoTrackerContentBase);
+      when(() => mockMatomoTracker.siteId).thenReturn(matomoTrackerSiteId);
+      when(() => mockVisitor.id).thenReturn(visitorId);
+      when(() => mockVisitor.uid).thenReturn(uid);
+      when(mockTrackingOrderItem.toArray).thenReturn([]);
+      when(() => mockSession.visitCount).thenReturn(sessionVisitCount);
+      when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
+      when(() => mockSession.firstVisit).thenReturn(sessionFirstVisite);
+    });
+
+    test('it should have ca if its an event or content and not a ping',
+        () async {
+      final matomotoMap = getCompleteMatomoEvent().toMap();
+
+      expect(matomotoMap['ca'], '1');
+    });
+
+    test('it should not have ca if its a ping', () async {
+      final matomotoMap = getCompleteMatomoEvent()
+          .copyWith(
+            ping: true,
+          )
+          .toMap();
+
+      expect(matomotoMap['ca'], null);
+    });
+  });
 }
