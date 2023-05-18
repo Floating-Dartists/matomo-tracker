@@ -88,10 +88,10 @@ void main() {
         ).toMap();
 
         final mapFull = Content(
-                name: matomoContentName,
-                piece: matomoContentPiece,
-                target: matomoContentTarget)
-            .toMap();
+          name: matomoContentName,
+          piece: matomoContentPiece,
+          target: matomoContentTarget,
+        ).toMap();
 
         expect(mapEquals(map, wantedContentMap), isTrue);
         expect(mapEquals(mapFull, wantedContentMapFull), isTrue);

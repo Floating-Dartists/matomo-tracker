@@ -2,8 +2,8 @@ import 'package:matomo_tracker/src/assert.dart';
 
 /// Describes a content.
 ///
-/// To track a content, first track [Matomo.trackContentImpression], then,
-/// if the user interacts with it, track [Matomo.trackContentInteraction].
+/// To track a content, first track [MatomoTracker.trackContentImpression], then,
+/// if the user interacts with it, track [MatomoTracker.trackContentInteraction].
 ///
 /// Read more about [Content Tracking](https://matomo.org/guide/reports/content-tracking/).
 class Content {

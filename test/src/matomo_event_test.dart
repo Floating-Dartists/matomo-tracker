@@ -285,7 +285,9 @@ void main() {
         expect(matomotoEvent.content?.piece, unchangedCopy.content?.piece);
         expect(matomotoEvent.content?.target, unchangedCopy.content?.target);
         expect(
-            matomotoEvent.contentInteraction, unchangedCopy.contentInteraction);
+          matomotoEvent.contentInteraction,
+          unchangedCopy.contentInteraction,
+        );
       });
     });
 
@@ -336,7 +338,9 @@ void main() {
         expect(matomotoEvent.content?.piece, changedCopy.content?.piece);
         expect(matomotoEvent.content?.target, changedCopy.content?.target);
         expect(
-            matomotoEvent.contentInteraction, changedCopy.contentInteraction);
+          matomotoEvent.contentInteraction,
+          changedCopy.contentInteraction,
+        );
       });
     });
   });
