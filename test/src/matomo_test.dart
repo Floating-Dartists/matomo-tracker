@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:matomo_tracker/src/content.dart';
 import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/matomo.dart';
 import 'package:mocktail/mocktail.dart';
@@ -200,6 +201,25 @@ void main() {
           category: matomoTrackerEventCategory,
           action: matomoTrackerAction,
         ),
+      );
+    });
+
+    testTracking('it should be able to trackContentImpression',
+        (tracker) async {
+      tracker.trackContentImpression(
+        content: Content(
+          name: matomoContentName,
+        ),
+      );
+    });
+
+    testTracking('it should be able to trackContentInteraction',
+        (tracker) async {
+      tracker.trackContentInteraction(
+        content: Content(
+          name: matomoContentName,
+        ),
+        interaction: matomoContentInteraction,
       );
     });
 
