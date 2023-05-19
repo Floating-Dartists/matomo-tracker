@@ -14,6 +14,7 @@ class TraceableWidget extends StatefulWidget {
     this.dimensions,
     this.campaign,
     this.tracker,
+    this.performanceInfo,
   });
 
   /// {@macro traceableClientMixin.actionName}
@@ -33,6 +34,9 @@ class TraceableWidget extends StatefulWidget {
 
   /// {@macro traceableClientMixin.dimensions}
   final Map<String, String>? dimensions;
+
+  /// {@macro traceableClientMixin.performanceInfo}
+  final PerformanceInfo? performanceInfo;
 
   /// {@macro traceableClientMixin.tracker}
   final MatomoTracker? tracker;
@@ -68,6 +72,9 @@ class _TraceableWidgetState extends State<TraceableWidget>
 
   @override
   Map<String, String>? get dimensions => widget.dimensions;
+
+  @override
+  PerformanceInfo? get performanceInfo => widget.performanceInfo;
 
   @override
   MatomoTracker get tracker => widget.tracker ?? super.tracker;

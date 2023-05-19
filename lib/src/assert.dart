@@ -11,3 +11,16 @@ void assertStringIsFilled({required String? value, required String name}) {
     );
   }
 }
+
+/// Method used to assert that a duration is not negative.
+///
+/// If the passed [value] is null, it won't do anything.
+void assertDurationNotNegative({required Duration? value, required String name}) {
+  if (value != null && value.isNegative) {
+    throw ArgumentError.value(
+      value,
+      name,
+      'Must not be negative.',
+    );
+  }
+}

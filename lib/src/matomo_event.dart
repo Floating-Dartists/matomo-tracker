@@ -31,6 +31,7 @@ class MatomoEvent {
     this.ping,
     this.content,
     this.contentInteraction,
+    this.performanceInfo,
   })  :
         // we use clock.now instead of DateTime.now to make testing easier
         _date = clock.now().toUtc(),
@@ -91,6 +92,8 @@ class MatomoEvent {
   final Content? content;
   final String? contentInteraction;
 
+  final PerformanceInfo? performanceInfo;
+
   MatomoEvent copyWith({
     MatomoTracker? tracker,
     String? path,
@@ -115,6 +118,7 @@ class MatomoEvent {
     bool? ping,
     Content? content,
     String? contentInteraction,
+    PerformanceInfo? performanceInfo,
   }) =>
       MatomoEvent(
         tracker: tracker ?? this.tracker,
@@ -140,6 +144,7 @@ class MatomoEvent {
         ping: ping ?? this.ping,
         content: content ?? this.content,
         contentInteraction: contentInteraction ?? this.contentInteraction,
+        performanceInfo: performanceInfo ?? this.performanceInfo,
       );
 
   Map<String, String> toMap() {
@@ -178,7 +183,10 @@ class MatomoEvent {
     final p = ping;
     final cont = content;
     final contInteraction = contentInteraction;
+    // According to documentation, pings should not have the ca parameter
     final ca = (event != null || content != null) && !(p ?? false);
+    // We don't need to send the performance info again if this is a ping
+    final perfInfo = (p ?? false) ? null : performanceInfo;
 
     return {
       // Required parameters
@@ -244,6 +252,8 @@ class MatomoEvent {
 
       if (cont != null) ...cont.toMap(),
       if (contInteraction != null) 'c_i': contInteraction,
+
+      if (perfInfo != null) ...perfInfo.toMap(),
 
       if (dims != null) ...dims,
     };

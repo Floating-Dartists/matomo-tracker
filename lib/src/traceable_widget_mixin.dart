@@ -63,6 +63,12 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   @protected
   Map<String, String>? dimensions;
 
+  /// {@template traceableClientMixin.performanceInfo}
+  /// Information on how long it took to generate this content.
+  /// {@endtemplate}
+  @protected
+  PerformanceInfo? performanceInfo;
+
   /// {@template traceableClientMixin.tracker}
   /// Matomo instance used to send events.
   ///
@@ -113,6 +119,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
       path: path,
       campaign: campaign,
       dimensions: dimensions,
+      performanceInfo: performanceInfo,
     );
   }
 }
