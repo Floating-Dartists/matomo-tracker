@@ -8,7 +8,6 @@ import 'package:matomo_tracker/utils/extensions.dart';
 
 class MatomoEvent {
   MatomoEvent({
-    required this.tracker,
     this.path,
     this.action,
     this.eventInfo,
@@ -40,7 +39,6 @@ class MatomoEvent {
           'screenId has to be six characters long',
         );
 
-  final MatomoTracker tracker;
   final String? path;
 
   /// The title of the action being tracked. It is possible to use slashes / to
@@ -95,7 +93,6 @@ class MatomoEvent {
   final PerformanceInfo? performanceInfo;
 
   MatomoEvent copyWith({
-    MatomoTracker? tracker,
     String? path,
     String? action,
     EventInfo? eventInfo,
@@ -121,7 +118,6 @@ class MatomoEvent {
     PerformanceInfo? performanceInfo,
   }) =>
       MatomoEvent(
-        tracker: tracker ?? this.tracker,
         path: path ?? this.path,
         action: action ?? this.action,
         eventInfo: eventInfo ?? this.eventInfo,
@@ -147,7 +143,7 @@ class MatomoEvent {
         performanceInfo: performanceInfo ?? this.performanceInfo,
       );
 
-  Map<String, String> toMap() {
+  Map<String, String> toMap(MatomoTracker tracker) {
     final id = tracker.visitor.id;
     final uid = tracker.visitor.uid;
     final pvId = screenId;

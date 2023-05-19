@@ -439,7 +439,6 @@ class MatomoTracker {
 
     validateDimension(dimensions);
     final lastPageView = MatomoEvent(
-      tracker: this,
       action: actionName,
       path: path,
       campaign: campaign,
@@ -466,7 +465,6 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
-        tracker: this,
         goalId: goalId,
         revenue: revenue,
         dimensions: dimensions,
@@ -488,7 +486,6 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
-        tracker: this,
         eventInfo: eventInfo,
         screenId: pvId,
         dimensions: dimensions,
@@ -512,7 +509,6 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
-        tracker: this,
         dimensions: dimensions,
       ),
     );
@@ -533,7 +529,6 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
-        tracker: this,
         searchKeyword: searchKeyword,
         searchCategory: searchCategory,
         searchCount: searchCount,
@@ -558,7 +553,6 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
-        tracker: this,
         goalId: 0,
         trackingOrderItems: trackingOrderItems,
         subTotal: subTotal,
@@ -588,7 +582,6 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
-        tracker: this,
         goalId: 0,
         orderId: orderId,
         trackingOrderItems: trackingOrderItems,
@@ -614,7 +607,6 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(
-        tracker: this,
         link: link,
         dimensions: dimensions,
       ),
@@ -637,7 +629,6 @@ class MatomoTracker {
   }) {
     return _track(
       MatomoEvent(
-        tracker: this,
         content: content,
         screenId: pvId,
         dimensions: dimensions,
@@ -665,7 +656,6 @@ class MatomoTracker {
   }) {
     return _track(
       MatomoEvent(
-        tracker: this,
         content: content,
         contentInteraction: interaction,
         screenId: pvId,
@@ -705,7 +695,7 @@ class MatomoTracker {
       return _lock.synchronized(() async {
         final events = List<MatomoEvent>.from(queue);
         if (!_optOut) {
-          final hasSucceeded = await _dispatcher.sendBatch(events);
+          final hasSucceeded = await _dispatcher.sendBatch(events, this);
           if (hasSucceeded) {
             // As the operation is asynchronous we need to be sure to remove
             // only the events that were sent in the batch.

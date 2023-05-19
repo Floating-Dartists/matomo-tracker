@@ -12,8 +12,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(Uri());
-    when(mockMatomoEvent.toMap).thenReturn({});
-    when(() => mockMatomoEvent.tracker).thenReturn(mockMatomoTracker);
+    when(() => mockMatomoEvent.toMap(mockMatomoTracker)).thenReturn({});
     when(() => mockMatomoTracker.userAgent).thenReturn(null);
     when(() => mockMatomoTracker.log).thenReturn(Logger());
     when(() => mockMatomoTracker.customHeaders).thenReturn({});
@@ -40,7 +39,8 @@ void main() {
         httpClient: mockHttpClient,
       );
 
-      await matomoDispatcher.sendBatch([mockMatomoEvent, mockMatomoEvent]);
+      await matomoDispatcher
+          .sendBatch([mockMatomoEvent, mockMatomoEvent], mockMatomoTracker);
 
       verify(
         () => mockHttpClient.post(
@@ -55,7 +55,6 @@ void main() {
         'it should add user agent in http request if the first event has an user agent',
         () async {
       final events = [mockMatomoEvent, mockMatomoEvent];
-      when(() => events.first.tracker).thenReturn(mockMatomoTracker);
       when(() => mockMatomoTracker.userAgent)
           .thenReturn(matomoTrackerUserAgent);
 
@@ -65,7 +64,7 @@ void main() {
         httpClient: mockHttpClient,
       );
 
-      await matomoDispatcher.sendBatch(events);
+      await matomoDispatcher.sendBatch(events, mockMatomoTracker);
 
       verify(
         () => mockHttpClient.post(
@@ -91,7 +90,7 @@ void main() {
         httpClient: mockHttpClient,
       );
 
-      await matomoDispatcher.sendBatch([]);
+      await matomoDispatcher.sendBatch([], mockMatomoTracker);
 
       verifyNever(
         () => mockHttpClient.post(
@@ -119,7 +118,8 @@ void main() {
     );
 
     await expectLater(
-      matomoDispatcher.sendBatch([mockMatomoEvent, mockMatomoEvent]),
+      matomoDispatcher
+          .sendBatch([mockMatomoEvent, mockMatomoEvent], mockMatomoTracker),
       completes,
     );
   });
@@ -131,7 +131,8 @@ void main() {
       httpClient: mockHttpClient,
     );
 
-    final uri = matomoDispatcher.buildUriForEvent(mockMatomoEvent);
+    final uri =
+        matomoDispatcher.buildUriForEvent(mockMatomoEvent, mockMatomoTracker);
 
     expect(
       uri.queryParameters[MatomoDispatcher.tokenAuthUriKey],
@@ -150,7 +151,7 @@ void main() {
       httpClient: mockHttpClient,
     );
 
-    await matomoDispatcher.sendBatch([mockMatomoEvent]);
+    await matomoDispatcher.sendBatch([mockMatomoEvent], mockMatomoTracker);
 
     verify(
       () => mockHttpClient.post(

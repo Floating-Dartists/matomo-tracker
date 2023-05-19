@@ -14,7 +14,6 @@ import '../ressources/mock/mock.dart';
 void main() {
   MatomoEvent getCompleteMatomoEvent() {
     return MatomoEvent(
-      tracker: mockMatomoTracker,
       path: matomoEventPath,
       action: matomoEventAction,
       dimensions: matomoEventDimension,
@@ -69,7 +68,6 @@ void main() {
   test('it should be able to create MatomotoEvent', () async {
     final matomotoEvent = getCompleteMatomoEvent();
 
-    expect(matomotoEvent.tracker, mockMatomoTracker);
     expect(matomotoEvent.path, matomoEventPath);
     expect(matomotoEvent.action, matomoEventAction);
     expect(matomotoEvent.eventInfo?.category, matomoEventCategory);
@@ -129,7 +127,6 @@ void main() {
         () {
           MatomoEvent getMatomoEventWithWrongScreenId() {
             return MatomoEvent(
-              tracker: mockMatomoTracker,
               screenId: matomoWrongScreenId,
             );
           }
@@ -146,7 +143,6 @@ void main() {
         () {
           MatomoEvent getMatomoEventWithEmptyEventCategory() {
             return MatomoEvent(
-              tracker: mockMatomoTracker,
               eventInfo: EventInfo(
                 category: '',
                 action: matomoEventAction,
@@ -166,7 +162,6 @@ void main() {
         () {
           MatomoEvent getMatomoEventWithEmptyEventAction() {
             return MatomoEvent(
-              tracker: mockMatomoTracker,
               eventInfo: EventInfo(
                 category: matomoEventCategory,
                 action: '',
@@ -184,7 +179,6 @@ void main() {
       test('it should throw ArgumentError if event name is empty', () {
         MatomoEvent getMatomoEventWithEmptyEventName() {
           return MatomoEvent(
-            tracker: mockMatomoTracker,
             eventInfo: EventInfo(
               category: matomoEventCategory,
               action: matomoEventAction,
@@ -223,7 +217,7 @@ void main() {
 
       withClock(Clock.fixed(fixedDate), () {
         final matomotoEvent = getCompleteMatomoEvent();
-        final eventMap = matomotoEvent.toMap();
+        final eventMap = matomotoEvent.toMap(mockMatomoTracker);
         final wantedEvent = getWantedEventMap(fixedDate);
 
         eventMap.remove('rand');
@@ -243,7 +237,7 @@ void main() {
 
       withClock(Clock.fixed(fixedDate), () {
         final matomotoEvent = getCompleteMatomoEvent();
-        final eventMap = matomotoEvent.toMap();
+        final eventMap = matomotoEvent.toMap(mockMatomoTracker);
         final wantedEvent =
             getWantedEventMap(fixedDate, userAgent: matomoTrackerUserAgent);
 
@@ -279,7 +273,6 @@ void main() {
         final matomotoEvent = getCompleteMatomoEvent();
         final unchangedCopy = matomotoEvent.copyWith();
 
-        expect(matomotoEvent.tracker, unchangedCopy.tracker);
         expect(matomotoEvent.path, unchangedCopy.path);
         expect(matomotoEvent.action, unchangedCopy.action);
         expect(
@@ -356,7 +349,6 @@ void main() {
         final changedCopy =
             matomotoEvent.copyWith(newVisit: matomoChangedNewVisit);
 
-        expect(matomotoEvent.tracker, changedCopy.tracker);
         expect(matomotoEvent.path, changedCopy.path);
         expect(matomotoEvent.action, changedCopy.action);
         expect(
@@ -444,7 +436,7 @@ void main() {
 
     test('it should have ca if its an event or content and not a ping',
         () async {
-      final matomotoMap = getCompleteMatomoEvent().toMap();
+      final matomotoMap = getCompleteMatomoEvent().toMap(mockMatomoTracker);
 
       expect(matomotoMap['ca'], '1');
     });
@@ -454,7 +446,7 @@ void main() {
           .copyWith(
             ping: true,
           )
-          .toMap();
+          .toMap(mockMatomoTracker);
 
       expect(matomotoMap.containsKey('ca'), false);
     });
@@ -464,7 +456,7 @@ void main() {
           .copyWith(
             ping: true,
           )
-          .toMap();
+          .toMap(mockMatomoTracker);
 
       expect(matomotoMap.containsKey('pf_net'), false);
       expect(matomotoMap.containsKey('pf_srv'), false);

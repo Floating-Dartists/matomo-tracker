@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:matomo_tracker/src/matomo.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
 
 class MatomoDispatcher {
@@ -24,21 +25,23 @@ class MatomoDispatcher {
   /// The events are sent in a single request.
   ///
   /// Returns `true` if the batch was sent successfully.
-  Future<bool> sendBatch(List<MatomoEvent> events) async {
+  Future<bool> sendBatch(
+      List<MatomoEvent> events, MatomoTracker tracker) async {
     if (events.isEmpty) return true;
 
-    final userAgent = events.first.tracker.userAgent;
+    final userAgent = tracker.userAgent;
     final headers = <String, String>{
       if (!kIsWeb && userAgent != null) userAgentHeaderKeys: userAgent,
-      ...events.first.tracker.customHeaders,
+      ...tracker.customHeaders,
     };
 
     final batch = {
       "requests": [
-        for (final event in events) "?${buildUriForEvent(event).query}",
+        for (final event in events)
+          "?${buildUriForEvent(event, tracker).query}",
       ],
     };
-    events.first.tracker.log.fine(' -> $batch');
+    tracker.log.fine(' -> $batch');
     try {
       final response = await httpClient.post(
         baseUri,
@@ -46,11 +49,11 @@ class MatomoDispatcher {
         body: jsonEncode(batch),
       );
       final statusCode = response.statusCode;
-      events.first.tracker.log.fine(' <- $statusCode');
+      tracker.log.fine(' <- $statusCode');
 
       return true;
     } catch (e) {
-      events.first.tracker.log.severe(
+      tracker.log.severe(
         message: ' <- $e',
         error: e,
       );
@@ -59,9 +62,9 @@ class MatomoDispatcher {
   }
 
   @visibleForTesting
-  Uri buildUriForEvent(MatomoEvent event) {
+  Uri buildUriForEvent(MatomoEvent event, MatomoTracker tracker) {
     final queryParameters = Map<String, String>.from(baseUri.queryParameters)
-      ..addAll(event.toMap());
+      ..addAll(event.toMap(tracker));
     final aTokenAuth = tokenAuth;
     if (aTokenAuth != null) {
       queryParameters.addEntries([MapEntry(tokenAuthUriKey, aTokenAuth)]);
