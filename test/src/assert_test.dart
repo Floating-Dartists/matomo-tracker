@@ -10,7 +10,7 @@ void main() {
       );
     });
 
-    test('should not do anything is string is filled', () {
+    test('should not do anything if string is filled', () {
       expect(
         () => assertStringIsFilled(value: 'value', name: 'name'),
         returnsNormally,
@@ -27,6 +27,49 @@ void main() {
     test('should throw if string contains only whitespace', () {
       expect(
         () => assertStringIsFilled(value: ' ', name: 'name'),
+        throwsArgumentError,
+      );
+    });
+  });
+
+  group('assertDurationNotNegative', () {
+    test('should not do anything if duration is null', () {
+      expect(
+        () => assertDurationNotNegative(value: null, name: 'name'),
+        returnsNormally,
+      );
+    });
+
+    test('should not do anything if duration is positive', () {
+      expect(
+        () => assertDurationNotNegative(
+          value: const Duration(
+            seconds: 1,
+          ),
+          name: 'name',
+        ),
+        returnsNormally,
+      );
+    });
+
+    test('should not do anything if duration is zero', () {
+      expect(
+        () => assertDurationNotNegative(
+          value: Duration.zero,
+          name: 'name',
+        ),
+        returnsNormally,
+      );
+    });
+
+    test('should throw if duration is negative', () {
+      expect(
+        () => assertDurationNotNegative(
+          value: const Duration(
+            seconds: -1,
+          ),
+          name: 'name',
+        ),
         throwsArgumentError,
       );
     });

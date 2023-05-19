@@ -54,6 +54,12 @@ const matomoShippingCost = 1.0;
 const matomoSubTotal = 1.0;
 const matomoTaxAmount = 1.0;
 final matomoTrackingOrderItems = [mockTrackingOrderItem];
+const matomoPerformanceInfoNetworkTime = Duration(milliseconds: 500);
+const matomoPerformanceInfoServerTime = Duration(milliseconds: 501);
+const matomoPerformanceInfoTransferTime = Duration(milliseconds: 502);
+const matomoPerformanceInfoDomProcessingTime = Duration(milliseconds: 503);
+const matomoPerformanceInfoDomCompletionTime = Duration(milliseconds: 504);
+const matomoPerformanceInfoOnloadTime = Duration(milliseconds: 505);
 Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "idsite": "1",
       "rec": "1",
@@ -99,6 +105,12 @@ Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "cdt": now.toIso8601String(),
       "dimension": "dimension",
       "ca": "1",
+      "pf_net": "500",
+      "pf_srv": "501",
+      "pf_tfr": "502",
+      "pf_dm1": "503",
+      "pf_dm2": "504",
+      "pf_onl": "505",
     };
 
 // MatomoDisptacher
@@ -146,7 +158,7 @@ const macOsRelease = 'macOsRelease';
 const linuxPrettyName = 'linuxPrettyName';
 
 // EventInfo
-final wantedEventMap = <String, String>{
+const wantedEventMap = <String, String>{
   'e_c': matomoEventCategory,
   'e_a': matomoEventAction,
 };
@@ -158,10 +170,10 @@ final wantedEventMapFull = <String, String>{
 };
 
 // Campaign
-final wantedCampaignMap = <String, String>{
+const wantedCampaignMap = <String, String>{
   'mtm_campaign': matomoCampaignName,
 };
-final wantedCampaignMapFull = <String, String>{
+const wantedCampaignMapFull = <String, String>{
   'mtm_campaign': matomoCampaignName,
   'mtm_keyword': matomoCampaignKeyword,
   'mtm_source': matomoCampaignSource,
@@ -173,11 +185,24 @@ final wantedCampaignMapFull = <String, String>{
 };
 
 // Content
-final wantedContentMap = <String, String>{
+const wantedContentMap = <String, String>{
   'c_n': matomoContentName,
 };
-final wantedContentMapFull = <String, String>{
+const wantedContentMapFull = <String, String>{
   'c_n': matomoContentName,
   'c_p': matomoContentPiece,
   'c_t': matomoContentTarget
+};
+
+// PerformanceInfo
+final wantedPerformanceMap = <String, String>{
+  'pf_net': matomoPerformanceInfoNetworkTime.inMilliseconds.toString(),
+};
+final wantedPerformanceInfoMapFull = <String, String>{
+  'pf_net': matomoPerformanceInfoNetworkTime.inMilliseconds.toString(),
+  'pf_srv': matomoPerformanceInfoServerTime.inMilliseconds.toString(),
+  'pf_tfr': matomoPerformanceInfoTransferTime.inMilliseconds.toString(),
+  'pf_dm1': matomoPerformanceInfoDomProcessingTime.inMilliseconds.toString(),
+  'pf_dm2': matomoPerformanceInfoDomCompletionTime.inMilliseconds.toString(),
+  'pf_onl': matomoPerformanceInfoOnloadTime.inMilliseconds.toString(),
 };
