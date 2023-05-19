@@ -20,7 +20,11 @@ class Content {
     assertStringIsFilled(value: piece, name: 'piece');
     assertStringIsFilled(value: target, name: 'target');
 
-    return Content._(name: name, piece: piece, target: target);
+    return Content._(
+      name: name,
+      piece: piece,
+      target: target,
+    );
   }
 
   const Content._({
