@@ -138,13 +138,23 @@ void main() {
     });
   });
 
-  test('it should be able to dispatchEvents', () async {
+  test('it should be able to dispatchActions', () async {
     final matomoTracker = await getInitializedMatomoTracker();
     final queueLength = matomoTracker.queue.length;
 
     matomoTracker.trackDimensions(matomoTrackerDimensions);
     expect(matomoTracker.queue.length, queueLength + 1);
-    await matomoTracker.dispatchEvents();
+    await matomoTracker.dispatchActions();
+    expect(matomoTracker.queue.length, 0);
+  });
+
+  test('it should be able to dropActions', () async {
+    final matomoTracker = await getInitializedMatomoTracker();
+    final queueLength = matomoTracker.queue.length;
+
+    matomoTracker.trackDimensions(matomoTrackerDimensions);
+    expect(matomoTracker.queue.length, queueLength + 1);
+    matomoTracker.dropActions();
     expect(matomoTracker.queue.length, 0);
   });
 
