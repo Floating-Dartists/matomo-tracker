@@ -29,6 +29,8 @@ class MatomoEvent {
     this.dimensions,
     this.newVisit,
     this.ping,
+    this.content,
+    this.contentInteraction,
   })  :
         // we use clock.now instead of DateTime.now to make testing easier
         _date = clock.now().toUtc(),
@@ -86,6 +88,9 @@ class MatomoEvent {
 
   final bool? ping;
 
+  final Content? content;
+  final String? contentInteraction;
+
   MatomoEvent copyWith({
     MatomoTracker? tracker,
     String? path,
@@ -108,6 +113,8 @@ class MatomoEvent {
     Map<String, String>? dimensions,
     bool? newVisit,
     bool? ping,
+    Content? content,
+    String? contentInteraction,
   }) =>
       MatomoEvent(
         tracker: tracker ?? this.tracker,
@@ -131,6 +138,8 @@ class MatomoEvent {
         dimensions: dimensions ?? this.dimensions,
         newVisit: newVisit ?? this.newVisit,
         ping: ping ?? this.ping,
+        content: content ?? this.content,
+        contentInteraction: contentInteraction ?? this.contentInteraction,
       );
 
   Map<String, String> toMap() {
@@ -167,6 +176,9 @@ class MatomoEvent {
     final country = locale.countryCode;
     final nV = newVisit;
     final p = ping;
+    final cont = content;
+    final contInteraction = contentInteraction;
+    final ca = (event != null || content != null) && !(p ?? false);
 
     return {
       // Required parameters
@@ -176,6 +188,8 @@ class MatomoEvent {
       if (nV != null && nV) 'new_visit': '1',
 
       if (p != null && p) 'ping': '1',
+
+      if (ca) 'ca': '1',
 
       // Recommended parameters
       if (actionName != null) 'action_name': actionName,
@@ -227,6 +241,9 @@ class MatomoEvent {
 
       // Other parameters (require authentication via `token_auth`)
       'cdt': _date.toIso8601String(),
+
+      if (cont != null) ...cont.toMap(),
+      if (contInteraction != null) 'c_i': contInteraction,
 
       if (dims != null) ...dims,
     };

@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:matomo_tracker/src/campaign.dart';
+import 'package:matomo_tracker/src/content.dart';
 import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
@@ -599,6 +600,59 @@ class MatomoTracker {
       MatomoEvent(
         tracker: this,
         link: link,
+        dimensions: dimensions,
+      ),
+    );
+  }
+
+  /// Tracks a content impression.
+  ///
+  /// Later, if the user interacts with the content (e.g. taps on it),
+  /// call [trackContentInteraction].
+  ///
+  /// To associate this impression with a page view, set [pvId]
+  /// to the [pvId] of that page, e.g. [TraceableClientMixin.pvId].
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
+  void trackContentImpression({
+    required Content content,
+    String? pvId,
+    Map<String, String>? dimensions,
+  }) {
+    return _track(
+      MatomoEvent(
+        tracker: this,
+        content: content,
+        screenId: pvId,
+        dimensions: dimensions,
+      ),
+    );
+  }
+
+  /// Tracks a content interaction.
+  ///
+  /// Use [trackContentImpression] instead if the content was shown
+  /// to the user, but he did not interact with it.
+  ///
+  /// The [interaction] corresponds with `c_i` and should
+  /// describe the type of interaction, e.g. `tap` or `swipe`.
+  ///
+  /// To associate this interaction with a page view, set [pvId]
+  /// to the [pvId] of that page, e.g. [TraceableClientMixin.pvId].
+  ///
+  /// For remarks on [dimensions] see [trackDimensions].
+  void trackContentInteraction({
+    required Content content,
+    required String interaction,
+    String? pvId,
+    Map<String, String>? dimensions,
+  }) {
+    return _track(
+      MatomoEvent(
+        tracker: this,
+        content: content,
+        contentInteraction: interaction,
+        screenId: pvId,
         dimensions: dimensions,
       ),
     );
