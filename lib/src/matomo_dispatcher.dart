@@ -26,7 +26,9 @@ class MatomoDispatcher {
   ///
   /// Returns `true` if the batch was sent successfully.
   Future<bool> sendBatch(
-      List<MatomoEvent> events, MatomoTracker tracker) async {
+    List<MatomoEvent> events,
+    MatomoTracker tracker,
+  ) async {
     if (events.isEmpty) return true;
 
     final userAgent = tracker.userAgent;
