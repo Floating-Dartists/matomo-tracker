@@ -359,9 +359,14 @@ class MatomoTracker {
     }
   }
 
-  /// Iterate on the events in the queue and send them to Matomo.
-  FutureOr<void> dispatchEvents() {
+  /// Iterate on the actions in the queue and send them to Matomo.
+  FutureOr<void> dispatchActions() {
     return _dequeue();
+  }
+
+  /// Drops all actions queued for dispatching.
+  void dropActions() {
+    queue.clear();
   }
 
   /// This will register a page view with [trackScreenWithName] by using the
