@@ -456,7 +456,7 @@ void main() {
           )
           .toMap();
 
-      expect(matomotoMap['ca'], null);
+      expect(matomotoMap.containsKey('ca'), false);
     });
 
     test('it should not have performanceInfo if its a ping', () async {
@@ -466,12 +466,12 @@ void main() {
           )
           .toMap();
 
-      expect(matomotoMap['pf_net'], null);
-      expect(matomotoMap['pf_srv'], null);
-      expect(matomotoMap['pf_tfr'], null);
-      expect(matomotoMap['pf_dm1'], null);
-      expect(matomotoMap['pf_dm2'], null);
-      expect(matomotoMap['pf_onl'], null);
+      expect(matomotoMap.containsKey('pf_net'), false);
+      expect(matomotoMap.containsKey('pf_srv'), false);
+      expect(matomotoMap.containsKey('pf_tfr'), false);
+      expect(matomotoMap.containsKey('pf_dm1'), false);
+      expect(matomotoMap.containsKey('pf_dm2'), false);
+      expect(matomotoMap.containsKey('pf_onl'), false);
     });
   });
 }
