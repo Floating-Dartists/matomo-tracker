@@ -5,6 +5,7 @@ import 'package:matomo_tracker/src/campaign.dart';
 import 'package:matomo_tracker/src/content.dart';
 import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
+import 'package:matomo_tracker/src/performance_info.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../ressources/mock/data.dart';
@@ -54,6 +55,14 @@ void main() {
       trackingOrderItems: matomoTrackingOrderItems,
       newVisit: matomoNewVisit,
       ping: matomoPing,
+      performanceInfo: PerformanceInfo(
+        networkTime: matomoPerformanceInfoNetworkTime,
+        serverTime: matomoPerformanceInfoServerTime,
+        transferTime: matomoPerformanceInfoTransferTime,
+        domProcessingTime: matomoPerformanceInfoDomProcessingTime,
+        domCompletionTime: matomoPerformanceInfoDomCompletionTime,
+        onloadTime: matomoPerformanceInfoOnloadTime,
+      ),
     );
   }
 
@@ -86,6 +95,30 @@ void main() {
     expect(matomotoEvent.content?.piece, matomoContentPiece);
     expect(matomotoEvent.content?.target, matomoContentTarget);
     expect(matomotoEvent.contentInteraction, matomoContentInteraction);
+    expect(
+      matomotoEvent.performanceInfo?.networkTime,
+      matomoPerformanceInfoNetworkTime,
+    );
+    expect(
+      matomotoEvent.performanceInfo?.serverTime,
+      matomoPerformanceInfoServerTime,
+    );
+    expect(
+      matomotoEvent.performanceInfo?.transferTime,
+      matomoPerformanceInfoTransferTime,
+    );
+    expect(
+      matomotoEvent.performanceInfo?.domProcessingTime,
+      matomoPerformanceInfoDomProcessingTime,
+    );
+    expect(
+      matomotoEvent.performanceInfo?.domCompletionTime,
+      matomoPerformanceInfoDomCompletionTime,
+    );
+    expect(
+      matomotoEvent.performanceInfo?.onloadTime,
+      matomoPerformanceInfoOnloadTime,
+    );
   });
 
   group(
@@ -288,6 +321,30 @@ void main() {
           matomotoEvent.contentInteraction,
           unchangedCopy.contentInteraction,
         );
+        expect(
+          matomotoEvent.performanceInfo?.networkTime,
+          unchangedCopy.performanceInfo?.networkTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.serverTime,
+          unchangedCopy.performanceInfo?.serverTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.transferTime,
+          unchangedCopy.performanceInfo?.transferTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.domProcessingTime,
+          unchangedCopy.performanceInfo?.domProcessingTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.domCompletionTime,
+          unchangedCopy.performanceInfo?.domCompletionTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.onloadTime,
+          unchangedCopy.performanceInfo?.onloadTime,
+        );
       });
     });
 
@@ -341,6 +398,30 @@ void main() {
           matomotoEvent.contentInteraction,
           changedCopy.contentInteraction,
         );
+        expect(
+          matomotoEvent.performanceInfo?.networkTime,
+          changedCopy.performanceInfo?.networkTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.serverTime,
+          changedCopy.performanceInfo?.serverTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.transferTime,
+          changedCopy.performanceInfo?.transferTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.domProcessingTime,
+          changedCopy.performanceInfo?.domProcessingTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.domCompletionTime,
+          changedCopy.performanceInfo?.domCompletionTime,
+        );
+        expect(
+          matomotoEvent.performanceInfo?.onloadTime,
+          changedCopy.performanceInfo?.onloadTime,
+        );
       });
     });
   });
@@ -375,7 +456,22 @@ void main() {
           )
           .toMap();
 
-      expect(matomotoMap['ca'], null);
+      expect(matomotoMap.containsKey('ca'), false);
+    });
+
+    test('it should not have performanceInfo if its a ping', () async {
+      final matomotoMap = getCompleteMatomoEvent()
+          .copyWith(
+            ping: true,
+          )
+          .toMap();
+
+      expect(matomotoMap.containsKey('pf_net'), false);
+      expect(matomotoMap.containsKey('pf_srv'), false);
+      expect(matomotoMap.containsKey('pf_tfr'), false);
+      expect(matomotoMap.containsKey('pf_dm1'), false);
+      expect(matomotoMap.containsKey('pf_dm2'), false);
+      expect(matomotoMap.containsKey('pf_onl'), false);
     });
   });
 }

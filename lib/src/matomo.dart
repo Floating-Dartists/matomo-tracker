@@ -5,6 +5,7 @@ import 'package:clock/clock.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:matomo_tracker/src/assert.dart';
 import 'package:matomo_tracker/src/campaign.dart';
 import 'package:matomo_tracker/src/content.dart';
 import 'package:matomo_tracker/src/event_info.dart';
@@ -16,6 +17,7 @@ import 'package:matomo_tracker/src/logger/log_record.dart';
 import 'package:matomo_tracker/src/logger/logger.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:matomo_tracker/src/matomo_event.dart';
+import 'package:matomo_tracker/src/performance_info.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
 import 'package:matomo_tracker/src/session.dart';
 import 'package:matomo_tracker/src/tracking_order_item.dart';
@@ -181,6 +183,9 @@ class MatomoTracker {
         'The visitorId must be 16 characters long',
       );
     }
+
+    assertDurationNotNegative(value: dequeueInterval, name: 'dequeueInterval');
+    assertDurationNotNegative(value: pingInterval, name: 'pingInterval');
 
     log.setLogging(level: verbosityLevel);
 
@@ -384,6 +389,7 @@ class MatomoTracker {
     String? path,
     Campaign? campaign,
     Map<String, String>? dimensions,
+    PerformanceInfo? performanceInfo,
   }) {
     final actionName = context.widget.toStringShort();
 
@@ -393,6 +399,7 @@ class MatomoTracker {
       path: path,
       campaign: campaign,
       dimensions: dimensions,
+      performanceInfo: performanceInfo,
     );
   }
 
@@ -418,6 +425,7 @@ class MatomoTracker {
     String? path,
     Campaign? campaign,
     Map<String, String>? dimensions,
+    PerformanceInfo? performanceInfo,
   }) {
     _initializationCheck();
 
@@ -437,6 +445,7 @@ class MatomoTracker {
       campaign: campaign,
       dimensions: dimensions,
       screenId: pvId ?? randomAlphaNumeric(6),
+      performanceInfo: performanceInfo,
     );
     _lastPageView = lastPageView;
     return _track(lastPageView);
@@ -497,7 +506,9 @@ class MatomoTracker {
   ///
   /// Also note that counting starts at 1 and NOT at 0 as opposed to what is stated
   /// in the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api) documentation.
-  void trackDimensions(Map<String, String> dimensions) {
+  void trackDimensions(
+    Map<String, String> dimensions,
+  ) {
     validateDimension(dimensions);
     return _track(
       MatomoEvent(

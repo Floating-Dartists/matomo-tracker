@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:matomo_tracker/matomo_tracker.dart';
 
@@ -117,8 +119,56 @@ class MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   String? get path => '/homepage';
 }
 
-class OtherPage extends StatelessWidget {
+class OtherPage extends StatefulWidget {
   const OtherPage({super.key});
+
+  @override
+  State<OtherPage> createState() => _OtherPageState();
+}
+
+class _OtherPageState extends State<OtherPage> {
+  late bool _loading;
+  late Duration? _workTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _loading = true;
+    // simulate work
+    final workStart = DateTime.now();
+    Future.delayed(Duration(seconds: Random().nextInt(4) + 3))
+        .then((_) => setState(() {
+              _loading = false;
+              _workTime = DateTime.now().difference(workStart);
+            }));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Other Page'),
+      ),
+      body: Center(
+        child: _loading
+            ? const CircularProgressIndicator()
+            : TraceableWidget(
+                path: '/otherpage',
+                actionName: 'Other Page',
+                performanceInfo: PerformanceInfo(
+                  serverTime: _workTime,
+                ),
+                child: const Text(
+                  'Welcome to the other page!',
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class OtherPage2 extends StatelessWidget {
+  const OtherPage2({super.key});
 
   @override
   Widget build(BuildContext context) {
