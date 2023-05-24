@@ -2,20 +2,24 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:matomo_tracker/src/matomo.dart';
 import 'package:matomo_tracker/src/matomo_action.dart';
+import 'package:matomo_tracker/src/logger/logger.dart';
 
 class MatomoDispatcher {
-  MatomoDispatcher(
-    String baseUrl,
-    this.tokenAuth, {
+  MatomoDispatcher({
+    required String baseUrl,
+    required this.log,
+    this.userAgent,
+    this.tokenAuth,
     http.Client? httpClient,
   })  : baseUri = Uri.parse(baseUrl),
         httpClient = httpClient ?? http.Client();
+
   final String? tokenAuth;
   final http.Client httpClient;
-
   final Uri baseUri;
+  final String? userAgent;
+  final Logger log;
 
   static const tokenAuthUriKey = 'token_auth';
   static const userAgentHeaderKeys = 'User-Agent';
@@ -25,25 +29,26 @@ class MatomoDispatcher {
   /// The actions are sent in a single request.
   ///
   /// Returns `true` if the batch was sent successfully.
-  Future<bool> sendBatch(
-    List<MatomoAction> actions,
-    MatomoTracker tracker,
-  ) async {
+  /// Note that this is based on the http return code of the
+  /// response, not its body.
+  Future<bool> sendBatch({
+    required List<Map<String, String>> actions,
+    Map<String, String> customHeaders = const {},
+  }) async {
     if (actions.isEmpty) return true;
 
-    final userAgent = tracker.userAgent;
+    final userAgent = this.userAgent;
     final headers = <String, String>{
       if (!kIsWeb && userAgent != null) userAgentHeaderKeys: userAgent,
-      ...tracker.customHeaders,
+      ...customHeaders,
     };
 
     final batch = {
-      "requests": [
-        for (final action in actions)
-          "?${buildUriForAction(action, tracker).query}",
+      'requests': [
+        for (final action in actions) '?${buildUriForAction(action).query}',
       ],
     };
-    tracker.log.fine(' -> $batch');
+    log.fine(' -> $batch');
     try {
       final response = await httpClient.post(
         baseUri,
@@ -51,11 +56,11 @@ class MatomoDispatcher {
         body: jsonEncode(batch),
       );
       final statusCode = response.statusCode;
-      tracker.log.fine(' <- $statusCode');
+      log.fine(' <- $statusCode');
 
       return true;
     } catch (e) {
-      tracker.log.severe(
+      log.severe(
         message: ' <- $e',
         error: e,
       );
@@ -64,9 +69,9 @@ class MatomoDispatcher {
   }
 
   @visibleForTesting
-  Uri buildUriForAction(MatomoAction action, MatomoTracker tracker) {
+  Uri buildUriForAction(Map<String, String> action) {
     final queryParameters = Map<String, String>.from(baseUri.queryParameters)
-      ..addAll(action.toMap(tracker));
+      ..addAll(action);
     final aTokenAuth = tokenAuth;
     if (aTokenAuth != null) {
       queryParameters.addEntries([MapEntry(tokenAuthUriKey, aTokenAuth)]);

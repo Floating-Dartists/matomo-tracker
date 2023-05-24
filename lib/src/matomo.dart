@@ -109,7 +109,7 @@ class MatomoTracker {
   late final LocalStorage _localStorage;
 
   @visibleForTesting
-  final queue = Queue<MatomoAction>();
+  final queue = Queue<Map<String, String>>();
 
   @visibleForTesting
   late Timer dequeueTimer;
@@ -121,7 +121,7 @@ class MatomoTracker {
 
   String? _tokenAuth;
 
-  String? get getAuthToken => _tokenAuth;
+  String? get authToken => _tokenAuth;
 
   late final Duration _dequeueInterval;
 
@@ -155,6 +155,9 @@ class MatomoTracker {
   /// send to Matomo to circumvent the [last page viewtime issue](https://github.com/Floating-Dartists/matomo-tracker/issues/78).
   /// To deactivate pings, set this to `null`. The default value is a good
   /// compromise between accuracy and network traffic.
+  ///
+  /// It is recommended to leave [userAgent] to `null` so it will be detected
+  /// automatically.
   Future<void> initialize({
     required int siteId,
     required String url,
@@ -171,6 +174,7 @@ class MatomoTracker {
     bool cookieless = false,
     Level verbosityLevel = Level.off,
     Map<String, String> customHeaders = const {},
+    String? userAgent,
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -198,7 +202,6 @@ class MatomoTracker {
     _platformInfo = platformInfo ?? PlatformInfo.instance;
     _cookieless = cookieless;
     _tokenAuth = tokenAuth;
-    _dispatcher = MatomoDispatcher(url, tokenAuth);
     _newVisit = newVisit;
 
     final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
@@ -210,7 +213,14 @@ class MatomoTracker {
     _visitor = Visitor(id: localVisitorId, uid: uid);
 
     // User agent
-    userAgent = await getUserAgent();
+    this.userAgent = userAgent ?? await getUserAgent();
+
+    _dispatcher = MatomoDispatcher(
+      baseUrl: url,
+      tokenAuth: tokenAuth,
+      userAgent: this.userAgent,
+      log: log,
+    );
 
     // Screen Resolution
     final physicalSize = PlatformDispatcher.instance.views.first.physicalSize;
@@ -258,7 +268,7 @@ class MatomoTracker {
     unawaited(_localStorage.setOptOut(optOut: _optOut));
 
     log.fine(
-      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=$userAgent',
+      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=${this.userAgent}',
     );
     _initialized = true;
 
@@ -670,7 +680,7 @@ class MatomoTracker {
       ac = ac.copyWith(newVisit: true);
       _newVisit = false;
     }
-    queue.add(ac);
+    queue.add(ac.toMap(this));
   }
 
   void _ping() {
@@ -693,9 +703,12 @@ class MatomoTracker {
 
     if (!_lock.locked) {
       return _lock.synchronized(() async {
-        final actions = List<MatomoAction>.from(queue);
+        final actions = List<Map<String, String>>.of(queue);
         if (!_optOut) {
-          final hasSucceeded = await _dispatcher.sendBatch(actions, this);
+          final hasSucceeded = await _dispatcher.sendBatch(
+            actions: actions,
+            customHeaders: customHeaders,
+          );
           if (hasSucceeded) {
             // As the operation is asynchronous we need to be sure to remove
             // only the actions that were sent in the batch.

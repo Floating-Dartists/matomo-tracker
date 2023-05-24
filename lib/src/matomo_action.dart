@@ -216,7 +216,7 @@ class MatomoAction {
       'cookie': '1',
       if (ua != null) 'ua': ua,
       'lang': locale.toString(),
-      if (country != null && tracker.getAuthToken != null) 'country': country,
+      if (country != null && tracker.authToken != null) 'country': country,
 
       if (uid != null) 'uid': uid,
 

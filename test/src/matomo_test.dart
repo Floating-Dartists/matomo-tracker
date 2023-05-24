@@ -82,7 +82,7 @@ void main() {
 
     testInitialization(
       'it should be able to set tokenAuth',
-      [(tracker, _) => expect(tracker.getAuthToken, matomoTrackerTokenAuth)],
+      [(tracker, _) => expect(tracker.authToken, matomoTrackerTokenAuth)],
       tokenAuth: matomoTrackerTokenAuth,
     );
   });
@@ -261,9 +261,9 @@ void main() {
       final matomoTracker = await getInitializedMatomoTracker();
 
       matomoTracker.trackDimensions(matomoTrackerDimensions);
-      expect(matomoTracker.queue.first.newVisit, true);
+      expect(matomoTracker.queue.first['new_visit'], '1');
       matomoTracker.trackDimensions(matomoTrackerDimensions);
-      expect(matomoTracker.queue.last.newVisit, null);
+      expect(matomoTracker.queue.last.containsKey('new_visit'), false);
     });
   });
 
