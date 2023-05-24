@@ -41,4 +41,11 @@ class CookielessStorage implements LocalStorage {
 
   @override
   Future<void> setVisitorId(String _) => Future.value();
+
+  @override
+  Future<String?> loadActions() => storage.loadActions();
+
+  @override
+  Future<void> storeActions(String serializedActions) =>
+      storage.storeActions(serializedActions);
 }
