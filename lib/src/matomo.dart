@@ -145,7 +145,9 @@ class MatomoTracker {
   ///
   /// The [visitorId] should have a length of 16 characters otherwise an
   /// [ArgumentError] will be thrown. This parameter corresponds with the
-  /// `_id` and should not be confused with the user id `uid`.
+  /// `_id` and should not be confused with the user id `uid`. See the
+  /// [Visitor] class for additional remarks. It is recommended to leave this
+  /// to `null` to use an automatically generated id.
   ///
   /// If [cookieless] is set to true, a [CookielessStorage] instance will be
   /// used. This means that the first_visit and the user_id will be stored in
