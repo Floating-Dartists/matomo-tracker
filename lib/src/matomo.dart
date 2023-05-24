@@ -78,6 +78,18 @@ class MatomoTracker {
     );
   }
 
+  /// Whether to attach the last `pvId` to actions that can be associated with
+  /// page views.
+  ///
+  /// There are some actions like [trackEvent] and [trackContentImpression]
+  /// that can be associated with page views by setting a `pvId` (what is the
+  /// abbreviation of page view id). If [attachLastPvId] is `true` and there is
+  /// a last page view tracked by [trackScreenWithName] (or a method/class that
+  /// uses it like [trackScreen], [TraceableClientMixin], [TraceableWidget]) the
+  /// last recored `pvId` is automatically used unless it is overwritten in that
+  /// action.
+  late final bool attachLastPvId;
+
   /// The user agent is used to detect the operating system and browser used.
   late final String? userAgent;
 
@@ -177,6 +189,7 @@ class MatomoTracker {
     Level verbosityLevel = Level.off,
     Map<String, String> customHeaders = const {},
     String? userAgent,
+    bool attachLastPvId = true,
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -205,6 +218,7 @@ class MatomoTracker {
     _cookieless = cookieless;
     _tokenAuth = tokenAuth;
     _newVisit = newVisit;
+    this.attachLastPvId = attachLastPvId;
 
     final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
     _localStorage = cookieless
@@ -384,9 +398,9 @@ class MatomoTracker {
   /// This will register a page view with [trackScreenWithName] by using the
   /// `context.widget.toStringShort()` as `actionName` value.
   ///
-  /// - `pvId`: A 6 character unique ID that identifies which actions
-  /// were performed on a specific page view. If `null`, a random id will be
-  /// generated.
+  /// - `pvId`: A 6 character unique ID that can later be used to associate
+  /// other actions (like [trackEvent]) with this page view. If `null`,
+  /// a random id will be generated (recommended). Also see [attachLastPvId].
   ///
   /// - `path`: A string that identifies the path of the screen. If not
   /// `null`, it will be combined to [contentBase] to create a URL. This combination
@@ -420,9 +434,9 @@ class MatomoTracker {
   /// - `actionName`: Equivalent to the page name, here used to identify the
   /// screen with a proper name.
   ///
-  /// - `pvId`: A 6 character unique ID that identifies which actions
-  /// were performed on a specific page view. If `null`, a random ID will be
-  /// generated.
+  /// - `pvId`: A 6 character unique ID that can later be used to associate
+  /// other actions (like [trackEvent]) with this page view. If `null`,
+  /// a random id will be generated (recommended). Also see [attachLastPvId].
   ///
   /// - `path`: A string that identifies the path of the screen. If not
   /// `null`, it will be combined to [contentBase] to create a URL. This
@@ -486,8 +500,10 @@ class MatomoTracker {
 
   /// Tracks an event.
   ///
-  /// To associate this event with a page view, set [pvId]
-  /// to the [pvId] of that page, e.g. [TraceableClientMixin.pvId].
+  /// To associate this event with a page view, enable [attachLastPvId] and
+  /// leave [pvId] to `null` here or set [pvId] to the [pvId] of that page view
+  /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
+  /// take precedance over [attachLastPvId].
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackEvent({
@@ -499,7 +515,7 @@ class MatomoTracker {
     return _track(
       MatomoAction(
         eventInfo: eventInfo,
-        screenId: pvId,
+        screenId: _inferPvId(pvId),
         dimensions: dimensions,
       ),
     );
@@ -630,8 +646,10 @@ class MatomoTracker {
   /// Later, if the user interacts with the content (e.g. taps on it),
   /// call [trackContentInteraction].
   ///
-  /// To associate this impression with a page view, set [pvId]
-  /// to the [pvId] of that page, e.g. [TraceableClientMixin.pvId].
+  /// To associate this impression with a page view, enable [attachLastPvId] and
+  /// leave [pvId] to `null` here or set [pvId] to the [pvId] of that page view
+  /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
+  /// take precedance over [attachLastPvId].
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackContentImpression({
@@ -642,7 +660,7 @@ class MatomoTracker {
     return _track(
       MatomoAction(
         content: content,
-        screenId: pvId,
+        screenId: _inferPvId(pvId),
         dimensions: dimensions,
       ),
     );
@@ -656,8 +674,10 @@ class MatomoTracker {
   /// The [interaction] corresponds with `c_i` and should
   /// describe the type of interaction, e.g. `tap` or `swipe`.
   ///
-  /// To associate this interaction with a page view, set [pvId]
-  /// to the [pvId] of that page, e.g. [TraceableClientMixin.pvId].
+  /// To associate this interaction with a page view, enable [attachLastPvId]
+  /// and leave [pvId] to `null` here or set [pvId] to the [pvId] of that page
+  /// view manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually
+  /// will take precedance over [attachLastPvId].
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackContentInteraction({
@@ -670,7 +690,7 @@ class MatomoTracker {
       MatomoAction(
         content: content,
         contentInteraction: interaction,
-        screenId: pvId,
+        screenId: _inferPvId(pvId),
         dimensions: dimensions,
       ),
     );
@@ -765,4 +785,7 @@ class MatomoTracker {
       }
     }
   }
+
+  String? _inferPvId(String? pvId) =>
+      pvId ?? (attachLastPvId ? _lastPageView?.screenId : null);
 }

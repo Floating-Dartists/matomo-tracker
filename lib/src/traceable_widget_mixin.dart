@@ -19,7 +19,11 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   ///
   /// Each unique ID represents one page view.
   ///
-  /// The default implementation will generate one on widget creation.
+  /// The default implementation will generate one on widget creation
+  /// (recommended).
+  ///
+  /// For more information see `pvId` in [MatomoTracker.trackScreenWithName] and
+  /// [MatomoTracker.attachLastPvId].
   /// {@endtemplate}
   @protected
   String get pvId => _pvId;
