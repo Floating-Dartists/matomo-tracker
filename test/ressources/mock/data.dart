@@ -18,7 +18,7 @@ const trackingOrderItemCategory = 'category';
 const trackingOrderItemPrice = 1.0;
 const trackingOrderItemQuantity = 1;
 
-// MatomoEvent
+// MatomoAction
 const matomoCampaignName = 'name';
 const matomoCampaignKeyword = 'keyword';
 const matomoCampaignSource = 'source';
@@ -34,8 +34,8 @@ const matomoContentInteraction = 'interaction';
 const matomoNewVisit = false;
 const matomoChangedNewVisit = true;
 const matomoPing = false;
-const matomoEventPath = 'path';
-const matomoEventAction = 'action';
+const matomoActionPath = 'path';
+const matomoActionName = 'action';
 const matomoEventCategory = 'eventCategory';
 const matomoEventDimension = {'dimension': 'dimension'};
 const matomoDiscountAmount = 1.0;
@@ -160,11 +160,11 @@ const linuxPrettyName = 'linuxPrettyName';
 // EventInfo
 const wantedEventMap = <String, String>{
   'e_c': matomoEventCategory,
-  'e_a': matomoEventAction,
+  'e_a': matomoActionName,
 };
 final wantedEventMapFull = <String, String>{
   'e_c': matomoEventCategory,
-  'e_a': matomoEventAction,
+  'e_a': matomoActionName,
   'e_n': matomoEventName,
   'e_v': matomoEventValue.toString(),
 };

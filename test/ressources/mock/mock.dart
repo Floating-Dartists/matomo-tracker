@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:matomo_tracker/src/matomo.dart';
-import 'package:matomo_tracker/src/matomo_event.dart';
+import 'package:matomo_tracker/src/matomo_action.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
 import 'package:matomo_tracker/src/session.dart';
 import 'package:matomo_tracker/src/tracking_order_item.dart';
@@ -19,7 +19,7 @@ class MockHttpClient extends Mock implements http.Client {}
 
 class MockHttpResponse extends Mock implements http.Response {}
 
-class MockMatomoEvent extends Mock implements MatomoEvent {}
+class MockMatomoAction extends Mock implements MatomoAction {}
 
 class MockVisitor extends Mock implements Visitor {}
 
@@ -62,7 +62,7 @@ class MockWidget extends StatelessWidget {
 final mockMatomoTracker = MockMatomoTracker();
 final mockTrackingOrderItem = MockTrackingOrderItem();
 final mockHttpClient = MockHttpClient();
-final mockMatomoEvent = MockMatomoEvent();
+final mockMatomoAction = MockMatomoAction();
 final mockHttpResponse = MockHttpResponse();
 final mockVisitor = MockVisitor();
 final mockSession = MockSession();

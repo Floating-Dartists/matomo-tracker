@@ -6,8 +6,8 @@ import 'package:clock/clock.dart';
 import 'package:matomo_tracker/matomo_tracker.dart';
 import 'package:matomo_tracker/utils/extensions.dart';
 
-class MatomoEvent {
-  MatomoEvent({
+class MatomoAction {
+  MatomoAction({
     this.path,
     this.action,
     this.eventInfo,
@@ -80,7 +80,7 @@ class MatomoEvent {
 
   final Campaign? campaign;
 
-  // The dimensions associated with the event
+  // The dimensions associated with the action
   final Map<String, String>? dimensions;
 
   final bool? newVisit;
@@ -92,7 +92,7 @@ class MatomoEvent {
 
   final PerformanceInfo? performanceInfo;
 
-  MatomoEvent copyWith({
+  MatomoAction copyWith({
     String? path,
     String? action,
     EventInfo? eventInfo,
@@ -117,7 +117,7 @@ class MatomoEvent {
     String? contentInteraction,
     PerformanceInfo? performanceInfo,
   }) =>
-      MatomoEvent(
+      MatomoAction(
         path: path ?? this.path,
         action: action ?? this.action,
         eventInfo: eventInfo ?? this.eventInfo,

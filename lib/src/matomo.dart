@@ -15,8 +15,8 @@ import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:matomo_tracker/src/local_storage/shared_prefs_storage.dart';
 import 'package:matomo_tracker/src/logger/log_record.dart';
 import 'package:matomo_tracker/src/logger/logger.dart';
+import 'package:matomo_tracker/src/matomo_action.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
-import 'package:matomo_tracker/src/matomo_event.dart';
 import 'package:matomo_tracker/src/performance_info.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
 import 'package:matomo_tracker/src/session.dart';
@@ -109,7 +109,7 @@ class MatomoTracker {
   late final LocalStorage _localStorage;
 
   @visibleForTesting
-  final queue = Queue<MatomoEvent>();
+  final queue = Queue<MatomoAction>();
 
   @visibleForTesting
   late Timer dequeueTimer;
@@ -129,7 +129,7 @@ class MatomoTracker {
 
   late bool _newVisit;
 
-  MatomoEvent? _lastPageView;
+  MatomoAction? _lastPageView;
 
   /// Initialize the tracker.
   ///
@@ -326,7 +326,7 @@ class MatomoTracker {
   /// {@macro local_storage.clear}
   void clear() => _localStorage.clear();
 
-  /// Cancel the timer which checks the queued events to send. (This will not
+  /// Cancel the timer which checks the queued actions to send. (This will not
   /// clear the queue.)
   void dispose() {
     pingTimer?.cancel();
@@ -438,7 +438,7 @@ class MatomoTracker {
     }
 
     validateDimension(dimensions);
-    final lastPageView = MatomoEvent(
+    final lastPageView = MatomoAction(
       action: actionName,
       path: path,
       campaign: campaign,
@@ -464,7 +464,7 @@ class MatomoTracker {
 
     validateDimension(dimensions);
     return _track(
-      MatomoEvent(
+      MatomoAction(
         goalId: goalId,
         revenue: revenue,
         dimensions: dimensions,
@@ -485,7 +485,7 @@ class MatomoTracker {
   }) {
     validateDimension(dimensions);
     return _track(
-      MatomoEvent(
+      MatomoAction(
         eventInfo: eventInfo,
         screenId: pvId,
         dimensions: dimensions,
@@ -508,7 +508,7 @@ class MatomoTracker {
   ) {
     validateDimension(dimensions);
     return _track(
-      MatomoEvent(
+      MatomoAction(
         dimensions: dimensions,
       ),
     );
@@ -528,7 +528,7 @@ class MatomoTracker {
   }) {
     validateDimension(dimensions);
     return _track(
-      MatomoEvent(
+      MatomoAction(
         searchKeyword: searchKeyword,
         searchCategory: searchCategory,
         searchCount: searchCount,
@@ -552,7 +552,7 @@ class MatomoTracker {
 
     validateDimension(dimensions);
     return _track(
-      MatomoEvent(
+      MatomoAction(
         goalId: 0,
         trackingOrderItems: trackingOrderItems,
         subTotal: subTotal,
@@ -581,7 +581,7 @@ class MatomoTracker {
 
     validateDimension(dimensions);
     return _track(
-      MatomoEvent(
+      MatomoAction(
         goalId: 0,
         orderId: orderId,
         trackingOrderItems: trackingOrderItems,
@@ -606,7 +606,7 @@ class MatomoTracker {
 
     validateDimension(dimensions);
     return _track(
-      MatomoEvent(
+      MatomoAction(
         link: link,
         dimensions: dimensions,
       ),
@@ -628,7 +628,7 @@ class MatomoTracker {
     Map<String, String>? dimensions,
   }) {
     return _track(
-      MatomoEvent(
+      MatomoAction(
         content: content,
         screenId: pvId,
         dimensions: dimensions,
@@ -655,7 +655,7 @@ class MatomoTracker {
     Map<String, String>? dimensions,
   }) {
     return _track(
-      MatomoEvent(
+      MatomoAction(
         content: content,
         contentInteraction: interaction,
         screenId: pvId,
@@ -664,13 +664,13 @@ class MatomoTracker {
     );
   }
 
-  void _track(MatomoEvent event) {
-    var ev = event;
+  void _track(MatomoAction action) {
+    var ac = action;
     if (_newVisit) {
-      ev = ev.copyWith(newVisit: true);
+      ac = ac.copyWith(newVisit: true);
       _newVisit = false;
     }
-    queue.add(ev);
+    queue.add(ac);
   }
 
   void _ping() {
@@ -693,13 +693,13 @@ class MatomoTracker {
 
     if (!_lock.locked) {
       return _lock.synchronized(() async {
-        final events = List<MatomoEvent>.from(queue);
+        final actions = List<MatomoAction>.from(queue);
         if (!_optOut) {
-          final hasSucceeded = await _dispatcher.sendBatch(events, this);
+          final hasSucceeded = await _dispatcher.sendBatch(actions, this);
           if (hasSucceeded) {
             // As the operation is asynchronous we need to be sure to remove
-            // only the events that were sent in the batch.
-            queue.removeWhere(events.contains);
+            // only the actions that were sent in the batch.
+            queue.removeWhere(actions.contains);
           }
         }
       });

@@ -70,7 +70,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   PerformanceInfo? performanceInfo;
 
   /// {@template traceableClientMixin.tracker}
-  /// Matomo instance used to send events.
+  /// Matomo instance used to send actions.
   ///
   /// By default it uses the global [MatomoTracker.instance].
   /// {@endtemplate}

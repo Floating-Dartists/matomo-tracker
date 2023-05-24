@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/campaign.dart';
 import 'package:matomo_tracker/src/content.dart';
 import 'package:matomo_tracker/src/event_info.dart';
-import 'package:matomo_tracker/src/matomo_event.dart';
+import 'package:matomo_tracker/src/matomo_action.dart';
 import 'package:matomo_tracker/src/performance_info.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -12,15 +12,15 @@ import '../ressources/mock/data.dart';
 import '../ressources/mock/mock.dart';
 
 void main() {
-  MatomoEvent getCompleteMatomoEvent() {
-    return MatomoEvent(
-      path: matomoEventPath,
-      action: matomoEventAction,
+  MatomoAction getCompleteMatomoAction() {
+    return MatomoAction(
+      path: matomoActionPath,
+      action: matomoActionName,
       dimensions: matomoEventDimension,
       discountAmount: matomoDiscountAmount,
       eventInfo: EventInfo(
         category: matomoEventCategory,
-        action: matomoEventAction,
+        action: matomoActionName,
         name: matomoEventName,
         value: matomoEventValue,
       ),
@@ -65,56 +65,56 @@ void main() {
     );
   }
 
-  test('it should be able to create MatomotoEvent', () async {
-    final matomotoEvent = getCompleteMatomoEvent();
+  test('it should be able to create MatomoAction', () async {
+    final matomoAction = getCompleteMatomoAction();
 
-    expect(matomotoEvent.path, matomoEventPath);
-    expect(matomotoEvent.action, matomoEventAction);
-    expect(matomotoEvent.eventInfo?.category, matomoEventCategory);
-    expect(matomotoEvent.dimensions, matomoEventDimension);
-    expect(matomotoEvent.discountAmount, matomoDiscountAmount);
-    expect(matomotoEvent.eventInfo?.action, matomoEventAction);
-    expect(matomotoEvent.eventInfo?.value, matomoEventValue);
-    expect(matomotoEvent.eventInfo?.name, matomoEventName);
-    expect(matomotoEvent.goalId, matomoGoalId);
-    expect(matomotoEvent.link, matomoLink);
-    expect(matomotoEvent.orderId, matomoOrderId);
-    expect(matomotoEvent.revenue, matomoRevenue);
-    expect(matomotoEvent.screenId, matomoScreenId);
-    expect(matomotoEvent.searchCategory, matomoSearchCategory);
-    expect(matomotoEvent.searchCount, matomoSearchCount);
-    expect(matomotoEvent.searchKeyword, matomoSearchKeyword);
-    expect(matomotoEvent.shippingCost, matomoShippingCost);
-    expect(matomotoEvent.subTotal, matomoSubTotal);
-    expect(matomotoEvent.taxAmount, matomoTaxAmount);
-    expect(matomotoEvent.trackingOrderItems, matomoTrackingOrderItems);
-    expect(matomotoEvent.newVisit, matomoNewVisit);
-    expect(matomotoEvent.content?.name, matomoContentName);
-    expect(matomotoEvent.content?.piece, matomoContentPiece);
-    expect(matomotoEvent.content?.target, matomoContentTarget);
-    expect(matomotoEvent.contentInteraction, matomoContentInteraction);
+    expect(matomoAction.path, matomoActionPath);
+    expect(matomoAction.action, matomoActionName);
+    expect(matomoAction.eventInfo?.category, matomoEventCategory);
+    expect(matomoAction.dimensions, matomoEventDimension);
+    expect(matomoAction.discountAmount, matomoDiscountAmount);
+    expect(matomoAction.eventInfo?.action, matomoActionName);
+    expect(matomoAction.eventInfo?.value, matomoEventValue);
+    expect(matomoAction.eventInfo?.name, matomoEventName);
+    expect(matomoAction.goalId, matomoGoalId);
+    expect(matomoAction.link, matomoLink);
+    expect(matomoAction.orderId, matomoOrderId);
+    expect(matomoAction.revenue, matomoRevenue);
+    expect(matomoAction.screenId, matomoScreenId);
+    expect(matomoAction.searchCategory, matomoSearchCategory);
+    expect(matomoAction.searchCount, matomoSearchCount);
+    expect(matomoAction.searchKeyword, matomoSearchKeyword);
+    expect(matomoAction.shippingCost, matomoShippingCost);
+    expect(matomoAction.subTotal, matomoSubTotal);
+    expect(matomoAction.taxAmount, matomoTaxAmount);
+    expect(matomoAction.trackingOrderItems, matomoTrackingOrderItems);
+    expect(matomoAction.newVisit, matomoNewVisit);
+    expect(matomoAction.content?.name, matomoContentName);
+    expect(matomoAction.content?.piece, matomoContentPiece);
+    expect(matomoAction.content?.target, matomoContentTarget);
+    expect(matomoAction.contentInteraction, matomoContentInteraction);
     expect(
-      matomotoEvent.performanceInfo?.networkTime,
+      matomoAction.performanceInfo?.networkTime,
       matomoPerformanceInfoNetworkTime,
     );
     expect(
-      matomotoEvent.performanceInfo?.serverTime,
+      matomoAction.performanceInfo?.serverTime,
       matomoPerformanceInfoServerTime,
     );
     expect(
-      matomotoEvent.performanceInfo?.transferTime,
+      matomoAction.performanceInfo?.transferTime,
       matomoPerformanceInfoTransferTime,
     );
     expect(
-      matomotoEvent.performanceInfo?.domProcessingTime,
+      matomoAction.performanceInfo?.domProcessingTime,
       matomoPerformanceInfoDomProcessingTime,
     );
     expect(
-      matomotoEvent.performanceInfo?.domCompletionTime,
+      matomoAction.performanceInfo?.domCompletionTime,
       matomoPerformanceInfoDomCompletionTime,
     );
     expect(
-      matomotoEvent.performanceInfo?.onloadTime,
+      matomoAction.performanceInfo?.onloadTime,
       matomoPerformanceInfoOnloadTime,
     );
   });
@@ -125,14 +125,14 @@ void main() {
       test(
         'it should throw AssertionError if screen id is not 6 characters',
         () {
-          MatomoEvent getMatomoEventWithWrongScreenId() {
-            return MatomoEvent(
+          MatomoAction getMatomoActionWithWrongScreenId() {
+            return MatomoAction(
               screenId: matomoWrongScreenId,
             );
           }
 
           expect(
-            getMatomoEventWithWrongScreenId,
+            getMatomoActionWithWrongScreenId,
             throwsAssertionError,
           );
         },
@@ -141,17 +141,17 @@ void main() {
       test(
         'it should throw ArgumentError if event category is empty',
         () {
-          MatomoEvent getMatomoEventWithEmptyEventCategory() {
-            return MatomoEvent(
+          MatomoAction getMatomoActionWithEmptyEventCategory() {
+            return MatomoAction(
               eventInfo: EventInfo(
                 category: '',
-                action: matomoEventAction,
+                action: matomoActionName,
               ),
             );
           }
 
           expect(
-            getMatomoEventWithEmptyEventCategory,
+            getMatomoActionWithEmptyEventCategory,
             throwsArgumentError,
           );
         },
@@ -160,8 +160,8 @@ void main() {
       test(
         'it should throw ArgumentError if event action is empty',
         () {
-          MatomoEvent getMatomoEventWithEmptyEventAction() {
-            return MatomoEvent(
+          MatomoAction getMatomoActionWithEmptyEventAction() {
+            return MatomoAction(
               eventInfo: EventInfo(
                 category: matomoEventCategory,
                 action: '',
@@ -170,25 +170,25 @@ void main() {
           }
 
           expect(
-            getMatomoEventWithEmptyEventAction,
+            getMatomoActionWithEmptyEventAction,
             throwsArgumentError,
           );
         },
       );
 
       test('it should throw ArgumentError if event name is empty', () {
-        MatomoEvent getMatomoEventWithEmptyEventName() {
-          return MatomoEvent(
+        MatomoAction getMatomoActionWithEmptyEventName() {
+          return MatomoAction(
             eventInfo: EventInfo(
               category: matomoEventCategory,
-              action: matomoEventAction,
+              action: matomoActionName,
               name: '',
             ),
           );
         }
 
         expect(
-          getMatomoEventWithEmptyEventName,
+          getMatomoActionWithEmptyEventName,
           throwsArgumentError,
         );
       });
@@ -216,8 +216,8 @@ void main() {
       final fixedDate = DateTime(2022).toUtc();
 
       withClock(Clock.fixed(fixedDate), () {
-        final matomotoEvent = getCompleteMatomoEvent();
-        final eventMap = matomotoEvent.toMap(mockMatomoTracker);
+        final matomoAction = getCompleteMatomoAction();
+        final eventMap = matomoAction.toMap(mockMatomoTracker);
         final wantedEvent = getWantedEventMap(fixedDate);
 
         eventMap.remove('rand');
@@ -236,8 +236,8 @@ void main() {
       final fixedDate = DateTime(2022).toUtc();
 
       withClock(Clock.fixed(fixedDate), () {
-        final matomotoEvent = getCompleteMatomoEvent();
-        final eventMap = matomotoEvent.toMap(mockMatomoTracker);
+        final matomoAction = getCompleteMatomoAction();
+        final eventMap = matomoAction.toMap(mockMatomoTracker);
         final wantedEvent =
             getWantedEventMap(fixedDate, userAgent: matomoTrackerUserAgent);
 
@@ -270,72 +270,72 @@ void main() {
       final fixedDate = DateTime(2022).toUtc();
 
       withClock(Clock.fixed(fixedDate), () {
-        final matomotoEvent = getCompleteMatomoEvent();
-        final unchangedCopy = matomotoEvent.copyWith();
+        final matomoAction = getCompleteMatomoAction();
+        final unchangedCopy = matomoAction.copyWith();
 
-        expect(matomotoEvent.path, unchangedCopy.path);
-        expect(matomotoEvent.action, unchangedCopy.action);
+        expect(matomoAction.path, unchangedCopy.path);
+        expect(matomoAction.action, unchangedCopy.action);
         expect(
-          matomotoEvent.eventInfo?.category,
+          matomoAction.eventInfo?.category,
           unchangedCopy.eventInfo?.category,
         );
-        expect(matomotoEvent.dimensions, unchangedCopy.dimensions);
-        expect(matomotoEvent.discountAmount, unchangedCopy.discountAmount);
+        expect(matomoAction.dimensions, unchangedCopy.dimensions);
+        expect(matomoAction.discountAmount, unchangedCopy.discountAmount);
         expect(
-          matomotoEvent.eventInfo?.action,
+          matomoAction.eventInfo?.action,
           unchangedCopy.eventInfo?.action,
         );
-        expect(matomotoEvent.eventInfo?.value, unchangedCopy.eventInfo?.value);
-        expect(matomotoEvent.eventInfo?.name, unchangedCopy.eventInfo?.name);
-        expect(matomotoEvent.goalId, unchangedCopy.goalId);
-        expect(matomotoEvent.link, unchangedCopy.link);
-        expect(matomotoEvent.orderId, unchangedCopy.orderId);
-        expect(matomotoEvent.revenue, unchangedCopy.revenue);
-        expect(matomotoEvent.screenId, unchangedCopy.screenId);
-        expect(matomotoEvent.searchCategory, unchangedCopy.searchCategory);
-        expect(matomotoEvent.searchCount, unchangedCopy.searchCount);
-        expect(matomotoEvent.searchKeyword, unchangedCopy.searchKeyword);
-        expect(matomotoEvent.shippingCost, unchangedCopy.shippingCost);
-        expect(matomotoEvent.subTotal, unchangedCopy.subTotal);
-        expect(matomotoEvent.taxAmount, unchangedCopy.taxAmount);
+        expect(matomoAction.eventInfo?.value, unchangedCopy.eventInfo?.value);
+        expect(matomoAction.eventInfo?.name, unchangedCopy.eventInfo?.name);
+        expect(matomoAction.goalId, unchangedCopy.goalId);
+        expect(matomoAction.link, unchangedCopy.link);
+        expect(matomoAction.orderId, unchangedCopy.orderId);
+        expect(matomoAction.revenue, unchangedCopy.revenue);
+        expect(matomoAction.screenId, unchangedCopy.screenId);
+        expect(matomoAction.searchCategory, unchangedCopy.searchCategory);
+        expect(matomoAction.searchCount, unchangedCopy.searchCount);
+        expect(matomoAction.searchKeyword, unchangedCopy.searchKeyword);
+        expect(matomoAction.shippingCost, unchangedCopy.shippingCost);
+        expect(matomoAction.subTotal, unchangedCopy.subTotal);
+        expect(matomoAction.taxAmount, unchangedCopy.taxAmount);
         expect(
-          matomotoEvent.trackingOrderItems,
+          matomoAction.trackingOrderItems,
           unchangedCopy.trackingOrderItems,
         );
-        expect(matomotoEvent.newVisit, unchangedCopy.newVisit);
-        expect(matomotoEvent.ping, unchangedCopy.ping);
+        expect(matomoAction.newVisit, unchangedCopy.newVisit);
+        expect(matomoAction.ping, unchangedCopy.ping);
         expect(
-          matomotoEvent.content?.name,
+          matomoAction.content?.name,
           unchangedCopy.content?.name,
         );
-        expect(matomotoEvent.content?.piece, unchangedCopy.content?.piece);
-        expect(matomotoEvent.content?.target, unchangedCopy.content?.target);
+        expect(matomoAction.content?.piece, unchangedCopy.content?.piece);
+        expect(matomoAction.content?.target, unchangedCopy.content?.target);
         expect(
-          matomotoEvent.contentInteraction,
+          matomoAction.contentInteraction,
           unchangedCopy.contentInteraction,
         );
         expect(
-          matomotoEvent.performanceInfo?.networkTime,
+          matomoAction.performanceInfo?.networkTime,
           unchangedCopy.performanceInfo?.networkTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.serverTime,
+          matomoAction.performanceInfo?.serverTime,
           unchangedCopy.performanceInfo?.serverTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.transferTime,
+          matomoAction.performanceInfo?.transferTime,
           unchangedCopy.performanceInfo?.transferTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.domProcessingTime,
+          matomoAction.performanceInfo?.domProcessingTime,
           unchangedCopy.performanceInfo?.domProcessingTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.domCompletionTime,
+          matomoAction.performanceInfo?.domCompletionTime,
           unchangedCopy.performanceInfo?.domCompletionTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.onloadTime,
+          matomoAction.performanceInfo?.onloadTime,
           unchangedCopy.performanceInfo?.onloadTime,
         );
       });
@@ -345,73 +345,73 @@ void main() {
       final fixedDate = DateTime(2022).toUtc();
 
       withClock(Clock.fixed(fixedDate), () {
-        final matomotoEvent = getCompleteMatomoEvent();
+        final matomoAction = getCompleteMatomoAction();
         final changedCopy =
-            matomotoEvent.copyWith(newVisit: matomoChangedNewVisit);
+            matomoAction.copyWith(newVisit: matomoChangedNewVisit);
 
-        expect(matomotoEvent.path, changedCopy.path);
-        expect(matomotoEvent.action, changedCopy.action);
+        expect(matomoAction.path, changedCopy.path);
+        expect(matomoAction.action, changedCopy.action);
         expect(
-          matomotoEvent.eventInfo?.category,
+          matomoAction.eventInfo?.category,
           changedCopy.eventInfo?.category,
         );
-        expect(matomotoEvent.dimensions, changedCopy.dimensions);
-        expect(matomotoEvent.discountAmount, changedCopy.discountAmount);
+        expect(matomoAction.dimensions, changedCopy.dimensions);
+        expect(matomoAction.discountAmount, changedCopy.discountAmount);
         expect(
-          matomotoEvent.eventInfo?.action,
+          matomoAction.eventInfo?.action,
           changedCopy.eventInfo?.action,
         );
-        expect(matomotoEvent.eventInfo?.value, changedCopy.eventInfo?.value);
-        expect(matomotoEvent.eventInfo?.name, changedCopy.eventInfo?.name);
-        expect(matomotoEvent.goalId, changedCopy.goalId);
-        expect(matomotoEvent.link, changedCopy.link);
-        expect(matomotoEvent.orderId, changedCopy.orderId);
-        expect(matomotoEvent.revenue, changedCopy.revenue);
-        expect(matomotoEvent.screenId, changedCopy.screenId);
-        expect(matomotoEvent.searchCategory, changedCopy.searchCategory);
-        expect(matomotoEvent.searchCount, changedCopy.searchCount);
-        expect(matomotoEvent.searchKeyword, changedCopy.searchKeyword);
-        expect(matomotoEvent.shippingCost, changedCopy.shippingCost);
-        expect(matomotoEvent.subTotal, changedCopy.subTotal);
-        expect(matomotoEvent.taxAmount, changedCopy.taxAmount);
+        expect(matomoAction.eventInfo?.value, changedCopy.eventInfo?.value);
+        expect(matomoAction.eventInfo?.name, changedCopy.eventInfo?.name);
+        expect(matomoAction.goalId, changedCopy.goalId);
+        expect(matomoAction.link, changedCopy.link);
+        expect(matomoAction.orderId, changedCopy.orderId);
+        expect(matomoAction.revenue, changedCopy.revenue);
+        expect(matomoAction.screenId, changedCopy.screenId);
+        expect(matomoAction.searchCategory, changedCopy.searchCategory);
+        expect(matomoAction.searchCount, changedCopy.searchCount);
+        expect(matomoAction.searchKeyword, changedCopy.searchKeyword);
+        expect(matomoAction.shippingCost, changedCopy.shippingCost);
+        expect(matomoAction.subTotal, changedCopy.subTotal);
+        expect(matomoAction.taxAmount, changedCopy.taxAmount);
         expect(
-          matomotoEvent.trackingOrderItems,
+          matomoAction.trackingOrderItems,
           changedCopy.trackingOrderItems,
         );
         expect(matomoChangedNewVisit, changedCopy.newVisit);
-        expect(matomotoEvent.ping, changedCopy.ping);
+        expect(matomoAction.ping, changedCopy.ping);
         expect(
-          matomotoEvent.content?.name,
+          matomoAction.content?.name,
           changedCopy.content?.name,
         );
-        expect(matomotoEvent.content?.piece, changedCopy.content?.piece);
-        expect(matomotoEvent.content?.target, changedCopy.content?.target);
+        expect(matomoAction.content?.piece, changedCopy.content?.piece);
+        expect(matomoAction.content?.target, changedCopy.content?.target);
         expect(
-          matomotoEvent.contentInteraction,
+          matomoAction.contentInteraction,
           changedCopy.contentInteraction,
         );
         expect(
-          matomotoEvent.performanceInfo?.networkTime,
+          matomoAction.performanceInfo?.networkTime,
           changedCopy.performanceInfo?.networkTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.serverTime,
+          matomoAction.performanceInfo?.serverTime,
           changedCopy.performanceInfo?.serverTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.transferTime,
+          matomoAction.performanceInfo?.transferTime,
           changedCopy.performanceInfo?.transferTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.domProcessingTime,
+          matomoAction.performanceInfo?.domProcessingTime,
           changedCopy.performanceInfo?.domProcessingTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.domCompletionTime,
+          matomoAction.performanceInfo?.domCompletionTime,
           changedCopy.performanceInfo?.domCompletionTime,
         );
         expect(
-          matomotoEvent.performanceInfo?.onloadTime,
+          matomoAction.performanceInfo?.onloadTime,
           changedCopy.performanceInfo?.onloadTime,
         );
       });
@@ -436,34 +436,34 @@ void main() {
 
     test('it should have ca if its an event or content and not a ping',
         () async {
-      final matomotoMap = getCompleteMatomoEvent().toMap(mockMatomoTracker);
+      final matomoMap = getCompleteMatomoAction().toMap(mockMatomoTracker);
 
-      expect(matomotoMap['ca'], '1');
+      expect(matomoMap['ca'], '1');
     });
 
     test('it should not have ca if its a ping', () async {
-      final matomotoMap = getCompleteMatomoEvent()
+      final matomoMap = getCompleteMatomoAction()
           .copyWith(
             ping: true,
           )
           .toMap(mockMatomoTracker);
 
-      expect(matomotoMap.containsKey('ca'), false);
+      expect(matomoMap.containsKey('ca'), false);
     });
 
     test('it should not have performanceInfo if its a ping', () async {
-      final matomotoMap = getCompleteMatomoEvent()
+      final matomoMap = getCompleteMatomoAction()
           .copyWith(
             ping: true,
           )
           .toMap(mockMatomoTracker);
 
-      expect(matomotoMap.containsKey('pf_net'), false);
-      expect(matomotoMap.containsKey('pf_srv'), false);
-      expect(matomotoMap.containsKey('pf_tfr'), false);
-      expect(matomotoMap.containsKey('pf_dm1'), false);
-      expect(matomotoMap.containsKey('pf_dm2'), false);
-      expect(matomotoMap.containsKey('pf_onl'), false);
+      expect(matomoMap.containsKey('pf_net'), false);
+      expect(matomoMap.containsKey('pf_srv'), false);
+      expect(matomoMap.containsKey('pf_tfr'), false);
+      expect(matomoMap.containsKey('pf_dm1'), false);
+      expect(matomoMap.containsKey('pf_dm2'), false);
+      expect(matomoMap.containsKey('pf_onl'), false);
     });
   });
 }

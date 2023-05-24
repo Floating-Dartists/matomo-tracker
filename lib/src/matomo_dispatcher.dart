@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:matomo_tracker/src/matomo.dart';
-import 'package:matomo_tracker/src/matomo_event.dart';
+import 'package:matomo_tracker/src/matomo_action.dart';
 
 class MatomoDispatcher {
   MatomoDispatcher(
@@ -20,16 +20,16 @@ class MatomoDispatcher {
   static const tokenAuthUriKey = 'token_auth';
   static const userAgentHeaderKeys = 'User-Agent';
 
-  /// Sends a batch of events to the Matomo server.
+  /// Sends a batch of actions to the Matomo server.
   ///
-  /// The events are sent in a single request.
+  /// The actions are sent in a single request.
   ///
   /// Returns `true` if the batch was sent successfully.
   Future<bool> sendBatch(
-    List<MatomoEvent> events,
+    List<MatomoAction> actions,
     MatomoTracker tracker,
   ) async {
-    if (events.isEmpty) return true;
+    if (actions.isEmpty) return true;
 
     final userAgent = tracker.userAgent;
     final headers = <String, String>{
@@ -39,8 +39,8 @@ class MatomoDispatcher {
 
     final batch = {
       "requests": [
-        for (final event in events)
-          "?${buildUriForEvent(event, tracker).query}",
+        for (final action in actions)
+          "?${buildUriForAction(action, tracker).query}",
       ],
     };
     tracker.log.fine(' -> $batch');
@@ -64,9 +64,9 @@ class MatomoDispatcher {
   }
 
   @visibleForTesting
-  Uri buildUriForEvent(MatomoEvent event, MatomoTracker tracker) {
+  Uri buildUriForAction(MatomoAction action, MatomoTracker tracker) {
     final queryParameters = Map<String, String>.from(baseUri.queryParameters)
-      ..addAll(event.toMap(tracker));
+      ..addAll(action.toMap(tracker));
     final aTokenAuth = tokenAuth;
     if (aTokenAuth != null) {
       queryParameters.addEntries([MapEntry(tokenAuthUriKey, aTokenAuth)]);
