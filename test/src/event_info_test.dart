@@ -9,13 +9,13 @@ void main() {
     test('should create a valid EventInfo', () {
       final eventInfo = EventInfo(
         category: matomoEventCategory,
-        action: matomoEventAction,
+        action: matomoActionName,
         name: matomoEventName,
         value: matomoEventValue,
       );
 
       expect(eventInfo.category, matomoEventCategory);
-      expect(eventInfo.action, matomoEventAction);
+      expect(eventInfo.action, matomoActionName);
       expect(eventInfo.name, matomoEventName);
       expect(eventInfo.value, matomoEventValue);
     });
@@ -26,14 +26,14 @@ void main() {
         EventInfo eventWithEmptyCategory() {
           return EventInfo(
             category: '',
-            action: matomoEventAction,
+            action: matomoActionName,
           );
         }
 
         EventInfo eventWithEmptyCategoryAndWhitespace() {
           return EventInfo(
             category: ' ',
-            action: matomoEventAction,
+            action: matomoActionName,
           );
         }
 
@@ -70,7 +70,7 @@ void main() {
       EventInfo eventWithEmptyName() {
         return EventInfo(
           category: matomoEventCategory,
-          action: matomoEventAction,
+          action: matomoActionName,
           name: '',
         );
       }
@@ -78,7 +78,7 @@ void main() {
       EventInfo eventWithEmptyNameAndWhitespace() {
         return EventInfo(
           category: matomoEventCategory,
-          action: matomoEventAction,
+          action: matomoActionName,
           name: ' ',
         );
       }
@@ -91,12 +91,12 @@ void main() {
       test('should return all non null properties inside the map', () {
         final map = EventInfo(
           category: matomoEventCategory,
-          action: matomoEventAction,
+          action: matomoActionName,
         ).toMap();
 
         final mapFull = EventInfo(
           category: matomoEventCategory,
-          action: matomoEventAction,
+          action: matomoActionName,
           name: matomoEventName,
           value: matomoEventValue,
         ).toMap();

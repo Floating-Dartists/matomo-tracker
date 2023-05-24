@@ -12,7 +12,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(Uri());
-    when(() => mockMatomoEvent.toMap(mockMatomoTracker)).thenReturn({});
+    when(() => mockMatomoAction.toMap(mockMatomoTracker)).thenReturn({});
     when(() => mockMatomoTracker.userAgent).thenReturn(null);
     when(() => mockMatomoTracker.log).thenReturn(Logger());
     when(() => mockMatomoTracker.customHeaders).thenReturn({});
@@ -32,7 +32,7 @@ void main() {
       },
     );
 
-    test('it should be able to send MatomoEvent in batch', () async {
+    test('it should be able to send MatomoAction in batch', () async {
       final matomoDispatcher = MatomoDispatcher(
         matomoDispatcherBaseUrl,
         matomoDispatcherToken,
@@ -40,7 +40,7 @@ void main() {
       );
 
       await matomoDispatcher
-          .sendBatch([mockMatomoEvent, mockMatomoEvent], mockMatomoTracker);
+          .sendBatch([mockMatomoAction, mockMatomoAction], mockMatomoTracker);
 
       verify(
         () => mockHttpClient.post(
@@ -52,9 +52,9 @@ void main() {
     });
 
     test(
-        'it should add user agent in http request if the first event has an user agent',
+        'it should add user agent in http request if the first action has an user agent',
         () async {
-      final events = [mockMatomoEvent, mockMatomoEvent];
+      final actions = [mockMatomoAction, mockMatomoAction];
       when(() => mockMatomoTracker.userAgent)
           .thenReturn(matomoTrackerUserAgent);
 
@@ -64,7 +64,7 @@ void main() {
         httpClient: mockHttpClient,
       );
 
-      await matomoDispatcher.sendBatch(events, mockMatomoTracker);
+      await matomoDispatcher.sendBatch(actions, mockMatomoTracker);
 
       verify(
         () => mockHttpClient.post(
@@ -82,7 +82,7 @@ void main() {
     });
 
     test(
-        'it should send nothing in sendBatch if the list of MatomoEvent is empty',
+        'it should send nothing in sendBatch if the list of MatomoAction is empty',
         () async {
       final matomoDispatcher = MatomoDispatcher(
         matomoDispatcherBaseUrl,
@@ -119,7 +119,7 @@ void main() {
 
     await expectLater(
       matomoDispatcher
-          .sendBatch([mockMatomoEvent, mockMatomoEvent], mockMatomoTracker),
+          .sendBatch([mockMatomoAction, mockMatomoAction], mockMatomoTracker),
       completes,
     );
   });
@@ -132,7 +132,7 @@ void main() {
     );
 
     final uri =
-        matomoDispatcher.buildUriForEvent(mockMatomoEvent, mockMatomoTracker);
+        matomoDispatcher.buildUriForAction(mockMatomoAction, mockMatomoTracker);
 
     expect(
       uri.queryParameters[MatomoDispatcher.tokenAuthUriKey],
@@ -151,7 +151,7 @@ void main() {
       httpClient: mockHttpClient,
     );
 
-    await matomoDispatcher.sendBatch([mockMatomoEvent], mockMatomoTracker);
+    await matomoDispatcher.sendBatch([mockMatomoAction], mockMatomoTracker);
 
     verify(
       () => mockHttpClient.post(
