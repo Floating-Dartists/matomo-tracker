@@ -67,7 +67,8 @@ void main() {
       );
 
       await matomoDispatcher.sendBatch(
-        actions: actions.map((action) => action.toMap(mockMatomoTracker)).toList(),
+        actions:
+            actions.map((action) => action.toMap(mockMatomoTracker)).toList(),
         customHeaders: mockMatomoTracker.customHeaders,
       );
 
@@ -136,7 +137,7 @@ void main() {
             .toList(),
         customHeaders: mockMatomoTracker.customHeaders,
       ),
-	  completes,
+      completes,
     );
   });
 
@@ -189,7 +190,9 @@ void main() {
     );
 
     await matomoDispatcher.sendBatch(
-      actions: [mockMatomoAction].map((action) => action.toMap(mockMatomoTracker)).toList(),
+      actions: [mockMatomoAction]
+          .map((action) => action.toMap(mockMatomoTracker))
+          .toList(),
       customHeaders: mockMatomoTracker.customHeaders,
     );
 

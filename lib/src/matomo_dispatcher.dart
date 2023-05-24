@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:matomo_tracker/src/matomo_action.dart';
 import 'package:matomo_tracker/src/logger/logger.dart';
 
 class MatomoDispatcher {
