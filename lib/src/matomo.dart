@@ -386,7 +386,7 @@ class MatomoTracker {
   }
 
   /// Iterate on the actions in the queue and send them to Matomo.
-  FutureOr<void> dispatchActions() {
+  Future<void> dispatchActions() {
     return _dequeue();
   }
 
@@ -716,7 +716,7 @@ class MatomoTracker {
     }
   }
 
-  FutureOr<void> _dequeue() {
+  Future<void> _dequeue() async {
     if (!_initialized) {
       throw const UninitializedMatomoInstanceException();
     }

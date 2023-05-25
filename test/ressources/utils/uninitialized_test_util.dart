@@ -1,11 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/matomo.dart';
 import 'package:meta/meta.dart';
 
-typedef TrackerCallback = FutureOr<void> Function(MatomoTracker tracker);
+typedef TrackerCallback = Future<void> Function(MatomoTracker tracker);
 
 /// A test that expects the [callback] to throw an
 /// [UninitializedMatomoInstanceException].
@@ -17,7 +15,7 @@ void uninitializedTest(TrackerCallback callback) {
       final matomoTracker = MatomoTracker();
 
       await expectLater(
-        () async => await callback(matomoTracker),
+        () async => callback(matomoTracker),
         throwsA(isA<UninitializedMatomoInstanceException>()),
       );
     },

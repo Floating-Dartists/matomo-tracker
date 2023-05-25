@@ -170,7 +170,7 @@ void main() {
 
     group('trackScreenWithName', () {
       uninitializedTest(
-        (tracker) {
+        (tracker) async {
           tracker.trackScreenWithName(
             actionName: matomoTrackerMockWidget.toStringShort(),
           );
@@ -268,7 +268,7 @@ void main() {
   });
 
   group('setVisitorUserId', () {
-    uninitializedTest((tracker) => tracker.setVisitorUserId(uid));
+    uninitializedTest((tracker) async => tracker.setVisitorUserId(uid));
 
     test('it should be able to set visitor userId', () async {
       final matomoTracker = await getInitializedMatomoTracker();
