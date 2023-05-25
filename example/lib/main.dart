@@ -52,15 +52,12 @@ class MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
 
   void _incrementCounter() {
     // Send an event to Matomo on tap.
-    // To signal that this event happend on this page, we use the
-    // pvId of the page.
     MatomoTracker.instance.trackEvent(
       eventInfo: EventInfo(
         category: 'Main',
         action: 'Click',
         name: 'IncrementCounter',
       ),
-      pvId: pvId,
     );
     setState(() {
       _counter++;
@@ -77,9 +74,7 @@ class MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ContentWidget(
-              pvId: pvId,
-            ),
+            const ContentWidget(),
             const Text(
               'You have pushed the button this many times:',
             ),
@@ -190,10 +185,8 @@ class OtherPage2 extends StatelessWidget {
 }
 
 class ContentWidget extends StatefulWidget {
-  final String? pvId;
   const ContentWidget({
     super.key,
-    this.pvId,
   });
 
   @override
@@ -213,7 +206,6 @@ class _ContentWidgetState extends State<ContentWidget> {
     _closed = false;
     MatomoTracker.instance.trackContentImpression(
       content: _exampleContent,
-      pvId: widget.pvId,
     );
   }
 
@@ -253,7 +245,6 @@ class _ContentWidgetState extends State<ContentWidget> {
     MatomoTracker.instance.trackContentInteraction(
       interaction: 'close',
       content: _exampleContent,
-      pvId: widget.pvId,
     );
   }
 }

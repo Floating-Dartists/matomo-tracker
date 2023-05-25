@@ -78,6 +78,18 @@ class MatomoTracker {
     );
   }
 
+  /// Whether to attach the last `pvId` to actions that can be associated with
+  /// page views.
+  ///
+  /// There are some actions like [trackEvent] and [trackContentImpression]
+  /// that can be associated with page views by setting a `pvId` (what is the
+  /// abbreviation of page view id). If [attachLastPvId] is `true` and there is
+  /// a last page view tracked by [trackScreenWithName] (or a method/class that
+  /// uses it like [trackScreen], [TraceableClientMixin], [TraceableWidget]) the
+  /// last recored `pvId` is automatically used unless it is overwritten in that
+  /// action.
+  late final bool attachLastPvId;
+
   /// The user agent is used to detect the operating system and browser used.
   late final String? userAgent;
 
@@ -109,7 +121,7 @@ class MatomoTracker {
   late final LocalStorage _localStorage;
 
   @visibleForTesting
-  final queue = Queue<MatomoAction>();
+  final queue = Queue<Map<String, String>>();
 
   @visibleForTesting
   late Timer dequeueTimer;
@@ -121,7 +133,7 @@ class MatomoTracker {
 
   String? _tokenAuth;
 
-  String? get getAuthToken => _tokenAuth;
+  String? get authToken => _tokenAuth;
 
   late final Duration _dequeueInterval;
 
@@ -145,7 +157,9 @@ class MatomoTracker {
   ///
   /// The [visitorId] should have a length of 16 characters otherwise an
   /// [ArgumentError] will be thrown. This parameter corresponds with the
-  /// `_id` and should not be confused with the user id `uid`.
+  /// `_id` and should not be confused with the user id `uid`. See the
+  /// [Visitor] class for additional remarks. It is recommended to leave this
+  /// to `null` to use an automatically generated id.
   ///
   /// If [cookieless] is set to true, a [CookielessStorage] instance will be
   /// used. This means that the first_visit and the user_id will be stored in
@@ -155,6 +169,9 @@ class MatomoTracker {
   /// send to Matomo to circumvent the [last page viewtime issue](https://github.com/Floating-Dartists/matomo-tracker/issues/78).
   /// To deactivate pings, set this to `null`. The default value is a good
   /// compromise between accuracy and network traffic.
+  ///
+  /// It is recommended to leave [userAgent] to `null` so it will be detected
+  /// automatically.
   Future<void> initialize({
     required int siteId,
     required String url,
@@ -171,6 +188,8 @@ class MatomoTracker {
     bool cookieless = false,
     Level verbosityLevel = Level.off,
     Map<String, String> customHeaders = const {},
+    String? userAgent,
+    bool attachLastPvId = true,
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -198,8 +217,8 @@ class MatomoTracker {
     _platformInfo = platformInfo ?? PlatformInfo.instance;
     _cookieless = cookieless;
     _tokenAuth = tokenAuth;
-    _dispatcher = MatomoDispatcher(url, tokenAuth);
     _newVisit = newVisit;
+    this.attachLastPvId = attachLastPvId;
 
     final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
     _localStorage = cookieless
@@ -210,7 +229,14 @@ class MatomoTracker {
     _visitor = Visitor(id: localVisitorId, uid: uid);
 
     // User agent
-    userAgent = await getUserAgent();
+    this.userAgent = userAgent ?? await getUserAgent();
+
+    _dispatcher = MatomoDispatcher(
+      baseUrl: url,
+      tokenAuth: tokenAuth,
+      userAgent: this.userAgent,
+      log: log,
+    );
 
     // Screen Resolution
     final physicalSize = PlatformDispatcher.instance.views.first.physicalSize;
@@ -258,7 +284,7 @@ class MatomoTracker {
     unawaited(_localStorage.setOptOut(optOut: _optOut));
 
     log.fine(
-      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=$userAgent',
+      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=${this.userAgent}',
     );
     _initialized = true;
 
@@ -372,9 +398,9 @@ class MatomoTracker {
   /// This will register a page view with [trackScreenWithName] by using the
   /// `context.widget.toStringShort()` as `actionName` value.
   ///
-  /// - `pvId`: A 6 character unique ID that identifies which actions
-  /// were performed on a specific page view. If `null`, a random id will be
-  /// generated.
+  /// - `pvId`: A 6 character unique ID that can later be used to associate
+  /// other actions (like [trackEvent]) with this page view. If `null`,
+  /// a random id will be generated (recommended). Also see [attachLastPvId].
   ///
   /// - `path`: A string that identifies the path of the screen. If not
   /// `null`, it will be combined to [contentBase] to create a URL. This combination
@@ -408,9 +434,9 @@ class MatomoTracker {
   /// - `actionName`: Equivalent to the page name, here used to identify the
   /// screen with a proper name.
   ///
-  /// - `pvId`: A 6 character unique ID that identifies which actions
-  /// were performed on a specific page view. If `null`, a random ID will be
-  /// generated.
+  /// - `pvId`: A 6 character unique ID that can later be used to associate
+  /// other actions (like [trackEvent]) with this page view. If `null`,
+  /// a random id will be generated (recommended). Also see [attachLastPvId].
   ///
   /// - `path`: A string that identifies the path of the screen. If not
   /// `null`, it will be combined to [contentBase] to create a URL. This
@@ -474,8 +500,10 @@ class MatomoTracker {
 
   /// Tracks an event.
   ///
-  /// To associate this event with a page view, set [pvId]
-  /// to the [pvId] of that page, e.g. [TraceableClientMixin.pvId].
+  /// To associate this event with a page view, enable [attachLastPvId] and
+  /// leave [pvId] to `null` here or set [pvId] to the [pvId] of that page view
+  /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
+  /// take precedance over [attachLastPvId].
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackEvent({
@@ -487,7 +515,7 @@ class MatomoTracker {
     return _track(
       MatomoAction(
         eventInfo: eventInfo,
-        screenId: pvId,
+        screenId: _inferPvId(pvId),
         dimensions: dimensions,
       ),
     );
@@ -618,8 +646,10 @@ class MatomoTracker {
   /// Later, if the user interacts with the content (e.g. taps on it),
   /// call [trackContentInteraction].
   ///
-  /// To associate this impression with a page view, set [pvId]
-  /// to the [pvId] of that page, e.g. [TraceableClientMixin.pvId].
+  /// To associate this impression with a page view, enable [attachLastPvId] and
+  /// leave [pvId] to `null` here or set [pvId] to the [pvId] of that page view
+  /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
+  /// take precedance over [attachLastPvId].
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackContentImpression({
@@ -630,7 +660,7 @@ class MatomoTracker {
     return _track(
       MatomoAction(
         content: content,
-        screenId: pvId,
+        screenId: _inferPvId(pvId),
         dimensions: dimensions,
       ),
     );
@@ -644,8 +674,10 @@ class MatomoTracker {
   /// The [interaction] corresponds with `c_i` and should
   /// describe the type of interaction, e.g. `tap` or `swipe`.
   ///
-  /// To associate this interaction with a page view, set [pvId]
-  /// to the [pvId] of that page, e.g. [TraceableClientMixin.pvId].
+  /// To associate this interaction with a page view, enable [attachLastPvId]
+  /// and leave [pvId] to `null` here or set [pvId] to the [pvId] of that page
+  /// view manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually
+  /// will take precedance over [attachLastPvId].
   ///
   /// For remarks on [dimensions] see [trackDimensions].
   void trackContentInteraction({
@@ -658,7 +690,7 @@ class MatomoTracker {
       MatomoAction(
         content: content,
         contentInteraction: interaction,
-        screenId: pvId,
+        screenId: _inferPvId(pvId),
         dimensions: dimensions,
       ),
     );
@@ -670,7 +702,7 @@ class MatomoTracker {
       ac = ac.copyWith(newVisit: true);
       _newVisit = false;
     }
-    queue.add(ac);
+    queue.add(ac.toMap(this));
   }
 
   void _ping() {
@@ -693,9 +725,12 @@ class MatomoTracker {
 
     if (!_lock.locked) {
       return _lock.synchronized(() async {
-        final actions = List<MatomoAction>.from(queue);
+        final actions = List<Map<String, String>>.of(queue);
         if (!_optOut) {
-          final hasSucceeded = await _dispatcher.sendBatch(actions, this);
+          final hasSucceeded = await _dispatcher.sendBatch(
+            actions: actions,
+            customHeaders: customHeaders,
+          );
           if (hasSucceeded) {
             // As the operation is asynchronous we need to be sure to remove
             // only the actions that were sent in the batch.
@@ -750,4 +785,7 @@ class MatomoTracker {
       }
     }
   }
+
+  String? _inferPvId(String? pvId) =>
+      pvId ?? (attachLastPvId ? _lastPageView?.screenId : null);
 }
