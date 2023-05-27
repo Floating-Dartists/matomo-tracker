@@ -9,11 +9,11 @@ const _matomoEndpoint = 'http://localhost:8765/matomo.php';
 const _sideId = 1;
 const _testUserId = 'Nelson Pandela';
 
-// Usage: run the example, cause some actions by clicking around,
-// close the example within 5min to prevent the dispatchment of
-// the actions, run the example again, wait at least 5min, then
-// finally check the Matomo dashboard to see if all actions are
-// there.
+// Use this as dispatchSettings in MatomoTracker.instance.initialize()
+// to test persistent actions. Then run the example, cause some actions
+// by clicking around, close the example within 5min to prevent the
+// dispatchment of the actions, run the example again, wait at least 5min,
+// finally check the Matomo dashboard to see if all actions are there.
 const DispatchSettings dispatchSettingsEndToEndTest =
     DispatchSettings.persistent(dequeueInterval: Duration(minutes: 5));
 
@@ -23,7 +23,7 @@ void main() async {
     siteId: _sideId,
     url: _matomoEndpoint,
     verbosityLevel: Level.all,
-    dispatchSettings: dispatchSettingsEndToEndTest,
+    // dispatchSettings: dispatchSettingsEndToEndTest,
   );
   MatomoTracker.instance.setVisitorUserId(_testUserId);
   runApp(const MyApp());

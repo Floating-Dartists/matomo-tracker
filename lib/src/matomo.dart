@@ -312,6 +312,10 @@ class MatomoTracker {
         _ping();
       });
     }
+
+    if (queue.isNotEmpty) {
+      await dispatchActions();
+    }
   }
 
   @visibleForTesting
