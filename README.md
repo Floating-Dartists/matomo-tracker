@@ -206,7 +206,6 @@ When using cookieless tracking, neither the user_id nor the first_visit will be 
 * Occurences of `widgetId` have been renamed to `pvId`.
 * An object of type `EventInfo` has been added, it has the following properties: `category`, `action`, `name` and `value`, use it instead of passing the event name, action and value as separate parameters.
 * For `TraceableClientMixin` and `TraceableWidget` to work you will have to add the `matomoObserver` to your `MaterialApp` or `WidgetsApp`:
-
 ```dart
 MaterialApp(
     // ...
@@ -215,6 +214,7 @@ MaterialApp(
     ],
 );
 ```
+* `MatomoEvent` has been renamed to `MatomoAction`
 
 ## v3.0.0
 
