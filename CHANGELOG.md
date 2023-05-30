@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.0.0-dev.2]
+
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
+
+* Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
+  * feat: Added content tracking [#86](https://github.com/Floating-Dartists/matomo-tracker/pull/86)
+  * feat: Added performance tracking [#87](https://github.com/Floating-Dartists/matomo-tracker/pull/87)
+  * feat: Ability to drop the dispatch queue [#89](https://github.com/Floating-Dartists/matomo-tracker/pull/89)
+  * feat: Serialize `MatomoAction` immediately [#94](https://github.com/Floating-Dartists/matomo-tracker/pull/94)
+  * feat: Attach the last `pvId` automatically [#96](https://github.com/Floating-Dartists/matomo-tracker/pull/96)
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
+  * Upgraded dependencies [#99](https://github.com/Floating-Dartists/matomo-tracker/pull/99)
+
 ## [4.0.0-dev.1]
 
 **Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
