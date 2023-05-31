@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:matomo_tracker/src/assert.dart';
 import 'package:matomo_tracker/src/campaign.dart';
 import 'package:matomo_tracker/src/content.dart';
+import 'package:matomo_tracker/src/dispatch_settings.dart';
 import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/local_storage/cookieless_storage.dart';
@@ -18,6 +19,7 @@ import 'package:matomo_tracker/src/logger/logger.dart';
 import 'package:matomo_tracker/src/matomo_action.dart';
 import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:matomo_tracker/src/performance_info.dart';
+import 'package:matomo_tracker/src/persistent_queue.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
 import 'package:matomo_tracker/src/session.dart';
 import 'package:matomo_tracker/src/tracking_order_item.dart';
@@ -121,7 +123,7 @@ class MatomoTracker {
   late final LocalStorage _localStorage;
 
   @visibleForTesting
-  final queue = Queue<Map<String, String>>();
+  late final Queue<Map<String, String>> queue;
 
   @visibleForTesting
   late Timer dequeueTimer;
@@ -135,7 +137,8 @@ class MatomoTracker {
 
   String? get authToken => _tokenAuth;
 
-  late final Duration _dequeueInterval;
+  /// Controls how actions are dispatched.
+  late final DispatchSettings _dispatchSettings;
 
   late final Duration? _pingInterval;
 
@@ -179,7 +182,7 @@ class MatomoTracker {
     String? visitorId,
     String? uid,
     String? contentBaseUrl,
-    Duration dequeueInterval = const Duration(seconds: 10),
+    DispatchSettings dispatchSettings = const DispatchSettings.nonPersistent(),
     Duration? pingInterval = const Duration(seconds: 30),
     String? tokenAuth,
     LocalStorage? localStorage,
@@ -203,15 +206,20 @@ class MatomoTracker {
       );
     }
 
-    assertDurationNotNegative(value: dequeueInterval, name: 'dequeueInterval');
-    assertDurationNotNegative(value: pingInterval, name: 'pingInterval');
+    assertDurationNotNegative(
+      value: dispatchSettings.dequeueInterval,
+      name: 'dequeueInterval',
+    );
+    assertDurationNotNegative(
+      value: pingInterval,
+      name: 'pingInterval',
+    );
 
     log.setLogging(level: verbosityLevel);
 
     this.siteId = siteId;
     this.url = url;
     this.customHeaders = customHeaders;
-    _dequeueInterval = dequeueInterval;
     _pingInterval = pingInterval;
     _lock = sync.Lock();
     _platformInfo = platformInfo ?? PlatformInfo.instance;
@@ -219,11 +227,18 @@ class MatomoTracker {
     _tokenAuth = tokenAuth;
     _newVisit = newVisit;
     this.attachLastPvId = attachLastPvId;
+    _dispatchSettings = dispatchSettings;
 
     final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
     _localStorage = cookieless
         ? CookielessStorage(storage: effectiveLocalStorage)
         : effectiveLocalStorage;
+    queue = _dispatchSettings.persistentQueue
+        ? await PersistentQueue.load(
+            storage: _localStorage,
+            onLoadFilter: _dispatchSettings.onLoad!,
+          )
+        : Queue();
 
     final localVisitorId = visitorId ?? await _getVisitorId();
     _visitor = Visitor(id: localVisitorId, uid: uid);
@@ -288,7 +303,7 @@ class MatomoTracker {
     );
     _initialized = true;
 
-    dequeueTimer = Timer.periodic(_dequeueInterval, (_) {
+    dequeueTimer = Timer.periodic(_dispatchSettings.dequeueInterval, (_) {
       _dequeue();
     });
 
@@ -296,6 +311,10 @@ class MatomoTracker {
       pingTimer = Timer.periodic(pingInterval, (_) {
         _ping();
       });
+    }
+
+    if (queue.isNotEmpty) {
+      await dispatchActions();
     }
   }
 
@@ -352,8 +371,9 @@ class MatomoTracker {
   /// {@macro local_storage.clear}
   void clear() => _localStorage.clear();
 
-  /// Cancel the timer which checks the queued actions to send. (This will not
-  /// clear the queue.)
+  /// Cancel the timer which checks the queued actions to send
+  ///
+  /// This will not clear the queue.
   void dispose() {
     pingTimer?.cancel();
     dequeueTimer.cancel();
@@ -379,7 +399,7 @@ class MatomoTracker {
       }
     }
     if (!dequeueTimer.isActive) {
-      dequeueTimer = Timer.periodic(_dequeueInterval, (timer) {
+      dequeueTimer = Timer.periodic(_dispatchSettings.dequeueInterval, (timer) {
         _dequeue();
       });
     }

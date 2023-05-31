@@ -4,6 +4,7 @@ library matomo_tracker;
 
 export 'src/campaign.dart';
 export 'src/content.dart';
+export 'src/dispatch_settings.dart';
 export 'src/event_info.dart';
 export 'src/exceptions.dart';
 export 'src/local_storage/local_storage.dart';
