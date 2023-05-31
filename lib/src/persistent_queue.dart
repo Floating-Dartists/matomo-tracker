@@ -54,9 +54,9 @@ class PersistentQueue extends DelegatingQueue<Map<String, String>> {
               final data = json.encode(toList());
               await _storage.storeActions(data);
             }
-            _saveInProgress!.complete();
+            _saveInProgress?.complete();
           } catch (error, stackTrace) {
-            _saveInProgress!.completeError(error, stackTrace);
+            _saveInProgress?.completeError(error, stackTrace);
           } finally {
             _saveInProgress = null;
           }
