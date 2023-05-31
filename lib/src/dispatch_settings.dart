@@ -12,8 +12,10 @@ bool _notOlderThan(
   DateTime now,
   Duration duration,
 ) {
-  final date = action['cdt']!;
-  return now.difference(DateTime.parse(date)) <= duration;
+  if (action['cdt'] case final date?) {
+    return now.difference(DateTime.parse(date)) <= duration;
+  }
+  return false;
 }
 
 bool _takeAll(Map<String, String> action) => true;
