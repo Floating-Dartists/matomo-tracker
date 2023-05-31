@@ -123,6 +123,6 @@ class DispatchSettings {
 
   /// Used to determine which of the stored actions are still valid.
   ///
-  /// Will be `null` if [persistentQueue] is `true`, or `null` if `false`.
+  /// Will not be `null` if [persistentQueue] is `true`, or `null` if `false`.
   final PersistenceFilter? onLoad;
 }
