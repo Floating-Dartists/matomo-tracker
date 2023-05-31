@@ -5,7 +5,7 @@ import '../ressources/mock/data.dart';
 
 void main() {
   TrackingOrderItem getTrackingOrderItem() {
-    return TrackingOrderItem(
+    return const TrackingOrderItem(
       sku: trackingOrderItemSku,
       name: trackingOrderItemName,
       category: trackingOrderItemCategory,
