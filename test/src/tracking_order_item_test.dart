@@ -10,7 +10,6 @@ void main() {
       name: trackingOrderItemName,
       category: trackingOrderItemCategory,
       price: trackingOrderItemPrice,
-      quantity: trackingOrderItemQuantity,
     );
   }
 
