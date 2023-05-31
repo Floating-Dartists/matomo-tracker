@@ -6,7 +6,7 @@
   </a>
 </p>
 
-[![Pub Version](https://img.shields.io/pub/v/matomo_tracker)](https://pub.dev/packages/matomo_tracker)
+[![Pub Version (including pre-releases)](https://img.shields.io/pub/v/matomo_tracker?include_prereleases)](https://pub.dev/packages/matomo_tracker)
 [![Matomo Integrations](https://img.shields.io/badge/featured%20on-Matomo-blue)](https://matomo.org/integrate/)
 [![GitHub license](https://img.shields.io/github/license/Floating-Dartists/matomo-tracker)](https://github.com/Floating-Dartists/matomo-tracker/blob/main/LICENSE)
 [![Coverage Status](https://coveralls.io/repos/github/Floating-Dartists/matomo-tracker/badge.svg?branch=main)](https://coveralls.io/github/Floating-Dartists/matomo-tracker?branch=main)
