@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0]
+
+* Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
+  * feat: Added a persistent dispatch queue [#97](https://github.com/Floating-Dartists/matomo-tracker/pull/97)
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
+  * chore: Updated `LICENSE` with major contributors [#100](https://github.com/Floating-Dartists/matomo-tracker/pull/100)
+  * chore: Added a contribution guide [#101](https://github.com/Floating-Dartists/matomo-tracker/pull/101)
+  * refacto: Added default values to `TrackingOrderItem` [#102](https://github.com/Floating-Dartists/matomo-tracker/pull/102)
+
+_Special thanks to [Eric Prokop](https://github.com/EPNW-Eric) who greatly contributed to this release._
+
 ## [4.0.0-dev.2]
 
 **Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
@@ -11,7 +22,7 @@
   * feat: Serialize `MatomoAction` immediately [#94](https://github.com/Floating-Dartists/matomo-tracker/pull/94)
   * feat: Attach the last `pvId` automatically [#96](https://github.com/Floating-Dartists/matomo-tracker/pull/96)
 * Contributions from [TesteurManiak](https://github.com/TesteurManiak)
-  * Upgraded dependencies [#99](https://github.com/Floating-Dartists/matomo-tracker/pull/99)
+  * chore: Upgraded dependencies (Dart 3 support) [#99](https://github.com/Floating-Dartists/matomo-tracker/pull/99)
 
 ## [4.0.0-dev.1]
 

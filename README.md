@@ -18,17 +18,23 @@ A fully cross-platform wrap of the Matomo tracking client for Flutter, using the
 # Summary
 
 - [Documentation](#documentation)
+  - [Supported Matomo Versions](#supported-matomo-versions)
   - [Getting Started](#getting-started)
   - [Using userId](#using-userid)
   - [Opting Out](#opting-out)
   - [Using Dimensions](#using-dimensions)
   - [Cookieless Tracking](#cookieless-tracking)
+  - [Dispatching](#dispatching)
 - [Migration Guide](#migration-guide)
     - [v4.0.0](#v400)
     - [v3.0.0](#v300)
 - [Contributors](#contributors)
 
 # Documentation
+
+## Supported Matomo Versions
+
+This package (matomo_tracker v4.0.0) currently supports Matomo 3.X up to Matomo 5.X. We are planning to drop support for Matomo 3 in the next major release. You can expect for legacy properties to be annotated as deprecated in the next minor release.
 
 ## Getting Started
 
