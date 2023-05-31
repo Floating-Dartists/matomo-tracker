@@ -91,13 +91,29 @@ void main() {
     });
 
     test(
-      'clear should call remove on kFirstVisit, kVisitCount and kVisitorId',
+      'clear should call remove on kFirstVisit, kVisitCount, kVisitorId and kPersistentQueue',
       () async {
         await sharedPrefsStorage.clear();
         verify(() => mockPrefs.remove(SharedPrefsStorage.kFirstVisit));
         verify(() => mockPrefs.remove(SharedPrefsStorage.kVisitCount));
         verify(() => mockPrefs.remove(SharedPrefsStorage.kVisitorId));
+        verify(() => mockPrefs.remove(SharedPrefsStorage.kPersistentQueue));
       },
     );
+
+    test('loadActions should call getString on kPersistentQueue', () async {
+      await sharedPrefsStorage.loadActions();
+      verify(() => mockPrefs.getString(SharedPrefsStorage.kPersistentQueue));
+    });
+
+    test('storeActions should call setString', () async {
+      await sharedPrefsStorage.storeActions(matomoTrackerVisitorId);
+      verify(
+        () => mockPrefs.setString(
+          SharedPrefsStorage.kPersistentQueue,
+          matomoTrackerVisitorId,
+        ),
+      );
+    });
   });
 }

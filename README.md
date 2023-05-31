@@ -195,6 +195,18 @@ await MatomoTracker.instance.initialize(
 
 When using cookieless tracking, neither the user_id nor the first_visit will be sent or saved locally.
 
+## Dispatching
+
+Actions logged are not send to Matomo immediately, but are queued for a configurable duration (defaulting to 10 seconds) before beeing send in batch. A user could terminate your app while there are still undispatched actions in the queue, which by default would be lost. The queue can be configured to be persistent so that such actions would then be send on the next app launch. See the [`DispatchSettings`](https://pub.dev/documentation/matomo_tracker/latest/matomo_tracker/DispatchSettings-class.html) class for more configuration options.
+
+```dart
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/matomo.php',
+    dispatchSettings: const DispatchSettings.persistent(),
+);
+```
+
 # Migration Guide
 
 ## v4.0.0
