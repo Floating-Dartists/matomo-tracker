@@ -44,8 +44,10 @@ class PersistentQueue extends DelegatingQueue<Map<String, String>> {
   @visibleForTesting
   Future<void> save() {
     _needsSave = true;
-    if (_saveInProgress == null) {
-      _saveInProgress = Completer<void>();
+    final effectiveSaveInProgress = _saveInProgress ?? Completer<void>();
+    if (effectiveSaveInProgress != _saveInProgress) {
+      assert(_saveInProgress == null);
+      _saveInProgress = effectiveSaveInProgress;
       unawaited(
         Future(() async {
           try {
@@ -54,16 +56,16 @@ class PersistentQueue extends DelegatingQueue<Map<String, String>> {
               final data = json.encode(toList());
               await _storage.storeActions(data);
             }
-            _saveInProgress?.complete();
+            effectiveSaveInProgress.complete();
           } catch (error, stackTrace) {
-            _saveInProgress?.completeError(error, stackTrace);
+            effectiveSaveInProgress.completeError(error, stackTrace);
           } finally {
             _saveInProgress = null;
           }
         }),
       );
     }
-    return _saveInProgress!.future;
+    return effectiveSaveInProgress.future;
   }
 
   void _unawaitedSave() => unawaited(save());
