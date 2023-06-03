@@ -142,7 +142,7 @@ void main() {
     final matomoTracker = await getInitializedMatomoTracker();
     final queueLength = matomoTracker.queue.length;
 
-    matomoTracker.trackDimensions(matomoTrackerDimensions);
+    matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
     expect(matomoTracker.queue.length, queueLength + 1);
     await matomoTracker.dispatchActions();
     expect(matomoTracker.queue.length, 0);
@@ -152,7 +152,7 @@ void main() {
     final matomoTracker = await getInitializedMatomoTracker();
     final queueLength = matomoTracker.queue.length;
 
-    matomoTracker.trackDimensions(matomoTrackerDimensions);
+    matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
     expect(matomoTracker.queue.length, queueLength + 1);
     matomoTracker.dropActions();
     expect(matomoTracker.queue.length, 0);
@@ -164,7 +164,7 @@ void main() {
       (tracker) {
         when(() => mockBuildContext.widget).thenReturn(matomoTrackerMockWidget);
 
-        tracker.trackScreen(mockBuildContext);
+        tracker.trackScreen(context: mockBuildContext);
       },
     );
 
@@ -201,7 +201,7 @@ void main() {
 
     testTracking('it should be able to trackGoal', (tracker) async {
       tracker.trackGoal(
-        matomoTrackerGoalId,
+        id: matomoTrackerGoalId,
       );
     });
 
@@ -235,7 +235,7 @@ void main() {
 
     testTracking('it should be able to trackDimensions', (tracker) async {
       tracker.trackDimensions(
-        matomoTrackerDimensions,
+        dimensions: matomoTrackerDimensions,
       );
     });
 
@@ -246,23 +246,23 @@ void main() {
     });
 
     testTracking('it should be able to trackCartUpdate', (tracker) async {
-      tracker.trackCartUpdate([], null, null, null, null);
+      tracker.trackCartUpdate();
     });
 
     testTracking('it should be able to trackOrder', (tracker) async {
-      tracker.trackOrder(null, [], null, null, null, null, null);
+      tracker.trackOrder(id: '', revenue: 0);
     });
 
     testTracking('it should be able to trackOutlink', (tracker) async {
-      tracker.trackOutlink(null);
+      tracker.trackOutlink(link: '');
     });
 
     test('it should be able to handle new_visit', () async {
       final matomoTracker = await getInitializedMatomoTracker();
 
-      matomoTracker.trackDimensions(matomoTrackerDimensions);
+      matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
       expect(matomoTracker.queue.first['new_visit'], '1');
-      matomoTracker.trackDimensions(matomoTrackerDimensions);
+      matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
       expect(matomoTracker.queue.last.containsKey('new_visit'), false);
     });
   });

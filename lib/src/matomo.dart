@@ -430,14 +430,18 @@ class MatomoTracker {
   ///
   /// - `campaign`: The campaign that lead to this page view.
   ///
+  /// {@template dimensions_track_parameter}
   /// For remarks on [dimensions] see [trackDimensions].
+  /// {@endtemplate}
   ///
+  /// {@template new_visit_track_parameter}
   /// The [newVisit] parameter can be used to make this action the begin
   /// of a new visit. If it's left to `null` and this is the first `track...`
   /// call after [MatomoTracker.initialize], the `newVisit` from there will
   /// be used.
-  void trackScreen(
-    BuildContext context, {
+  /// {@endtemplate}
+  void trackScreen({
+    required BuildContext context,
     String? pvId,
     String? path,
     Campaign? campaign,
@@ -473,12 +477,9 @@ class MatomoTracker {
   ///
   /// - `campaign`: The campaign that lead to this page view.
   ///
-  /// For remarks on [dimensions] see [trackDimensions].
+  /// {@template dimensions_track_parameter}
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
+  /// {@macro new_visit_track_parameter}
   void trackScreenWithName({
     required String actionName,
     String? pvId,
@@ -514,16 +515,13 @@ class MatomoTracker {
 
   /// Tracks a conversion for a goal.
   ///
-  /// The [goalId] corresponds with `idgoal` and [revenue] with `revenue`.
+  /// The [id] corresponds with `idgoal` and [revenue] with `revenue`.
   ///
-  /// For remarks on [dimensions] see [trackDimensions].
+  /// {@template dimensions_track_parameter}
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
-  void trackGoal(
-    int goalId, {
+  /// {@macro new_visit_track_parameter}
+  void trackGoal({
+    required int id,
     double? revenue,
     Map<String, String>? dimensions,
     bool? newVisit,
@@ -533,7 +531,7 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoAction(
-        goalId: goalId,
+        goalId: id,
         revenue: revenue,
         dimensions: dimensions,
         newVisit: _inferNewVisit(newVisit),
@@ -548,12 +546,9 @@ class MatomoTracker {
   /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
   /// take precedance over [attachLastPvId].
   ///
-  /// For remarks on [dimensions] see [trackDimensions].
+  /// {@template dimensions_track_parameter}
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
+  /// {@macro new_visit_track_parameter}
   void trackEvent({
     required EventInfo eventInfo,
     String? pvId,
@@ -573,21 +568,23 @@ class MatomoTracker {
 
   /// Tracks custom visit dimensions.
   ///
-  /// The keys of the [dimensions] map correspond with the `dimension[1-999]` parameters.
-  /// This means that the keys MUST be named `dimension1`, `dimension2`, `...`.
+  /// The keys of the [dimensions] map correspond with the `dimension[1-999]`
+  /// parameters. This means that the keys MUST be named `dimension1`,
+  /// `dimension2`, `...`.
   ///
-  /// The keys of the [dimensions] map will be validated if they follow these rules, and if not, a
-  /// [ArgumentError] will be thrown.
+  /// The keys of the [dimensions] map will be validated if they follow these
+  /// rules, and if not, a [ArgumentError] will be thrown.
   ///
   /// Also note that counting starts at 1 and NOT at 0 as opposed to what is stated
-  /// in the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api) documentation.
+  /// in the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api)
+  /// documentation.
   ///
   /// The [newVisit] parameter can be used to make this action the begin
   /// of a new visit. If it's left to `null` and this is the first `track...`
   /// call after [MatomoTracker.initialize], the `newVisit` from there will
   /// be used.
-  void trackDimensions(
-    Map<String, String> dimensions, {
+  void trackDimensions({
+    required Map<String, String> dimensions,
     bool? newVisit,
   }) {
     validateDimension(dimensions);
@@ -601,15 +598,12 @@ class MatomoTracker {
 
   /// Tracks a search.
   ///
-  /// [searchKeyword] corresponds with `search`, [searchCategory] with `search_cat` and
-  /// [searchCount] with `search_count`.
+  /// [searchKeyword] corresponds with `search`, [searchCategory] with
+  /// `search_cat` and [searchCount] with `search_count`.
   ///
-  /// For remarks on [dimensions] see [trackDimensions].
+  /// {@template dimensions_track_parameter}
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
+  /// {@macro new_visit_track_parameter}
   void trackSearch({
     required String searchKeyword,
     String? searchCategory,
@@ -631,18 +625,15 @@ class MatomoTracker {
 
   /// Tracks a cart update.
   ///
-  /// For remarks on [dimensions] see [trackDimensions].
+  /// {@template dimensions_track_parameter}
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
-  void trackCartUpdate(
+  /// {@macro new_visit_track_parameter}
+  void trackCartUpdate({
     List<TrackingOrderItem>? trackingOrderItems,
     num? subTotal,
     num? taxAmount,
     num? shippingCost,
-    num? discountAmount, {
+    num? discountAmount,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -651,6 +642,7 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoAction(
+        // goalId should be set to 0 to track an ecommerce interaction
         goalId: 0,
         trackingOrderItems: trackingOrderItems,
         subTotal: subTotal,
@@ -663,22 +655,23 @@ class MatomoTracker {
     );
   }
 
-  /// Tracks an order.
+  /// Tracks an ecommerce order.
   ///
-  /// For remarks on [dimensions] see [trackDimensions].
+  /// [id] corresponds with `ec_id`, [trackingOrderItems] with `ec_items`,
+  /// [revenue] with `revenue`, [subTotal] with `ec_st`, [taxAmount] with
+  /// `ec_tx`, [shippingCost] with `ec_sh`, [discountAmount] with `ec_dt`.
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
-  void trackOrder(
-    String? orderId,
+  /// {@template dimensions_track_parameter}
+  ///
+  /// {@macro new_visit_track_parameter}
+  void trackOrder({
+    required String id,
+    required double revenue,
     List<TrackingOrderItem>? trackingOrderItems,
-    num? revenue,
     num? subTotal,
     num? taxAmount,
     num? shippingCost,
-    num? discountAmount, {
+    num? discountAmount,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -687,8 +680,9 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoAction(
+        // goalId should be set to 0 to track an ecommerce interaction
         goalId: 0,
-        orderId: orderId,
+        orderId: id,
         trackingOrderItems: trackingOrderItems,
         revenue: revenue,
         subTotal: subTotal,
@@ -703,14 +697,13 @@ class MatomoTracker {
 
   /// Tracks the click on an outgoing link.
   ///
-  /// For remarks on [dimensions] see [trackDimensions].
+  /// [link] corresponds with `link`.
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
-  void trackOutlink(
-    String? link, {
+  /// {@template dimensions_track_parameter}
+  ///
+  /// {@macro new_visit_track_parameter}
+  void trackOutlink({
+    required String link,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -736,12 +729,9 @@ class MatomoTracker {
   /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
   /// take precedance over [attachLastPvId].
   ///
-  /// For remarks on [dimensions] see [trackDimensions].
+  /// {@template dimensions_track_parameter}
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
+  /// {@macro new_visit_track_parameter}
   void trackContentImpression({
     required Content content,
     String? pvId,
@@ -771,7 +761,7 @@ class MatomoTracker {
   /// view manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually
   /// will take precedance over [attachLastPvId].
   ///
-  /// For remarks on [dimensions] see [trackDimensions].
+  /// {@template dimensions_track_parameter}
   ///
   /// Note that this method is missing a `newVisit` parameter on purpose since
   /// it doesn't make sense to have an interaction without an impression first,

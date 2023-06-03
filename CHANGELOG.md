@@ -2,12 +2,16 @@
 
 ## [4.0.0]
 
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
+
 * Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
   * feat: Added a persistent dispatch queue [#97](https://github.com/Floating-Dartists/matomo-tracker/pull/97)
+  * feat: Extended the newVisit capabilities [#105](https://github.com/Floating-Dartists/matomo-tracker/pull/105)
 * Contributions from [TesteurManiak](https://github.com/TesteurManiak)
   * chore: Updated `LICENSE` with major contributors [#100](https://github.com/Floating-Dartists/matomo-tracker/pull/100)
   * chore: Added a contribution guide [#101](https://github.com/Floating-Dartists/matomo-tracker/pull/101)
   * refacto: Added default values to `TrackingOrderItem` [#102](https://github.com/Floating-Dartists/matomo-tracker/pull/102)
+  * refacto: Uniformized the "track" methods parameters [#106](https://github.com/Floating-Dartists/matomo-tracker/pull/106)
 
 _Special thanks to [Eric Prokop](https://github.com/EPNW-Eric) who greatly contributed to this release._
 
