@@ -11,7 +11,7 @@
   * chore: Updated `LICENSE` with major contributors [#100](https://github.com/Floating-Dartists/matomo-tracker/pull/100)
   * chore: Added a contribution guide [#101](https://github.com/Floating-Dartists/matomo-tracker/pull/101)
   * refacto: Added default values to `TrackingOrderItem` [#102](https://github.com/Floating-Dartists/matomo-tracker/pull/102)
-  * refacto: Uniformized the "track" methods parameters [#103]()
+  * refacto: Uniformized the "track" methods parameters [#106](https://github.com/Floating-Dartists/matomo-tracker/pull/106)
 
 _Special thanks to [Eric Prokop](https://github.com/EPNW-Eric) who greatly contributed to this release._
 
