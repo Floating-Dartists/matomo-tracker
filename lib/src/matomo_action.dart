@@ -52,19 +52,32 @@ class MatomoAction {
   /// specific page view.
   final String? screenId;
 
+  ///  If specified, the tracking request will trigger a conversion for the
+  /// [goal](https://matomo.org/guide/reports/goals-and-conversions/) of the
+  /// website being tracked with this ID.
   final int? goalId;
+
+  /// The unique string identifier for the ecommerce order (required when
+  /// tracking an ecommerce order)
   final String? orderId;
+
+  /// Items in the Ecommerce order.
   final List<TrackingOrderItem>? trackingOrderItems;
 
   /// Used either as a monetary value when tracking a goal or as the total of
   /// an ecommerce order.
   final double? revenue;
 
-  /// Excludes shipping
+  /// Sub total of an order; excludes shipping.
   final num? subTotal;
 
+  /// Tax amount of an order.
   final num? taxAmount;
+
+  /// Shipping cost of an order.
   final num? shippingCost;
+
+  /// Discount offered for an order.
   final num? discountAmount;
 
   /// The current time.
