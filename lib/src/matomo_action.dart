@@ -55,7 +55,10 @@ class MatomoAction {
   final int? goalId;
   final String? orderId;
   final List<TrackingOrderItem>? trackingOrderItems;
-  final num? revenue;
+
+  /// Used either as a monetary value when tracking a goal or as the total of
+  /// an ecommerce order.
+  final double? revenue;
 
   /// Excludes shipping
   final num? subTotal;
@@ -100,7 +103,7 @@ class MatomoAction {
     int? goalId,
     String? orderId,
     List<TrackingOrderItem>? trackingOrderItems,
-    num? revenue,
+    double? revenue,
     num? subTotal,
     num? taxAmount,
     num? shippingCost,

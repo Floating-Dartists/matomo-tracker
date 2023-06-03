@@ -233,6 +233,12 @@ MaterialApp(
 );
 ```
 * `MatomoEvent` has been renamed to `MatomoAction`
+* `trackScreen` positional parameter `context` is now a named parameter
+* `trackGoal` positional parameter `goalId` is now a named parameter: `id`
+* `trackDimensions` positional parameter `dimensions` is now a named parameter
+* `trackCartUpdate` positional parameters `trackingOrderItems`, `subTotal`, `taxAmount`, `shippingCost` and `discountAmount` are now named parameters
+* `trackOrder` positional parameters `orderId` (now `id`), `trackingOrderItems`, `revenue` (also became a `double`), `subTotal`, `taxAmount`, `shippingCost` and `discountAmount` are now named parameters
+* `trackOutlink` positional parameter `link` is now a named required parameter (also changed the type to `String`)
 
 ## v3.0.0
 
