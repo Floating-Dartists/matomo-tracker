@@ -156,7 +156,9 @@ class MatomoTracker {
   ///
   /// The [newVisit] parameter is used to mark this initialization the start
   /// of a new visit. If set to `false` it is left to Matomo to decide if this
-  /// is a new visit or not.
+  /// is a new visit or not. In practice, this will be used as the `newVisit`
+  /// parameter in the first `track...` method call but only if the `newVisit`
+  /// parameter in that method call is left to `null`.
   ///
   /// The [visitorId] should have a length of 16 characters otherwise an
   /// [ArgumentError] will be thrown. This parameter corresponds with the
@@ -429,6 +431,11 @@ class MatomoTracker {
   /// - `campaign`: The campaign that lead to this page view.
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackScreen(
     BuildContext context, {
     String? pvId,
@@ -436,6 +443,7 @@ class MatomoTracker {
     Campaign? campaign,
     Map<String, String>? dimensions,
     PerformanceInfo? performanceInfo,
+    bool? newVisit,
   }) {
     final actionName = context.widget.toStringShort();
 
@@ -446,6 +454,7 @@ class MatomoTracker {
       campaign: campaign,
       dimensions: dimensions,
       performanceInfo: performanceInfo,
+      newVisit: _inferNewVisit(newVisit),
     );
   }
 
@@ -465,6 +474,11 @@ class MatomoTracker {
   /// - `campaign`: The campaign that lead to this page view.
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackScreenWithName({
     required String actionName,
     String? pvId,
@@ -472,6 +486,7 @@ class MatomoTracker {
     Campaign? campaign,
     Map<String, String>? dimensions,
     PerformanceInfo? performanceInfo,
+    bool? newVisit,
   }) {
     _initializationCheck();
 
@@ -491,6 +506,7 @@ class MatomoTracker {
       dimensions: dimensions,
       screenId: pvId ?? randomAlphaNumeric(6),
       performanceInfo: performanceInfo,
+      newVisit: _inferNewVisit(newVisit),
     );
     _lastPageView = lastPageView;
     return _track(lastPageView);
@@ -501,10 +517,16 @@ class MatomoTracker {
   /// The [goalId] corresponds with `idgoal` and [revenue] with `revenue`.
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackGoal(
     int goalId, {
     double? revenue,
     Map<String, String>? dimensions,
+    bool? newVisit,
   }) {
     _initializationCheck();
 
@@ -514,6 +536,7 @@ class MatomoTracker {
         goalId: goalId,
         revenue: revenue,
         dimensions: dimensions,
+        newVisit: _inferNewVisit(newVisit),
       ),
     );
   }
@@ -526,10 +549,16 @@ class MatomoTracker {
   /// take precedance over [attachLastPvId].
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackEvent({
     required EventInfo eventInfo,
     String? pvId,
     Map<String, String>? dimensions,
+    bool? newVisit,
   }) {
     validateDimension(dimensions);
     return _track(
@@ -537,6 +566,7 @@ class MatomoTracker {
         eventInfo: eventInfo,
         screenId: _inferPvId(pvId),
         dimensions: dimensions,
+        newVisit: _inferNewVisit(newVisit),
       ),
     );
   }
@@ -551,13 +581,20 @@ class MatomoTracker {
   ///
   /// Also note that counting starts at 1 and NOT at 0 as opposed to what is stated
   /// in the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api) documentation.
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackDimensions(
-    Map<String, String> dimensions,
-  ) {
+    Map<String, String> dimensions, {
+    bool? newVisit,
+  }) {
     validateDimension(dimensions);
     return _track(
       MatomoAction(
         dimensions: dimensions,
+        newVisit: _inferNewVisit(newVisit),
       ),
     );
   }
@@ -568,11 +605,17 @@ class MatomoTracker {
   /// [searchCount] with `search_count`.
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackSearch({
     required String searchKeyword,
     String? searchCategory,
     int? searchCount,
     Map<String, String>? dimensions,
+    bool? newVisit,
   }) {
     validateDimension(dimensions);
     return _track(
@@ -581,6 +624,7 @@ class MatomoTracker {
         searchCategory: searchCategory,
         searchCount: searchCount,
         dimensions: dimensions,
+        newVisit: _inferNewVisit(newVisit),
       ),
     );
   }
@@ -588,6 +632,11 @@ class MatomoTracker {
   /// Tracks a cart update.
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackCartUpdate(
     List<TrackingOrderItem>? trackingOrderItems,
     num? subTotal,
@@ -595,6 +644,7 @@ class MatomoTracker {
     num? shippingCost,
     num? discountAmount, {
     Map<String, String>? dimensions,
+    bool? newVisit,
   }) {
     _initializationCheck();
 
@@ -608,6 +658,7 @@ class MatomoTracker {
         shippingCost: shippingCost,
         discountAmount: discountAmount,
         dimensions: dimensions,
+        newVisit: _inferNewVisit(newVisit),
       ),
     );
   }
@@ -615,6 +666,11 @@ class MatomoTracker {
   /// Tracks an order.
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackOrder(
     String? orderId,
     List<TrackingOrderItem>? trackingOrderItems,
@@ -624,6 +680,7 @@ class MatomoTracker {
     num? shippingCost,
     num? discountAmount, {
     Map<String, String>? dimensions,
+    bool? newVisit,
   }) {
     _initializationCheck();
 
@@ -639,6 +696,7 @@ class MatomoTracker {
         shippingCost: shippingCost,
         discountAmount: discountAmount,
         dimensions: dimensions,
+        newVisit: _inferNewVisit(newVisit),
       ),
     );
   }
@@ -646,9 +704,15 @@ class MatomoTracker {
   /// Tracks the click on an outgoing link.
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackOutlink(
     String? link, {
     Map<String, String>? dimensions,
+    bool? newVisit,
   }) {
     _initializationCheck();
 
@@ -657,6 +721,7 @@ class MatomoTracker {
       MatomoAction(
         link: link,
         dimensions: dimensions,
+        newVisit: _inferNewVisit(newVisit),
       ),
     );
   }
@@ -672,16 +737,23 @@ class MatomoTracker {
   /// take precedance over [attachLastPvId].
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// The [newVisit] parameter can be used to make this action the begin
+  /// of a new visit. If it's left to `null` and this is the first `track...`
+  /// call after [MatomoTracker.initialize], the `newVisit` from there will
+  /// be used.
   void trackContentImpression({
     required Content content,
     String? pvId,
     Map<String, String>? dimensions,
+    bool? newVisit,
   }) {
     return _track(
       MatomoAction(
         content: content,
         screenId: _inferPvId(pvId),
         dimensions: dimensions,
+        newVisit: _inferNewVisit(newVisit),
       ),
     );
   }
@@ -700,6 +772,10 @@ class MatomoTracker {
   /// will take precedance over [attachLastPvId].
   ///
   /// For remarks on [dimensions] see [trackDimensions].
+  ///
+  /// Note that this method is missing a `newVisit` parameter on purpose since
+  /// it doesn't make sense to have an interaction without an impression first,
+  /// and then the impression would mark the new visit, not the interaction.
   void trackContentInteraction({
     required Content content,
     required String interaction,
@@ -716,14 +792,7 @@ class MatomoTracker {
     );
   }
 
-  void _track(MatomoAction action) {
-    var ac = action;
-    if (_newVisit) {
-      ac = ac.copyWith(newVisit: true);
-      _newVisit = false;
-    }
-    queue.add(ac.toMap(this));
-  }
+  void _track(MatomoAction action) => queue.add(action.toMap(this));
 
   void _ping() {
     final lastPageView = _lastPageView;
@@ -731,6 +800,7 @@ class MatomoTracker {
       _track(
         lastPageView.copyWith(
           ping: true,
+          newVisit: false,
         ),
       );
     }
@@ -808,4 +878,10 @@ class MatomoTracker {
 
   String? _inferPvId(String? pvId) =>
       pvId ?? (attachLastPvId ? _lastPageView?.screenId : null);
+
+  bool _inferNewVisit(bool? localNewVisit) {
+    final globalNewVisit = _newVisit;
+    _newVisit = false;
+    return localNewVisit ?? globalNewVisit;
+  }
 }
