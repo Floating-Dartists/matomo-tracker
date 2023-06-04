@@ -425,10 +425,12 @@ class MatomoTracker {
   /// a random id will be generated (recommended). Also see [attachLastPvId].
   ///
   /// - `path`: A string that identifies the path of the screen. If not
-  /// `null`, it will be combined to [contentBase] to create a URL. This combination
+  /// `null`, it will be appended to [contentBase] to create a URL. This combination
   /// corresponds with `url`.
   ///
-  /// - `campaign`: The campaign that lead to this page view.
+  /// - `campaign`: The campaign that lead to this page view. Setting this multiple
+  /// times during an apps lifetime can have some side effects, see the [Campaign]
+  /// class for more information.
   ///
   /// {@template dimensions_track_parameter}
   /// For remarks on [dimensions] see [trackDimensions].
@@ -472,10 +474,12 @@ class MatomoTracker {
   /// a random id will be generated (recommended). Also see [attachLastPvId].
   ///
   /// - `path`: A string that identifies the path of the screen. If not
-  /// `null`, it will be combined to [contentBase] to create a URL. This
+  /// `null`, it will be appended to [contentBase] to create a URL. This
   /// combination corresponds with `url`.
   ///
-  /// - `campaign`: The campaign that lead to this page view.
+  /// - `campaign`: The campaign that lead to this page view. Setting this multiple
+  /// times during an apps lifetime can have some side effects, see the [Campaign]
+  /// class for more information.
   ///
   /// {@macro dimensions_track_parameter}
   ///
