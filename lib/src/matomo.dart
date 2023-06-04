@@ -583,10 +583,7 @@ class MatomoTracker {
   /// in the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api)
   /// documentation.
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
+  /// {@macro new_visit_track_parameter}
   void trackDimensions({
     required Map<String, String> dimensions,
     bool? newVisit,
