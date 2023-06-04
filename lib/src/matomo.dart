@@ -477,7 +477,7 @@ class MatomoTracker {
   ///
   /// - `campaign`: The campaign that lead to this page view.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackScreenWithName({
@@ -517,7 +517,7 @@ class MatomoTracker {
   ///
   /// The [id] corresponds with `idgoal` and [revenue] with `revenue`.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackGoal({
@@ -546,7 +546,7 @@ class MatomoTracker {
   /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
   /// take precedance over [attachLastPvId].
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackEvent({
@@ -601,7 +601,7 @@ class MatomoTracker {
   /// [searchKeyword] corresponds with `search`, [searchCategory] with
   /// `search_cat` and [searchCount] with `search_count`.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackSearch({
@@ -625,7 +625,7 @@ class MatomoTracker {
 
   /// Tracks a cart update.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackCartUpdate({
@@ -661,7 +661,7 @@ class MatomoTracker {
   /// [revenue] with `revenue`, [subTotal] with `ec_st`, [taxAmount] with
   /// `ec_tx`, [shippingCost] with `ec_sh`, [discountAmount] with `ec_dt`.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackOrder({
@@ -699,7 +699,7 @@ class MatomoTracker {
   ///
   /// [link] corresponds with `link`.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackOutlink({
@@ -729,7 +729,7 @@ class MatomoTracker {
   /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
   /// take precedance over [attachLastPvId].
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackContentImpression({
@@ -761,7 +761,7 @@ class MatomoTracker {
   /// view manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually
   /// will take precedance over [attachLastPvId].
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// Note that this method is missing a `newVisit` parameter on purpose since
   /// it doesn't make sense to have an interaction without an impression first,
