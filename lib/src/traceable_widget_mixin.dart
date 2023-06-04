@@ -23,7 +23,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   /// (recommended).
   ///
   /// For more information see `pvId` in [MatomoTracker.trackScreenWithName] and
-  /// [MatomoTracker.attachLastPvId].
+  /// [MatomoTracker.attachLastScreenInfo].
   /// {@endtemplate}
   @protected
   String get pvId => _pvId;
