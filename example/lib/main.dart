@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:matomo_tracker/matomo_tracker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // See the docker folder for instructions on how to get a
 // test Matomo instance running
@@ -105,6 +106,8 @@ class MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
                 child: const Text('Go to OtherPage'),
               ),
             ),
+            const Outlink(),
+            const SearchWidget(),
           ],
         ),
       ),
@@ -168,6 +171,108 @@ class _OtherPageState extends State<OtherPage> {
               ),
       ),
     );
+  }
+}
+
+/// Example for outlink tracking
+class Outlink extends StatelessWidget {
+  static const _outlink = 'https://github.com/Floating-Dartists/matomo-tracker';
+  const Outlink({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('Outlink tracking test:'),
+          ElevatedButton(
+            onPressed: _onPressed,
+            child: const Text('View on GitHub'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onPressed() {
+    MatomoTracker.instance.trackOutlink(
+      link: _outlink,
+    );
+    launchUrl(Uri.parse(_outlink));
+  }
+}
+
+class SearchWidget extends StatefulWidget {
+  const SearchWidget({super.key});
+
+  @override
+  State<SearchWidget> createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<SearchWidget> {
+  final _searchController = TextEditingController(text: 'Enter Search Text...');
+  bool _canSearch = true;
+  String? _lastSearch;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_textChange);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _searchController.removeListener(_textChange);
+  }
+
+  void _textChange() {
+    final canSearch = _searchController.text.trim().isNotEmpty;
+    if (_canSearch != canSearch) {
+      setState(() {
+        _canSearch = canSearch;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                width: 300.0,
+                child: TextField(controller: _searchController),
+              ),
+              IconButton(
+                onPressed: _canSearch ? _search : null,
+                icon: const Icon(Icons.search),
+              ),
+            ],
+          ),
+          _lastSearch == null
+              ? const Text('No search yet!')
+              : Text('Last search: $_lastSearch'),
+        ],
+      ),
+    );
+  }
+
+  void _search() {
+    MatomoTracker.instance.trackSearch(
+      searchKeyword: _searchController.text,
+    );
+    setState(() {
+      _lastSearch = _searchController.text;
+    });
   }
 }
 
