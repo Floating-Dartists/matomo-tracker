@@ -80,17 +80,20 @@ class MatomoTracker {
     );
   }
 
-  /// Whether to attach the last `pvId` to actions that can be associated with
-  /// page views.
+  /// Whether to attach `pvId` and `path` to `track...` calls automatically.
   ///
-  /// There are some actions like [trackEvent] and [trackContentImpression]
-  /// that can be associated with page views by setting a `pvId` (what is the
-  /// abbreviation of page view id). If [attachLastPvId] is `true` and there is
-  /// a last page view tracked by [trackScreenWithName] (or a method/class that
-  /// uses it like [trackScreen], [TraceableClientMixin], [TraceableWidget]) the
-  /// last recored `pvId` is automatically used unless it is overwritten in that
-  /// action.
-  late final bool attachLastPvId;
+  /// There most actions can be associated with page views by setting a `pvId`
+  /// (what is the abbreviation of page view id). If [attachLastScreenInfo] is
+  /// `true` and there is a last page view tracked by [trackScreenWithName] (or
+  /// a method/class that uses it like [trackScreen], [TraceableClientMixin],
+  /// [TraceableWidget]) the last recorded `pvId` is automatically used unless
+  /// it is overwritten in that action.
+  ///
+  /// Similarly, most actions can have a `path` which usually represents the page
+  /// the action happend on. If [attachLastScreenInfo] is `true` and there  is a
+  /// last page view tracked by a method mentioned above, the last recorded `path`
+  /// is automatically used unless it is overwritten in that action.
+  late final bool attachLastScreenInfo;
 
   /// The user agent is used to detect the operating system and browser used.
   late final String? userAgent;
@@ -194,7 +197,7 @@ class MatomoTracker {
     Level verbosityLevel = Level.off,
     Map<String, String> customHeaders = const {},
     String? userAgent,
-    bool attachLastPvId = true,
+    bool attachLastScreenInfo = true,
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -228,7 +231,7 @@ class MatomoTracker {
     _cookieless = cookieless;
     _tokenAuth = tokenAuth;
     _newVisit = newVisit;
-    this.attachLastPvId = attachLastPvId;
+    this.attachLastScreenInfo = attachLastScreenInfo;
     _dispatchSettings = dispatchSettings;
 
     final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
@@ -420,15 +423,22 @@ class MatomoTracker {
   /// This will register a page view with [trackScreenWithName] by using the
   /// `context.widget.toStringShort()` as `actionName` value.
   ///
-  /// - `pvId`: A 6 character unique ID that can later be used to associate
+  /// {@template pvid_screen_track_parameter}
+  /// [pvId] is a  6 character unique ID that can later be used to associate
   /// other actions (like [trackEvent]) with this page view. If `null`,
-  /// a random id will be generated (recommended). Also see [attachLastPvId].
+  /// a random id will be generated (recommended). Also see [attachLastScreenInfo].
+  /// {@endtemplate}
   ///
-  /// - `path`: A string that identifies the path of the screen. If not
-  /// `null`, it will be combined to [contentBase] to create a URL. This combination
-  /// corresponds with `url`.
+  /// {@template campaign_and_path_track_parameter}
+  /// [path] is a string that identifies the path of the screen where this action
+  /// happend. If not `null`, it will be appended to [contentBase] to create a
+  /// URL. This combination corresponds with `url`. Also see [attachLastScreenInfo].
+  /// Setting [path] manually will take precedance over [attachLastScreenInfo].
   ///
-  /// - `campaign`: The campaign that lead to this page view.
+  /// [campaign] can be a campaign that lead to this action. Setting this multiple
+  /// times during an apps lifetime can have some side effects, see the [Campaign]
+  /// class for more information.
+  /// {@endtemplate}
   ///
   /// {@template dimensions_track_parameter}
   /// For remarks on [dimensions] see [trackDimensions].
@@ -464,20 +474,14 @@ class MatomoTracker {
 
   /// Registers a page view.
   ///
-  /// - `actionName`: Equivalent to the page name, here used to identify the
-  /// screen with a proper name.
+  /// [actionName] represents the page name, here used to identify the
+  /// screen with a proper name. Corresponds with `action_name`.
   ///
-  /// - `pvId`: A 6 character unique ID that can later be used to associate
-  /// other actions (like [trackEvent]) with this page view. If `null`,
-  /// a random id will be generated (recommended). Also see [attachLastPvId].
+  /// {@macro pvid_screen_track_parameter}
   ///
-  /// - `path`: A string that identifies the path of the screen. If not
-  /// `null`, it will be combined to [contentBase] to create a URL. This
-  /// combination corresponds with `url`.
+  /// {@macro campaign_and_path_track_parameter}
   ///
-  /// - `campaign`: The campaign that lead to this page view.
-  ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackScreenWithName({
@@ -517,12 +521,24 @@ class MatomoTracker {
   ///
   /// The [id] corresponds with `idgoal` and [revenue] with `revenue`.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@template pvid_other_track_parameter}
+  /// To associate this action with a page view, enable [attachLastScreenInfo] and
+  /// leave [pvId] to `null` here or set [pvId] to the [pvId] of that page view
+  /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
+  /// take precedance over [attachLastScreenInfo].
+  /// {@endtemplate}
+  ///
+  /// {@macro campaign_and_path_track_parameter}
+  ///
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackGoal({
     required int id,
     double? revenue,
+    String? pvId,
+    String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -533,6 +549,9 @@ class MatomoTracker {
       MatomoAction(
         goalId: id,
         revenue: revenue,
+        screenId: _inferPvId(pvId),
+        path: _inferPath(path),
+        campaign: campaign,
         dimensions: dimensions,
         newVisit: _inferNewVisit(newVisit),
       ),
@@ -541,17 +560,18 @@ class MatomoTracker {
 
   /// Tracks an event.
   ///
-  /// To associate this event with a page view, enable [attachLastPvId] and
-  /// leave [pvId] to `null` here or set [pvId] to the [pvId] of that page view
-  /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
-  /// take precedance over [attachLastPvId].
+  /// {@macro pvid_other_track_parameter}
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro campaign_and_path_track_parameter}
+  ///
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackEvent({
     required EventInfo eventInfo,
     String? pvId,
+    String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -560,13 +580,19 @@ class MatomoTracker {
       MatomoAction(
         eventInfo: eventInfo,
         screenId: _inferPvId(pvId),
+        path: _inferPath(path),
+        campaign: campaign,
         dimensions: dimensions,
         newVisit: _inferNewVisit(newVisit),
       ),
     );
   }
 
-  /// Tracks custom visit dimensions.
+  /// Tracks custom dimensions.
+  ///
+  /// It is recommended to set the `dimensions` parameter in one of the other
+  /// track calls instead of using this method (since it will log an additional
+  /// page view).
   ///
   /// The keys of the [dimensions] map correspond with the `dimension[1-999]`
   /// parameters. This means that the keys MUST be named `dimension1`,
@@ -575,21 +601,27 @@ class MatomoTracker {
   /// The keys of the [dimensions] map will be validated if they follow these
   /// rules, and if not, a [ArgumentError] will be thrown.
   ///
-  /// Also note that counting starts at 1 and NOT at 0 as opposed to what is stated
-  /// in the [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api)
-  /// documentation.
+  /// To see the dimensions in the Matomo dashboard, make sure to add them in the
+  /// dashboard first.
   ///
-  /// The [newVisit] parameter can be used to make this action the begin
-  /// of a new visit. If it's left to `null` and this is the first `track...`
-  /// call after [MatomoTracker.initialize], the `newVisit` from there will
-  /// be used.
+  /// {@macro pvid_other_track_parameter}
+  ///
+  /// {@macro campaign_and_path_track_parameter}
+  ///
+  /// {@macro new_visit_track_parameter}
   void trackDimensions({
     required Map<String, String> dimensions,
+    String? pvId,
+    String? path,
+    Campaign? campaign,
     bool? newVisit,
   }) {
     validateDimension(dimensions);
     return _track(
       MatomoAction(
+        screenId: _inferPvId(pvId),
+        path: _inferPath(path),
+        campaign: campaign,
         dimensions: dimensions,
         newVisit: _inferNewVisit(newVisit),
       ),
@@ -601,13 +633,20 @@ class MatomoTracker {
   /// [searchKeyword] corresponds with `search`, [searchCategory] with
   /// `search_cat` and [searchCount] with `search_count`.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro pvid_other_track_parameter}
+  ///
+  /// {@macro campaign_and_path_track_parameter}
+  ///
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackSearch({
     required String searchKeyword,
     String? searchCategory,
     int? searchCount,
+    String? pvId,
+    String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -617,6 +656,9 @@ class MatomoTracker {
         searchKeyword: searchKeyword,
         searchCategory: searchCategory,
         searchCount: searchCount,
+        screenId: _inferPvId(pvId),
+        path: _inferPath(path),
+        campaign: campaign,
         dimensions: dimensions,
         newVisit: _inferNewVisit(newVisit),
       ),
@@ -625,7 +667,11 @@ class MatomoTracker {
 
   /// Tracks a cart update.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro pvid_other_track_parameter}
+  ///
+  /// {@macro campaign_and_path_track_parameter}
+  ///
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackCartUpdate({
@@ -634,6 +680,9 @@ class MatomoTracker {
     num? taxAmount,
     num? shippingCost,
     num? discountAmount,
+    String? pvId,
+    String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -649,6 +698,9 @@ class MatomoTracker {
         taxAmount: taxAmount,
         shippingCost: shippingCost,
         discountAmount: discountAmount,
+        screenId: _inferPvId(pvId),
+        path: _inferPath(path),
+        campaign: campaign,
         dimensions: dimensions,
         newVisit: _inferNewVisit(newVisit),
       ),
@@ -661,7 +713,11 @@ class MatomoTracker {
   /// [revenue] with `revenue`, [subTotal] with `ec_st`, [taxAmount] with
   /// `ec_tx`, [shippingCost] with `ec_sh`, [discountAmount] with `ec_dt`.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro pvid_other_track_parameter}
+  ///
+  /// {@macro campaign_and_path_track_parameter}
+  ///
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackOrder({
@@ -672,6 +728,9 @@ class MatomoTracker {
     num? taxAmount,
     num? shippingCost,
     num? discountAmount,
+    String? pvId,
+    String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -689,6 +748,9 @@ class MatomoTracker {
         taxAmount: taxAmount,
         shippingCost: shippingCost,
         discountAmount: discountAmount,
+        screenId: _inferPvId(pvId),
+        path: _inferPath(path),
+        campaign: campaign,
         dimensions: dimensions,
         newVisit: _inferNewVisit(newVisit),
       ),
@@ -699,11 +761,18 @@ class MatomoTracker {
   ///
   /// [link] corresponds with `link`.
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro pvid_other_track_parameter}
+  ///
+  /// {@macro campaign_and_path_track_parameter}
+  ///
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackOutlink({
     required String link,
+    String? pvId,
+    String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -713,6 +782,9 @@ class MatomoTracker {
     return _track(
       MatomoAction(
         link: link,
+        screenId: _inferPvId(pvId),
+        path: _inferPath(path),
+        campaign: campaign,
         dimensions: dimensions,
         newVisit: _inferNewVisit(newVisit),
       ),
@@ -724,17 +796,18 @@ class MatomoTracker {
   /// Later, if the user interacts with the content (e.g. taps on it),
   /// call [trackContentInteraction].
   ///
-  /// To associate this impression with a page view, enable [attachLastPvId] and
-  /// leave [pvId] to `null` here or set [pvId] to the [pvId] of that page view
-  /// manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually will
-  /// take precedance over [attachLastPvId].
+  /// {@macro pvid_other_track_parameter}
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro campaign_and_path_track_parameter}
+  ///
+  /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
   void trackContentImpression({
     required Content content,
     String? pvId,
+    String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
@@ -742,6 +815,8 @@ class MatomoTracker {
       MatomoAction(
         content: content,
         screenId: _inferPvId(pvId),
+        path: _inferPath(path),
+        campaign: campaign,
         dimensions: dimensions,
         newVisit: _inferNewVisit(newVisit),
       ),
@@ -756,12 +831,11 @@ class MatomoTracker {
   /// The [interaction] corresponds with `c_i` and should
   /// describe the type of interaction, e.g. `tap` or `swipe`.
   ///
-  /// To associate this interaction with a page view, enable [attachLastPvId]
-  /// and leave [pvId] to `null` here or set [pvId] to the [pvId] of that page
-  /// view manually, e.g. [TraceableClientMixin.pvId]. Setting [pvId] manually
-  /// will take precedance over [attachLastPvId].
+  /// {@macro pvid_other_track_parameter}
   ///
-  /// {@template dimensions_track_parameter}
+  /// {@macro campaign_and_path_track_parameter}
+  ///
+  /// {@macro dimensions_track_parameter}
   ///
   /// Note that this method is missing a `newVisit` parameter on purpose since
   /// it doesn't make sense to have an interaction without an impression first,
@@ -770,6 +844,8 @@ class MatomoTracker {
     required Content content,
     required String interaction,
     String? pvId,
+    String? path,
+    Campaign? campaign,
     Map<String, String>? dimensions,
   }) {
     return _track(
@@ -777,6 +853,8 @@ class MatomoTracker {
         content: content,
         contentInteraction: interaction,
         screenId: _inferPvId(pvId),
+        path: _inferPath(path),
+        campaign: campaign,
         dimensions: dimensions,
       ),
     );
@@ -867,11 +945,14 @@ class MatomoTracker {
   }
 
   String? _inferPvId(String? pvId) =>
-      pvId ?? (attachLastPvId ? _lastPageView?.screenId : null);
+      pvId ?? (attachLastScreenInfo ? _lastPageView?.screenId : null);
 
   bool _inferNewVisit(bool? localNewVisit) {
     final globalNewVisit = _newVisit;
     _newVisit = false;
     return localNewVisit ?? globalNewVisit;
   }
+
+  String? _inferPath(String? path) =>
+      path ?? (attachLastScreenInfo ? _lastPageView?.path : null);
 }

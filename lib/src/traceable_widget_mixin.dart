@@ -23,7 +23,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   /// (recommended).
   ///
   /// For more information see `pvId` in [MatomoTracker.trackScreenWithName] and
-  /// [MatomoTracker.attachLastPvId].
+  /// [MatomoTracker.attachLastScreenInfo].
   /// {@endtemplate}
   @protected
   String get pvId => _pvId;
@@ -51,7 +51,9 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
 
   /// {@template traceableClientMixin.campaign}
   /// The campaign that lead to this interaction or `null` for a
-  /// default entry.
+  /// default entry. Setting this multiple times during an apps
+  /// lifetime can have some side effects, see the [Campaign] class
+  /// for more information.
   /// {@endtemplate}
   @protected
   Campaign? campaign;

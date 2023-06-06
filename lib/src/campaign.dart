@@ -2,6 +2,17 @@ import 'package:matomo_tracker/src/assert.dart';
 
 /// Describes a campaign.
 ///
+/// Multiple `track...` methods in [MatomoTracker] can take a campaign as argument.
+/// 
+/// When using campaigns, it should be noted that each visit can only have at most
+/// one campaign associated with it. It does not matter if the first `track...`
+/// call or a subsequent `track...` call has the campaign attached, it will be treated
+/// as the campaign for the whole visit. Calling `track...` methods with the same
+/// campaign (in respect to the objects field values) will not start a new visit,
+/// nor will calling `track...` without a campaign after setting a campaign in a
+/// previous `track...` call start a new visit. On the other hand, calling a
+/// `track...` method with a different campaign will start a new visit.
+///
 /// Read more about [Campaign Tracking](https://matomo.org/faq/reports/what-is-campaign-tracking-and-why-it-is-important/).
 class Campaign {
   /// Creates a campaign description.
