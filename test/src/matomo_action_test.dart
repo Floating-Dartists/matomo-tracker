@@ -44,7 +44,7 @@ void main() {
       link: matomoLink,
       orderId: matomoOrderId,
       revenue: matomoRevenue,
-      screenId: matomoScreenId,
+      pvId: matomoPvId,
       searchCategory: matomoSearchCategory,
       searchCount: matomoSearchCount,
       searchKeyword: matomoSearchKeyword,
@@ -80,7 +80,7 @@ void main() {
     expect(matomoAction.link, matomoLink);
     expect(matomoAction.orderId, matomoOrderId);
     expect(matomoAction.revenue, matomoRevenue);
-    expect(matomoAction.screenId, matomoScreenId);
+    expect(matomoAction.pvId, matomoPvId);
     expect(matomoAction.searchCategory, matomoSearchCategory);
     expect(matomoAction.searchCount, matomoSearchCount);
     expect(matomoAction.searchKeyword, matomoSearchKeyword);
@@ -125,14 +125,14 @@ void main() {
       test(
         'it should throw AssertionError if screen id is not 6 characters',
         () {
-          MatomoAction getMatomoActionWithWrongScreenId() {
+          MatomoAction getMatomoActionWithWrongPvId() {
             return MatomoAction(
-              screenId: matomoWrongScreenId,
+              pvId: matomoWrongPvId,
             );
           }
 
           expect(
-            getMatomoActionWithWrongScreenId,
+            getMatomoActionWithWrongPvId,
             throwsAssertionError,
           );
         },
@@ -291,7 +291,7 @@ void main() {
         expect(matomoAction.link, unchangedCopy.link);
         expect(matomoAction.orderId, unchangedCopy.orderId);
         expect(matomoAction.revenue, unchangedCopy.revenue);
-        expect(matomoAction.screenId, unchangedCopy.screenId);
+        expect(matomoAction.pvId, unchangedCopy.pvId);
         expect(matomoAction.searchCategory, unchangedCopy.searchCategory);
         expect(matomoAction.searchCount, unchangedCopy.searchCount);
         expect(matomoAction.searchKeyword, unchangedCopy.searchKeyword);
@@ -367,7 +367,7 @@ void main() {
         expect(matomoAction.link, changedCopy.link);
         expect(matomoAction.orderId, changedCopy.orderId);
         expect(matomoAction.revenue, changedCopy.revenue);
-        expect(matomoAction.screenId, changedCopy.screenId);
+        expect(matomoAction.pvId, changedCopy.pvId);
         expect(matomoAction.searchCategory, changedCopy.searchCategory);
         expect(matomoAction.searchCount, changedCopy.searchCount);
         expect(matomoAction.searchKeyword, changedCopy.searchKeyword);

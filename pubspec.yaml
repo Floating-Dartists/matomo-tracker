@@ -22,7 +22,8 @@ dependencies:
   uuid: ^3.0.7
 
 dev_dependencies:
-  fd_lints: ^1.1.1
+  custom_lint: ^0.4.0
+  fd_lints: ^2.0.0
   flutter_test:
     sdk: flutter
   meta: ^1.9.1

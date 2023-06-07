@@ -60,7 +60,7 @@ class MatomoTracker {
   ///
   /// Should not be confused with the `url` tracking parameter
   /// which is constructed by combining [contentBase] with a `path`
-  /// (e.g. in [trackScreenWithName]).
+  /// (e.g. in [trackPageViewWithName]).
   late final String url;
   late final Session session;
 
@@ -84,8 +84,8 @@ class MatomoTracker {
   ///
   /// There most actions can be associated with page views by setting a `pvId`
   /// (what is the abbreviation of page view id). If [attachLastScreenInfo] is
-  /// `true` and there is a last page view tracked by [trackScreenWithName] (or
-  /// a method/class that uses it like [trackScreen], [TraceableClientMixin],
+  /// `true` and there is a last page view tracked by [trackPageViewWithName] (or
+  /// a method/class that uses it like [trackPageView], [TraceableClientMixin],
   /// [TraceableWidget]) the last recorded `pvId` is automatically used unless
   /// it is overwritten in that action.
   ///
@@ -103,7 +103,7 @@ class MatomoTracker {
 
   /// URL for the current action.
   ///
-  /// For the tracking of screens (e.g. with [trackScreenWithName]) this is combined
+  /// For the tracking of screens (e.g. with [trackPageViewWithName]) this is combined
   /// with the `path` parameter to create the tracked `url`.
   late final String contentBase;
 
@@ -238,10 +238,12 @@ class MatomoTracker {
     _localStorage = cookieless
         ? CookielessStorage(storage: effectiveLocalStorage)
         : effectiveLocalStorage;
-    queue = _dispatchSettings.persistentQueue
+
+    final onLoad = _dispatchSettings.onLoad;
+    queue = _dispatchSettings.persistentQueue && onLoad != null
         ? await PersistentQueue.load(
             storage: _localStorage,
-            onLoadFilter: _dispatchSettings.onLoad!,
+            onLoadFilter: onLoad,
           )
         : Queue();
 
@@ -420,7 +422,7 @@ class MatomoTracker {
     queue.clear();
   }
 
-  /// This will register a page view with [trackScreenWithName] by using the
+  /// This will register a page view with [trackPageViewWithName] by using the
   /// `context.widget.toStringShort()` as `actionName` value.
   ///
   /// {@template pvid_screen_track_parameter}
@@ -450,7 +452,7 @@ class MatomoTracker {
   /// call after [MatomoTracker.initialize], the `newVisit` from there will
   /// be used.
   /// {@endtemplate}
-  void trackScreen({
+  void trackPageView({
     required BuildContext context,
     String? pvId,
     String? path,
@@ -461,7 +463,7 @@ class MatomoTracker {
   }) {
     final actionName = context.widget.toStringShort();
 
-    trackScreenWithName(
+    trackPageViewWithName(
       actionName: actionName,
       pvId: pvId,
       path: path,
@@ -484,7 +486,7 @@ class MatomoTracker {
   /// {@macro dimensions_track_parameter}
   ///
   /// {@macro new_visit_track_parameter}
-  void trackScreenWithName({
+  void trackPageViewWithName({
     required String actionName,
     String? pvId,
     String? path,
@@ -509,7 +511,7 @@ class MatomoTracker {
       path: path,
       campaign: campaign,
       dimensions: dimensions,
-      screenId: pvId ?? randomAlphaNumeric(6),
+      pvId: pvId ?? randomAlphaNumeric(6),
       performanceInfo: performanceInfo,
       newVisit: _inferNewVisit(newVisit),
     );
@@ -549,7 +551,7 @@ class MatomoTracker {
       MatomoAction(
         goalId: id,
         revenue: revenue,
-        screenId: _inferPvId(pvId),
+        pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
@@ -579,7 +581,7 @@ class MatomoTracker {
     return _track(
       MatomoAction(
         eventInfo: eventInfo,
-        screenId: _inferPvId(pvId),
+        pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
@@ -619,7 +621,7 @@ class MatomoTracker {
     validateDimension(dimensions);
     return _track(
       MatomoAction(
-        screenId: _inferPvId(pvId),
+        pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
@@ -656,7 +658,7 @@ class MatomoTracker {
         searchKeyword: searchKeyword,
         searchCategory: searchCategory,
         searchCount: searchCount,
-        screenId: _inferPvId(pvId),
+        pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
@@ -698,7 +700,7 @@ class MatomoTracker {
         taxAmount: taxAmount,
         shippingCost: shippingCost,
         discountAmount: discountAmount,
-        screenId: _inferPvId(pvId),
+        pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
@@ -748,7 +750,7 @@ class MatomoTracker {
         taxAmount: taxAmount,
         shippingCost: shippingCost,
         discountAmount: discountAmount,
-        screenId: _inferPvId(pvId),
+        pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
@@ -782,7 +784,7 @@ class MatomoTracker {
     return _track(
       MatomoAction(
         link: link,
-        screenId: _inferPvId(pvId),
+        pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
@@ -814,7 +816,7 @@ class MatomoTracker {
     return _track(
       MatomoAction(
         content: content,
-        screenId: _inferPvId(pvId),
+        pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
@@ -852,7 +854,7 @@ class MatomoTracker {
       MatomoAction(
         content: content,
         contentInteraction: interaction,
-        screenId: _inferPvId(pvId),
+        pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
@@ -945,7 +947,7 @@ class MatomoTracker {
   }
 
   String? _inferPvId(String? pvId) =>
-      pvId ?? (attachLastScreenInfo ? _lastPageView?.screenId : null);
+      pvId ?? (attachLastScreenInfo ? _lastPageView?.pvId : null);
 
   bool _inferNewVisit(bool? localNewVisit) {
     final globalNewVisit = _newVisit;

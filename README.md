@@ -117,7 +117,7 @@ class MyHomePage extends StatelessWidget {
 }
 ```
 
-You can also optionally call directly `trackScreen` or `trackScreenWithName` to track a view.
+You can also optionally call directly `trackPageView` or `trackPageViewWithName` to track a view.
 
 For tracking goals and, events call `trackGoal` and `trackEvent` respectively.
 
@@ -178,7 +178,7 @@ MatomoTracker.instance.trackEvent(
 You can similarly track dimensions on Screen views with:
 
 ```dart
-MatomoTracker.instance.trackScreenWithName(
+MatomoTracker.instance.trackPageViewWithName(
     actionName: "Settings",
     path: "/settings",
     dimensions: {'dimension1': '0.0.1'}
@@ -217,11 +217,12 @@ await MatomoTracker.instance.initialize(
 
 ## v4.0.0
 
+* `trackScreen` was renamed to `trackPageView` and `trackScreenWithName` to `trackPageViewWithName`.
+* `screenId` and `widgetId` were renamed to `pvId`.
+* `userId` was renamed to `uid`.
+* `traceName` and `widgetName` were renamed to `actionName`.
+* `traceTitle` was renamed to `eventName`.
 * `forcedId` property has been removed as it was never used. You should rely on the user ID instead.
-* Occurences of `userId` have been renamed to `uid`.
-* Occurences of `traceName` and `widgetName` have been renamed to `actionName`.
-* Occurences of `traceTitle` have been renamed to `eventName`.
-* Occurences of `widgetId` have been renamed to `pvId`.
 * An object of type `EventInfo` has been added, it has the following properties: `category`, `action`, `name` and `value`, use it instead of passing the event name, action and value as separate parameters.
 * For `TraceableClientMixin` and `TraceableWidget` to work you will have to add the `matomoObserver` to your `MaterialApp` or `WidgetsApp`:
 ```dart
@@ -233,7 +234,7 @@ MaterialApp(
 );
 ```
 * `MatomoEvent` has been renamed to `MatomoAction`
-* `trackScreen` positional parameter `context` is now a named parameter
+* `trackPageView` positional parameter `context` is now a named parameter
 * `trackGoal` positional parameter `goalId` is now a named parameter: `id`
 * `trackDimensions` positional parameter `dimensions` is now a named parameter
 * `trackCartUpdate` positional parameters `trackingOrderItems`, `subTotal`, `taxAmount`, `shippingCost` and `discountAmount` are now named parameters
