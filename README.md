@@ -218,11 +218,11 @@ await MatomoTracker.instance.initialize(
 ## v4.0.0
 
 * `trackScreen` was renamed to `trackPageView` and `trackScreenWithName` to `trackPageViewWithName`.
+* `screenId` and `widgetId` were renamed to `pvId`.
+* `userId` was renamed to `uid`.
+* `traceName` and `widgetName` were renamed to `actionName`.
+* `traceTitle` was renamed to `eventName`.
 * `forcedId` property has been removed as it was never used. You should rely on the user ID instead.
-* Occurences of `userId` have been renamed to `uid`.
-* Occurences of `traceName` and `widgetName` have been renamed to `actionName`.
-* Occurences of `traceTitle` have been renamed to `eventName`.
-* Occurences of `widgetId` have been renamed to `pvId`.
 * An object of type `EventInfo` has been added, it has the following properties: `category`, `action`, `name` and `value`, use it instead of passing the event name, action and value as separate parameters.
 * For `TraceableClientMixin` and `TraceableWidget` to work you will have to add the `matomoObserver` to your `MaterialApp` or `WidgetsApp`:
 ```dart
