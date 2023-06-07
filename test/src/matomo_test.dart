@@ -160,36 +160,36 @@ void main() {
 
   group('tracking', () {
     testTracking(
-      'it should be able to trackScreen',
+      'it should be able to trackPageView',
       (tracker) {
         when(() => mockBuildContext.widget).thenReturn(matomoTrackerMockWidget);
 
-        tracker.trackScreen(context: mockBuildContext);
+        tracker.trackPageView(context: mockBuildContext);
       },
     );
 
-    group('trackScreenWithName', () {
+    group('trackPageViewWithName', () {
       uninitializedTest(
         (tracker) async {
-          tracker.trackScreenWithName(
+          tracker.trackPageViewWithName(
             actionName: matomoTrackerMockWidget.toStringShort(),
           );
         },
       );
 
-      testTracking('it should be able to trackScreenWithName', (tracker) {
-        tracker.trackScreenWithName(
+      testTracking('it should be able to trackPageViewWithName', (tracker) {
+        tracker.trackPageViewWithName(
           actionName: matomoTrackerMockWidget.toStringShort(),
         );
       });
 
       test(
-        'should throw ArgumentError if currentScreenId lenght != 6 ',
+        'should throw ArgumentError if currentPvId lenght != 6 ',
         () async {
           final matomoTracker = await getInitializedMatomoTracker();
 
           await expectLater(
-            () => matomoTracker.trackScreenWithName(
+            () => matomoTracker.trackPageViewWithName(
               actionName: matomoTrackerMockWidget.toStringShort(),
               pvId: '',
             ),

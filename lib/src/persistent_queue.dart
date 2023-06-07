@@ -26,7 +26,11 @@ class PersistentQueue extends DelegatingQueue<Map<String, String>> {
   @visibleForTesting
   static List<Map<String, String>> decode(String? actionsData) {
     if (actionsData != null) {
-      return (json.decode(actionsData) as List)
+      final actions = jsonDecode(actionsData);
+      if (actions is! List) {
+        throw FormatException('Expected a list of actions, but got: $actions');
+      }
+      return actions
           .cast<Map<String, dynamic>>()
           .map<Map<String, String>>((element) => element.cast())
           .toList();

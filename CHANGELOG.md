@@ -7,6 +7,7 @@
 * Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
   * feat: Added a persistent dispatch queue [#97](https://github.com/Floating-Dartists/matomo-tracker/pull/97)
   * feat: Extended the newVisit capabilities [#105](https://github.com/Floating-Dartists/matomo-tracker/pull/105)
+  * feat: More campaigns, path, pvId [#109](https://github.com/Floating-Dartists/matomo-tracker/pull/109)
 * Contributions from [TesteurManiak](https://github.com/TesteurManiak)
   * chore: Updated `LICENSE` with major contributors [#100](https://github.com/Floating-Dartists/matomo-tracker/pull/100)
   * chore: Added a contribution guide [#101](https://github.com/Floating-Dartists/matomo-tracker/pull/101)

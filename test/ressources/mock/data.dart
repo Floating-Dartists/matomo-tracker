@@ -45,8 +45,8 @@ const matomoGoalId = 1;
 const matomoLink = 'link';
 const matomoOrderId = 'orderId';
 const matomoRevenue = 1.0;
-const matomoScreenId = '123456'; // 6 characters
-const matomoWrongScreenId = '123';
+const matomoPvId = '123456'; // 6 characters
+const matomoWrongPvId = '123';
 const matomoSearchCategory = 'searchCategory';
 const matomoSearchCount = 1;
 const matomoSearchKeyword = 'searchKeyword';
@@ -139,7 +139,7 @@ final matomoTrackerLocalFirstVisist = DateTime.fromMillisecondsSinceEpoch(
   1640979000000,
   isUtc: true,
 );
-const matomoTrackerCurrentScreenId = '123456'; // 6 characters
+const matomoTrackerCurrentPvId = '123456'; // 6 characters
 
 // DeviceInfoPlugin
 const webBrowserUserAgent = 'webBrowserUserAgent';

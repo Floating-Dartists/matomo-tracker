@@ -4,7 +4,7 @@ import 'package:matomo_tracker/utils/random_alpha_numeric.dart';
 
 final matomoObserver = RouteObserver<ModalRoute<void>>();
 
-/// Register a [MatomoTracker.trackScreenWithName] on this widget.
+/// Register a [MatomoTracker.trackPageViewWithName] on this widget.
 @optionalTypeArgs
 mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
     implements RouteAware {
@@ -22,7 +22,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   /// The default implementation will generate one on widget creation
   /// (recommended).
   ///
-  /// For more information see `pvId` in [MatomoTracker.trackScreenWithName] and
+  /// For more information see `pvId` in [MatomoTracker.trackPageViewWithName] and
   /// [MatomoTracker.attachLastScreenInfo].
   /// {@endtemplate}
   @protected
@@ -92,7 +92,11 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    matomoObserver.subscribe(this, ModalRoute.of(context)!);
+
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      matomoObserver.subscribe(this, route);
+    }
   }
 
   @override
@@ -119,7 +123,7 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
   void didPushNext() {}
 
   void _track() {
-    tracker.trackScreenWithName(
+    tracker.trackPageViewWithName(
       actionName: actionName,
       pvId: pvId,
       path: path,

@@ -11,7 +11,7 @@ class MatomoAction {
     this.path,
     this.action,
     this.eventInfo,
-    this.screenId,
+    this.pvId,
     this.goalId,
     this.orderId,
     this.trackingOrderItems,
@@ -35,8 +35,8 @@ class MatomoAction {
         // we use clock.now instead of DateTime.now to make testing easier
         _date = clock.now().toUtc(),
         assert(
-          screenId == null || screenId.length == 6,
-          'screenId has to be six characters long',
+          pvId == null || pvId.length == 6,
+          'pvId has to be six characters long',
         );
 
   final String? path;
@@ -50,7 +50,7 @@ class MatomoAction {
 
   /// 6 character unique ID that identifies which actions were performed on a
   /// specific page view.
-  final String? screenId;
+  final String? pvId;
 
   ///  If specified, the tracking request will trigger a conversion for the
   /// [goal](https://matomo.org/guide/reports/goals-and-conversions/) of the
@@ -112,7 +112,7 @@ class MatomoAction {
     String? path,
     String? action,
     EventInfo? eventInfo,
-    String? screenId,
+    String? pvId,
     int? goalId,
     String? orderId,
     List<TrackingOrderItem>? trackingOrderItems,
@@ -137,7 +137,7 @@ class MatomoAction {
         path: path ?? this.path,
         action: action ?? this.action,
         eventInfo: eventInfo ?? this.eventInfo,
-        screenId: screenId ?? this.screenId,
+        pvId: pvId ?? this.pvId,
         goalId: goalId ?? this.goalId,
         orderId: orderId ?? this.orderId,
         trackingOrderItems: trackingOrderItems ?? this.trackingOrderItems,
@@ -162,7 +162,7 @@ class MatomoAction {
   Map<String, String> toMap(MatomoTracker tracker) {
     final id = tracker.visitor.id;
     final uid = tracker.visitor.uid;
-    final pvId = screenId;
+    final pvId = this.pvId;
     final actionName = action;
     final camp = campaign;
     final campKeyword = camp?.keyword;
@@ -187,6 +187,10 @@ class MatomoAction {
     final ecTx = taxAmount;
     final ecSh = shippingCost;
     final ecDt = discountAmount;
+    final search = searchKeyword;
+    final searchCat = searchCategory;
+    final searchCount = this.searchCount;
+    final link = this.link;
     final ua = tracker.userAgent;
     final dims = dimensions;
     final locale = PlatformDispatcher.instance.locale;
@@ -233,7 +237,6 @@ class MatomoAction {
       if (ua != null) 'ua': ua,
       'lang': locale.toString(),
       if (country != null && tracker.authToken != null) 'country': country,
-
       if (uid != null) 'uid': uid,
 
       // Optional Action info (measure Page view, Outlink, Download, Site search)
@@ -252,12 +255,10 @@ class MatomoAction {
       if (ecTx != null) 'ec_tx': ecTx.toString(),
       if (ecSh != null) 'ec_sh': ecSh.toString(),
       if (ecDt != null) 'ec_dt': ecDt.toString(),
-
-      if (searchKeyword != null) 'search': searchKeyword!,
-      if (searchCategory != null) 'search_cat': searchCategory!,
-      if (searchCount != null) 'search_count': searchCount!.toString(),
-
-      if (link != null) 'link': link!,
+      if (search != null) 'search': search,
+      if (searchCat != null) 'search_cat': searchCat,
+      if (searchCount != null) 'search_count': searchCount.toString(),
+      if (link != null) 'link': link,
 
       // Other parameters (require authentication via `token_auth`)
       'cdt': _date.toIso8601String(),

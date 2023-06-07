@@ -15,8 +15,7 @@ class SharedPrefsStorage implements LocalStorage {
   set prefs(SharedPreferences prefs) => _prefs = prefs;
 
   Future<SharedPreferences> _getSharedPrefs() async {
-    _prefs ??= await SharedPreferences.getInstance();
-    return _prefs!;
+    return _prefs ??= await SharedPreferences.getInstance();
   }
 
   @override
