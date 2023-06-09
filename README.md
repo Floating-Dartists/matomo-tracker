@@ -299,6 +299,13 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/EPNW-Eric">
+            <img src="https://avatars.githubusercontent.com/u/123490368?v=4" width="100;" alt="EPNW-Eric"/>
+            <br />
+            <sub><b>Null</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/Pierre-Monier">
             <img src="https://avatars.githubusercontent.com/u/65488471?v=4" width="100;" alt="Pierre-Monier"/>
             <br />
@@ -325,15 +332,22 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Krille-chan</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/scolnet">
             <img src="https://avatars.githubusercontent.com/u/79212486?v=4" width="100;" alt="scolnet"/>
             <br />
             <sub><b>Scolnet</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
+    <td align="center">
+        <a href="https://github.com/MeixDev">
+            <img src="https://avatars.githubusercontent.com/u/14351291?v=4" width="100;" alt="MeixDev"/>
+            <br />
+            <sub><b>Meï</b></sub>
+        </a>
+    </td>
     <td align="center">
         <a href="https://github.com/KawachenCofinpro">
             <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
@@ -349,13 +363,6 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/MeixDev">
-            <img src="https://avatars.githubusercontent.com/u/14351291?v=4" width="100;" alt="MeixDev"/>
-            <br />
-            <sub><b>Meï</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/petcupaula">
             <img src="https://avatars.githubusercontent.com/u/12584735?v=4" width="100;" alt="petcupaula"/>
             <br />
@@ -368,15 +375,15 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Chris Tomlinson</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/JohannSchramm">
             <img src="https://avatars.githubusercontent.com/u/43448334?v=4" width="100;" alt="JohannSchramm"/>
             <br />
             <sub><b>Johann Schramm</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/lsaudon">
             <img src="https://avatars.githubusercontent.com/u/25029876?v=4" width="100;" alt="lsaudon"/>
@@ -387,13 +394,6 @@ await MatomoTracker.instance.initialize(
     <td align="center">
         <a href="https://github.com/Bendix20">
             <img src="https://avatars.githubusercontent.com/u/52244034?v=4" width="100;" alt="Bendix20"/>
-            <br />
-            <sub><b>Null</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/EPNW-Eric">
-            <img src="https://avatars.githubusercontent.com/u/123490368?v=4" width="100;" alt="EPNW-Eric"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
