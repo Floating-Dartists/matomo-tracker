@@ -1,4 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:matomo_tracker/src/content.dart';
+import 'package:matomo_tracker/src/event_info.dart';
+import 'package:matomo_tracker/src/matomo.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../ressources/mock/data.dart';
@@ -22,68 +25,67 @@ void main() {
         () => getInitializedMatomoTracker(
           visitorId: matomoTrackerWrongVisitorId,
         ),
-        throwsA(isA<ArgumentError>()),
+        throwsArgumentError,
       );
     },
   );
 
-  group(
-    'initialize',
-    () {
-      // We need to setup matomo tracker mock on each tests because we clear some
-      // of the mocks used in the matomo tracker
-      setUp(matomoTrackerSetup);
+  group('initialize', () {
+    // We need to setup matomo tracker mock on each tests because we clear some
+    // of the mocks used in the matomo tracker
+    setUp(matomoTrackerSetup);
 
-      tearDown(() {
-        // We reset shared preferences to avoid side effects between tests
-        reset(mockLocalStorage);
-      });
-      testInitialization(
-        'it should be able to initialize',
-        [
-          (tracker, _) => expect(tracker.url, matomoTrackerUrl),
-          (tracker, _) => expect(tracker.siteId, matomoTrackerSiteId),
-          (tracker, _) => expect(tracker.initialized, true),
-          (tracker, _) => expect(tracker.timer.isActive, true),
-          (tracker, fixedDateTime) =>
-              expect(tracker.session.firstVisit, fixedDateTime.toUtc()),
-          (tracker, fixedDateTime) =>
-              expect(tracker.session.lastVisit, fixedDateTime.toUtc()),
-          (tracker, _) => expect(tracker.session.visitCount, 1),
-        ],
-      );
+    tearDown(() {
+      // We reset shared preferences to avoid side effects between tests
+      reset(mockLocalStorage);
+    });
 
-      testInitialization(
-        'it should be able to get localFirstVisit from local storage',
-        init: () {
-          when(
-            mockLocalStorage.getFirstVisit,
-          ).thenAnswer((_) async => matomoTrackerLocalFirstVisist);
-        },
-        [
-          (tracker, _) => expect(
-                tracker.session.firstVisit,
-                matomoTrackerLocalFirstVisist,
-              ),
-        ],
-      );
+    testInitialization(
+      'it should be able to initialize',
+      [
+        (tracker, _) => expect(tracker.url, matomoTrackerUrl),
+        (tracker, _) => expect(tracker.siteId, matomoTrackerSiteId),
+        (tracker, _) => expect(tracker.initialized, true),
+        (tracker, _) => expect(tracker.dequeueTimer.isActive, true),
+        (tracker, _) => expect(tracker.pingTimer?.isActive, true),
+        (tracker, fixedDateTime) =>
+            expect(tracker.session.firstVisit, fixedDateTime.toUtc()),
+        (tracker, fixedDateTime) =>
+            expect(tracker.session.lastVisit, fixedDateTime.toUtc()),
+        (tracker, _) => expect(tracker.session.visitCount, 1),
+      ],
+    );
 
-      testInitialization(
-        'it should be able to get add a given contentBaseUrl',
-        [
-          (tracker, _) =>
-              expect(tracker.contentBase, matomoTrackerContentBaseUrl),
-        ],
-        contentBaseUrl: matomoTrackerContentBaseUrl,
-      );
+    testInitialization(
+      'it should be able to get localFirstVisit from local storage',
+      init: () {
+        when(
+          mockLocalStorage.getFirstVisit,
+        ).thenAnswer((_) async => matomoTrackerLocalFirstVisist);
+      },
+      [
+        (tracker, _) => expect(
+              tracker.session.firstVisit,
+              matomoTrackerLocalFirstVisist,
+            ),
+      ],
+    );
 
-      testInitialization(
-        'it should be able to set tokenAuth',
-        [(tracker, _) => expect(tracker.getAuthToken, matomoTrackerTokenAuth)],
-        tokenAuth: matomoTrackerTokenAuth,
-      );
-    },
-  );
+    testInitialization(
+      'it should be able to get add a given contentBaseUrl',
+      [
+        (tracker, _) =>
+            expect(tracker.contentBase, matomoTrackerContentBaseUrl),
+      ],
+      contentBaseUrl: matomoTrackerContentBaseUrl,
+    );
+
+    testInitialization(
+      'it should be able to set tokenAuth',
+      [(tracker, _) => expect(tracker.authToken, matomoTrackerTokenAuth)],
+      tokenAuth: matomoTrackerTokenAuth,
+    );
+  });
 
   group('OptOut', () {
     test('it should be able to set opt out', () async {
@@ -107,14 +109,16 @@ void main() {
       final matomoTracker = await getInitializedMatomoTracker();
       matomoTracker.dispose();
 
-      expect(matomoTracker.timer.isActive, false);
+      expect(matomoTracker.dequeueTimer.isActive, false);
+      expect(matomoTracker.pingTimer?.isActive, false);
     });
 
     test('it should be able to pause', () async {
       final matomoTracker = await getInitializedMatomoTracker();
       matomoTracker.pause();
 
-      expect(matomoTracker.timer.isActive, false);
+      expect(matomoTracker.dequeueTimer.isActive, false);
+      expect(matomoTracker.pingTimer?.isActive, false);
     });
 
     test('it should be able to resume', () async {
@@ -122,7 +126,8 @@ void main() {
       matomoTracker
         ..pause()
         ..resume();
-      expect(matomoTracker.timer.isActive, true);
+      expect(matomoTracker.dequeueTimer.isActive, true);
+      expect(matomoTracker.pingTimer?.isActive, true);
     });
 
     test('it should be able to clear localData', () async {
@@ -133,71 +138,62 @@ void main() {
     });
   });
 
-  test('it should be able to dispatchEvents', () async {
+  test('it should be able to dispatchActions', () async {
     final matomoTracker = await getInitializedMatomoTracker();
     final queueLength = matomoTracker.queue.length;
 
-    matomoTracker.trackDimensions(matomoTrackerDimensions);
+    matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
     expect(matomoTracker.queue.length, queueLength + 1);
-    await matomoTracker.dispatchEvents();
+    await matomoTracker.dispatchActions();
+    expect(matomoTracker.queue.length, 0);
+  });
+
+  test('it should be able to dropActions', () async {
+    final matomoTracker = await getInitializedMatomoTracker();
+    final queueLength = matomoTracker.queue.length;
+
+    matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
+    expect(matomoTracker.queue.length, queueLength + 1);
+    matomoTracker.dropActions();
     expect(matomoTracker.queue.length, 0);
   });
 
   group('tracking', () {
     testTracking(
-      'it should be able to trackScreen',
+      'it should be able to trackPageView',
       (tracker) {
         when(() => mockBuildContext.widget).thenReturn(matomoTrackerMockWidget);
 
-        tracker.trackScreen(
-          mockBuildContext,
-          eventName: matomoTrackerEvenName,
-        );
+        tracker.trackPageView(context: mockBuildContext);
       },
     );
 
-    testTracking(
-      "it should be able to trackScreen and currentScreenId should change of it's given",
-      (tracker) {
-        when(() => mockBuildContext.widget).thenReturn(matomoTrackerMockWidget);
-
-        tracker.trackScreen(
-          mockBuildContext,
-          eventName: matomoTrackerEvenName,
-          currentScreenId: matomoTrackerCurrentScreenId,
-        );
-      },
-      extraExpectations: (tracker) {
-        expect(tracker.currentScreenId, matomoTrackerCurrentScreenId);
-      },
-    );
-
-    group('trackScreenWithName', () {
+    group('trackPageViewWithName', () {
       uninitializedTest(
-        (tracker) => tracker.trackScreenWithName(
-          widgetName: matomoTrackerMockWidget.toStringShort(),
-          eventName: matomoTrackerEvenName,
-        ),
+        (tracker) async {
+          tracker.trackPageViewWithName(
+            actionName: matomoTrackerMockWidget.toStringShort(),
+          );
+        },
       );
 
-      testTracking('it should be able to trackScreenWithName', (tracker) async {
-        tracker.trackScreenWithName(
-          widgetName: matomoTrackerMockWidget.toStringShort(),
-          eventName: matomoTrackerEvenName,
+      testTracking('it should be able to trackPageViewWithName', (tracker) {
+        tracker.trackPageViewWithName(
+          actionName: matomoTrackerMockWidget.toStringShort(),
         );
       });
 
       test(
-        'should throw ArgumentError if currentScreenId lenght != 6 ',
+        'should throw ArgumentError if currentPvId lenght != 6 ',
         () async {
           final matomoTracker = await getInitializedMatomoTracker();
+
           await expectLater(
-            () => matomoTracker.trackScreenWithName(
-              widgetName: matomoTrackerMockWidget.toStringShort(),
-              eventName: matomoTrackerEvenName,
-              currentScreenId: '',
+            () => matomoTracker.trackPageViewWithName(
+              actionName: matomoTrackerMockWidget.toStringShort(),
+              pvId: '',
             ),
-            throwsA(isA<ArgumentError>()),
+            throwsArgumentError,
           );
         },
       );
@@ -205,20 +201,41 @@ void main() {
 
     testTracking('it should be able to trackGoal', (tracker) async {
       tracker.trackGoal(
-        matomoTrackerGoalId,
+        id: matomoTrackerGoalId,
       );
     });
 
     testTracking('it should be able to trackEvent', (tracker) async {
       tracker.trackEvent(
-        eventCategory: matomoTrackerEventCategory,
-        action: matomoTrackerAction,
+        eventInfo: EventInfo(
+          category: matomoTrackerEventCategory,
+          action: matomoTrackerAction,
+        ),
+      );
+    });
+
+    testTracking('it should be able to trackContentImpression',
+        (tracker) async {
+      tracker.trackContentImpression(
+        content: Content(
+          name: matomoContentName,
+        ),
+      );
+    });
+
+    testTracking('it should be able to trackContentInteraction',
+        (tracker) async {
+      tracker.trackContentInteraction(
+        content: Content(
+          name: matomoContentName,
+        ),
+        interaction: matomoContentInteraction,
       );
     });
 
     testTracking('it should be able to trackDimensions', (tracker) async {
       tracker.trackDimensions(
-        matomoTrackerDimensions,
+        dimensions: matomoTrackerDimensions,
       );
     });
 
@@ -229,26 +246,35 @@ void main() {
     });
 
     testTracking('it should be able to trackCartUpdate', (tracker) async {
-      tracker.trackCartUpdate([], null, null, null, null);
+      tracker.trackCartUpdate();
     });
 
     testTracking('it should be able to trackOrder', (tracker) async {
-      tracker.trackOrder(null, [], null, null, null, null, null);
+      tracker.trackOrder(id: '', revenue: 0);
     });
 
     testTracking('it should be able to trackOutlink', (tracker) async {
-      tracker.trackOutlink(null);
+      tracker.trackOutlink(link: '');
+    });
+
+    test('it should be able to handle new_visit', () async {
+      final matomoTracker = await getInitializedMatomoTracker();
+
+      matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
+      expect(matomoTracker.queue.first['new_visit'], '1');
+      matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
+      expect(matomoTracker.queue.last.containsKey('new_visit'), false);
     });
   });
 
   group('setVisitorUserId', () {
-    uninitializedTest((tracker) => tracker.setVisitorUserId(userId));
+    uninitializedTest((tracker) async => tracker.setVisitorUserId(uid));
 
     test('it should be able to set visitor userId', () async {
       final matomoTracker = await getInitializedMatomoTracker();
-      matomoTracker.setVisitorUserId(userId);
+      matomoTracker.setVisitorUserId(uid);
 
-      expect(matomoTracker.visitor.userId, userId);
+      expect(matomoTracker.visitor.uid, uid);
     });
   });
 
@@ -400,5 +426,52 @@ void main() {
         linuxPrettyName,
       );
     });
+  });
+
+  group('validateDimension', () {
+    final tracker = MatomoTracker();
+
+    test('should not do anything if dimensions is null', () {
+      tracker.validateDimension(null);
+    });
+
+    test('should not do anything if dimension keys are valid', () {
+      const dimensions = <String, String>{
+        "dimension1": "value1",
+        "dimension2": "value2",
+      };
+
+      tracker.validateDimension(dimensions);
+    });
+
+    test(
+      'should throw an ArgumentError if one of the keys does not start with "dimension"',
+      () {
+        const dimensions = <String, String>{
+          "dimension1": "value1",
+          "dim2": "value2",
+        };
+
+        expect(
+          () => tracker.validateDimension(dimensions),
+          throwsArgumentError,
+        );
+      },
+    );
+
+    test(
+      'should throw an ArgumentError if one of the keys index is invalid',
+      () {
+        const dimension = <String, String>{
+          "dimension1": "value1",
+          "dimension0": "value2",
+        };
+
+        expect(
+          () => tracker.validateDimension(dimension),
+          throwsArgumentError,
+        );
+      },
+    );
   });
 }

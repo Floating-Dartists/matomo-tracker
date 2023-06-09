@@ -6,7 +6,7 @@
   </a>
 </p>
 
-[![Pub Version](https://img.shields.io/pub/v/matomo_tracker)](https://pub.dev/packages/matomo_tracker)
+[![Pub Version (including pre-releases)](https://img.shields.io/pub/v/matomo_tracker?include_prereleases)](https://pub.dev/packages/matomo_tracker)
 [![Matomo Integrations](https://img.shields.io/badge/featured%20on-Matomo-blue)](https://matomo.org/integrate/)
 [![GitHub license](https://img.shields.io/github/license/Floating-Dartists/matomo-tracker)](https://github.com/Floating-Dartists/matomo-tracker/blob/main/LICENSE)
 [![Coverage Status](https://coveralls.io/repos/github/Floating-Dartists/matomo-tracker/badge.svg?branch=main)](https://coveralls.io/github/Floating-Dartists/matomo-tracker?branch=main)
@@ -18,16 +18,23 @@ A fully cross-platform wrap of the Matomo tracking client for Flutter, using the
 # Summary
 
 - [Documentation](#documentation)
+  - [Supported Matomo Versions](#supported-matomo-versions)
   - [Getting Started](#getting-started)
   - [Using userId](#using-userid)
   - [Opting Out](#opting-out)
   - [Using Dimensions](#using-dimensions)
   - [Cookieless Tracking](#cookieless-tracking)
+  - [Dispatching](#dispatching)
 - [Migration Guide](#migration-guide)
+    - [v4.0.0](#v400)
     - [v3.0.0](#v300)
 - [Contributors](#contributors)
 
 # Documentation
+
+## Supported Matomo Versions
+
+This package (matomo_tracker v4.0.0) currently supports Matomo 3.X up to Matomo 5.X. We are planning to drop support for Matomo 3 in the next major release. You can expect for legacy properties to be annotated as deprecated in the next minor release.
 
 ## Getting Started
 
@@ -49,6 +56,7 @@ await MatomoTracker.instance.initialize(
     visitorId: '2589631479517535',
 );
 ```
+Note that this Visitor ID should not be confused with the User ID which is explained below!
 
 To track views simply add `TraceableClientMixin` on your `State`:
 
@@ -76,10 +84,10 @@ class _MyHomePageState extends State<MyHomePage> with TraceableClientMixin {
   }
 
   @override
-  String get traceName => 'Created HomePage'; // optional
+  String get actionName => 'Created HomePage'; // optional
 
   @override
-  String get traceTitle => widget.title;
+  String get path => '/home'; // optional
 }
 ```
 
@@ -94,8 +102,8 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TraceableWidget(
-      traceName: 'Created HomePage', // optional
-      traceTitle: title,
+      actionName: 'Created HomePage', // optional
+      path: '/home', // optional
       child: Scaffold(
         appBar: AppBar(
           title: Text(title),
@@ -109,7 +117,7 @@ class MyHomePage extends StatelessWidget {
 }
 ```
 
-You can also optionally call directly `trackScreen` or `trackScreenWithName` to track a view.
+You can also optionally call directly `trackPageView` or `trackPageViewWithName` to track a view.
 
 For tracking goals and, events call `trackGoal` and `trackEvent` respectively.
 
@@ -117,9 +125,12 @@ A value can be passed for events:
 
 ```dart
 MatomoTracker.instance.trackEvent(
-    name: 'eventName',
-    action: 'eventAction',
-    eventValue: 18,
+    eventInfo: EventInfo(
+        category: 'eventCategory',
+        name: 'eventName',
+        action: 'eventAction',
+        value: 18,
+    ),
 );
 ```
 
@@ -154,9 +165,12 @@ MatomoTracker.instance.trackDimensions({
 
 ```dart
 MatomoTracker.instance.trackEvent(
-    name: 'eventName',
-    action: 'eventAction',
-    eventValue: 18,
+    eventInfo: EventInfo(
+        category: "eventCategory",
+        action: "eventAction",
+        name: "eventName",
+        value: 18,
+    ),
     dimensions: {'dimension2':'guest-user'}
 );
 ```
@@ -164,12 +178,14 @@ MatomoTracker.instance.trackEvent(
 You can similarly track dimensions on Screen views with:
 
 ```dart
-MatomoTracker.instance.trackScreenWithName(
-      widgetName: "Settings",
-      eventName: "screen_view",
-      dimensions: {'dimension1': '0.0.1'}
-    );
+MatomoTracker.instance.trackPageViewWithName(
+    actionName: "Settings",
+    path: "/settings",
+    dimensions: {'dimension1': '0.0.1'}
+);
 ```
+
+The naming of the dimensions is important and explained in more detail in the documentation of [`trackDimensions`](https://pub.dev/documentation/matomo_tracker/latest/matomo_tracker/MatomoTracker/trackDimensions.html).
 
 ## Cookieless Tracking
 
@@ -185,7 +201,45 @@ await MatomoTracker.instance.initialize(
 
 When using cookieless tracking, neither the user_id nor the first_visit will be sent or saved locally.
 
+## Dispatching
+
+Actions logged are not send to Matomo immediately, but are queued for a configurable duration (defaulting to 10 seconds) before beeing send in batch. A user could terminate your app while there are still undispatched actions in the queue, which by default would be lost. The queue can be configured to be persistent so that such actions would then be send on the next app launch. See the [`DispatchSettings`](https://pub.dev/documentation/matomo_tracker/latest/matomo_tracker/DispatchSettings-class.html) class for more configuration options.
+
+```dart
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/matomo.php',
+    dispatchSettings: const DispatchSettings.persistent(),
+);
+```
+
 # Migration Guide
+
+## v4.0.0
+
+* `trackScreen` was renamed to `trackPageView` and `trackScreenWithName` to `trackPageViewWithName`.
+* `screenId` and `widgetId` were renamed to `pvId`.
+* `userId` was renamed to `uid`.
+* `traceName` and `widgetName` were renamed to `actionName`.
+* `traceTitle` was renamed to `eventName`.
+* `forcedId` property has been removed as it was never used. You should rely on the user ID instead.
+* An object of type `EventInfo` has been added, it has the following properties: `category`, `action`, `name` and `value`, use it instead of passing the event name, action and value as separate parameters.
+* For `TraceableClientMixin` and `TraceableWidget` to work you will have to add the `matomoObserver` to your `MaterialApp` or `WidgetsApp`:
+```dart
+MaterialApp(
+    // ...
+    navigatorObservers: [
+        MatomoTracker.matomoObserver,
+    ],
+);
+```
+* `MatomoEvent` has been renamed to `MatomoAction`
+* `trackPageView` positional parameter `context` is now a named parameter
+* `trackGoal` positional parameter `goalId` is now a named parameter: `id`
+* `trackDimensions` positional parameter `dimensions` is now a named parameter
+* `trackCartUpdate` positional parameters `trackingOrderItems`, `subTotal`, `taxAmount`, `shippingCost` and `discountAmount` are now named parameters
+* `trackOrder` positional parameters `orderId` (now `id`), `trackingOrderItems`, `revenue` (also became a `double`), `subTotal`, `taxAmount`, `shippingCost` and `discountAmount` are now named parameters
+* `trackOutlink` positional parameter `link` is now a named required parameter (also changed the type to `String`)
 
 ## v3.0.0
 

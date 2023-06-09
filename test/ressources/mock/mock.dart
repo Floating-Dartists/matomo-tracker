@@ -2,8 +2,9 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:matomo_tracker/src/local_storage/local_storage.dart';
+import 'package:matomo_tracker/src/logger/logger.dart';
 import 'package:matomo_tracker/src/matomo.dart';
-import 'package:matomo_tracker/src/matomo_event.dart';
+import 'package:matomo_tracker/src/matomo_action.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
 import 'package:matomo_tracker/src/session.dart';
 import 'package:matomo_tracker/src/tracking_order_item.dart';
@@ -19,7 +20,7 @@ class MockHttpClient extends Mock implements http.Client {}
 
 class MockHttpResponse extends Mock implements http.Response {}
 
-class MockMatomoEvent extends Mock implements MatomoEvent {}
+class MockMatomoAction extends Mock implements MatomoAction {}
 
 class MockVisitor extends Mock implements Visitor {}
 
@@ -49,6 +50,8 @@ class MockLinuxDeviceInfo extends Mock implements LinuxDeviceInfo {}
 
 class MockBuildContext extends Mock implements BuildContext {}
 
+class MockLogger extends Mock implements Logger {}
+
 // used to mock widgets
 class MockWidget extends StatelessWidget {
   const MockWidget({super.key});
@@ -62,7 +65,7 @@ class MockWidget extends StatelessWidget {
 final mockMatomoTracker = MockMatomoTracker();
 final mockTrackingOrderItem = MockTrackingOrderItem();
 final mockHttpClient = MockHttpClient();
-final mockMatomoEvent = MockMatomoEvent();
+final mockMatomoAction = MockMatomoAction();
 final mockHttpResponse = MockHttpResponse();
 final mockVisitor = MockVisitor();
 final mockSession = MockSession();
@@ -78,3 +81,4 @@ final mockMacOsDeviceInfo = MockMacOsDeviceInfo();
 final mockLinuxDeviceInfo = MockLinuxDeviceInfo();
 final mockPackageInfo = MockPackageInfo();
 final mockBuildContext = MockBuildContext();
+final mockLogger = MockLogger();

@@ -11,8 +11,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: subosito/flutter-action@v1.5.3
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2.10.0
       - name: Fetch dependencies
         run: flutter packages get
       - name: Analyze project
@@ -20,6 +20,6 @@ jobs:
       - name: Run tests
         run: flutter test --coverage --dart-define=CI=true
       - name: Collect and report coverage
-        uses: coverallsapp/github-action@v1.1.2
+        uses: coverallsapp/github-action@v2.1.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

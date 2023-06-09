@@ -7,6 +7,7 @@ class SharedPrefsStorage implements LocalStorage {
   static const kVisitCount = 'matomo_visit_count';
   static const kVisitorId = 'matomo_visitor_id';
   static const kOptOut = 'matomo_opt_out';
+  static const kPersistentQueue = 'matomo_persistent_queue';
 
   SharedPreferences? _prefs;
 
@@ -14,8 +15,7 @@ class SharedPrefsStorage implements LocalStorage {
   set prefs(SharedPreferences prefs) => _prefs = prefs;
 
   Future<SharedPreferences> _getSharedPrefs() async {
-    _prefs ??= await SharedPreferences.getInstance();
-    return _prefs!;
+    return _prefs ??= await SharedPreferences.getInstance();
   }
 
   @override
@@ -79,6 +79,19 @@ class SharedPrefsStorage implements LocalStorage {
       prefs.remove(kFirstVisit),
       prefs.remove(kVisitCount),
       prefs.remove(kVisitorId),
+      prefs.remove(kPersistentQueue),
     ]);
+  }
+
+  @override
+  Future<String?> loadActions() async {
+    final prefs = await _getSharedPrefs();
+    return prefs.getString(kPersistentQueue);
+  }
+
+  @override
+  Future<void> storeActions(String serializedActions) async {
+    final prefs = await _getSharedPrefs();
+    await prefs.setString(kPersistentQueue, serializedActions);
   }
 }

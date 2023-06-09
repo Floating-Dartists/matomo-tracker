@@ -9,9 +9,7 @@ const sessionVisitCount = 1;
 
 // Visitor
 const visitorId = 'visitorId';
-const forceId = '1234567890123456'; // 16 characters
-const wrongForceId = '1234';
-const userId = 'userId';
+const uid = 'userId';
 
 // TrackingOrderItem
 const trackingOrderItemSku = 'skusku';
@@ -20,9 +18,24 @@ const trackingOrderItemCategory = 'category';
 const trackingOrderItemPrice = 1.0;
 const trackingOrderItemQuantity = 1;
 
-// MatomoEvent
-const matomoEventPath = 'path';
-const matomoEventAction = 'action';
+// MatomoAction
+const matomoCampaignName = 'name';
+const matomoCampaignKeyword = 'keyword';
+const matomoCampaignSource = 'source';
+const matomoCampaignMedium = 'medium';
+const matomoCampaignContent = 'content';
+const matomoCampaignId = 'id';
+const matomoCampaignGroup = 'group';
+const matomoCampaignPlacement = 'placement';
+const matomoContentName = 'name';
+const matomoContentPiece = 'piece';
+const matomoContentTarget = 'target';
+const matomoContentInteraction = 'interaction';
+const matomoNewVisit = false;
+const matomoChangedNewVisit = true;
+const matomoPing = false;
+const matomoActionPath = 'path';
+const matomoActionName = 'action';
 const matomoEventCategory = 'eventCategory';
 const matomoEventDimension = {'dimension': 'dimension'};
 const matomoDiscountAmount = 1.0;
@@ -32,8 +45,8 @@ const matomoGoalId = 1;
 const matomoLink = 'link';
 const matomoOrderId = 'orderId';
 const matomoRevenue = 1.0;
-const matomoScreenId = '123456'; // 6 characters
-const matomoWrongScreenId = '123';
+const matomoPvId = '123456'; // 6 characters
+const matomoWrongPvId = '123';
 const matomoSearchCategory = 'searchCategory';
 const matomoSearchCount = 1;
 const matomoSearchKeyword = 'searchKeyword';
@@ -41,11 +54,20 @@ const matomoShippingCost = 1.0;
 const matomoSubTotal = 1.0;
 const matomoTaxAmount = 1.0;
 final matomoTrackingOrderItems = [mockTrackingOrderItem];
+const matomoPerformanceInfoNetworkTime = Duration(milliseconds: 500);
+const matomoPerformanceInfoServerTime = Duration(milliseconds: 501);
+const matomoPerformanceInfoTransferTime = Duration(milliseconds: 502);
+const matomoPerformanceInfoDomProcessingTime = Duration(milliseconds: 503);
+const matomoPerformanceInfoDomCompletionTime = Duration(milliseconds: 504);
+const matomoPerformanceInfoOnloadTime = Duration(milliseconds: 505);
 Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "idsite": "1",
       "rec": "1",
       "action_name": "action",
-      "url": "contentBase/path",
+      "url":
+          "contentBase/path?mtm_campaign=name&mtm_keyword=keyword&mtm_source=source&mtm_medium=medium&mtm_content=content&mtm_cid=id&mtm_group=group&mtm_placement=placement",
+      "_rcn": "name",
+      "_rck": "keyword",
       "_id": "visitorId",
       "apiv": "1",
       "_idvc": "1",
@@ -59,13 +81,16 @@ Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       if (userAgent != null) "ua": userAgent,
       "lang": "en_US",
       "uid": "userId",
-      "cid": "1234567890123456",
       "pv_id": "123456",
       "idgoal": "1",
       "e_c": "eventCategory",
       "e_a": "action",
       "e_n": "eventName",
       "e_v": "1.0",
+      "c_n": "name",
+      "c_p": "piece",
+      "c_t": "target",
+      "c_i": "interaction",
       "ec_id": "orderId",
       "ec_items": "[[]]",
       "revenue": "1.0",
@@ -78,7 +103,14 @@ Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "search_count": "1",
       "link": "link",
       "cdt": now.toIso8601String(),
-      "dimension": "dimension"
+      "dimension": "dimension",
+      "ca": "1",
+      "pf_net": "500",
+      "pf_srv": "501",
+      "pf_tfr": "502",
+      "pf_dm1": "503",
+      "pf_dm2": "504",
+      "pf_onl": "505",
     };
 
 // MatomoDisptacher
@@ -93,7 +125,7 @@ const matomoTrackerUrl = 'https://example.com';
 const matomoTrackerContentBaseUrl = 'https://example.com';
 const matomoTrackerPackageName = 'packageName';
 const matomoTrackerWrongVisitorId = '1234'; // not 16 characters
-const matomoTrackerEvenName = 'eventName';
+const matomoTrackerEventName = 'eventName';
 const matomoTrackerMockWidget = MockWidget();
 const matomoTrackerGoalId = 1;
 const matomoTrackerEventCategory = 'eventCategory';
@@ -107,7 +139,7 @@ final matomoTrackerLocalFirstVisist = DateTime.fromMillisecondsSinceEpoch(
   1640979000000,
   isUtc: true,
 );
-const matomoTrackerCurrentScreenId = '123456'; // 6 characters
+const matomoTrackerCurrentPvId = '123456'; // 6 characters
 
 // DeviceInfoPlugin
 const webBrowserUserAgent = 'webBrowserUserAgent';
@@ -124,3 +156,53 @@ const macOsModel = 'macOsModel';
 const macOsKernelVersion = 'macOsKernelVersion';
 const macOsRelease = 'macOsRelease';
 const linuxPrettyName = 'linuxPrettyName';
+
+// EventInfo
+const wantedEventMap = <String, String>{
+  'e_c': matomoEventCategory,
+  'e_a': matomoActionName,
+};
+final wantedEventMapFull = <String, String>{
+  'e_c': matomoEventCategory,
+  'e_a': matomoActionName,
+  'e_n': matomoEventName,
+  'e_v': matomoEventValue.toString(),
+};
+
+// Campaign
+const wantedCampaignMap = <String, String>{
+  'mtm_campaign': matomoCampaignName,
+};
+const wantedCampaignMapFull = <String, String>{
+  'mtm_campaign': matomoCampaignName,
+  'mtm_keyword': matomoCampaignKeyword,
+  'mtm_source': matomoCampaignSource,
+  'mtm_medium': matomoCampaignMedium,
+  'mtm_content': matomoCampaignContent,
+  'mtm_cid': matomoCampaignId,
+  'mtm_group': matomoCampaignGroup,
+  'mtm_placement': matomoCampaignPlacement,
+};
+
+// Content
+const wantedContentMap = <String, String>{
+  'c_n': matomoContentName,
+};
+const wantedContentMapFull = <String, String>{
+  'c_n': matomoContentName,
+  'c_p': matomoContentPiece,
+  'c_t': matomoContentTarget
+};
+
+// PerformanceInfo
+final wantedPerformanceMap = <String, String>{
+  'pf_net': matomoPerformanceInfoNetworkTime.inMilliseconds.toString(),
+};
+final wantedPerformanceInfoMapFull = <String, String>{
+  'pf_net': matomoPerformanceInfoNetworkTime.inMilliseconds.toString(),
+  'pf_srv': matomoPerformanceInfoServerTime.inMilliseconds.toString(),
+  'pf_tfr': matomoPerformanceInfoTransferTime.inMilliseconds.toString(),
+  'pf_dm1': matomoPerformanceInfoDomProcessingTime.inMilliseconds.toString(),
+  'pf_dm2': matomoPerformanceInfoDomCompletionTime.inMilliseconds.toString(),
+  'pf_onl': matomoPerformanceInfoOnloadTime.inMilliseconds.toString(),
+};

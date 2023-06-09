@@ -1,10 +1,54 @@
 # Changelog
 
+## [4.0.0]
+
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
+
+* Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
+  * feat: Added a persistent dispatch queue [#97](https://github.com/Floating-Dartists/matomo-tracker/pull/97)
+  * feat: Extended the newVisit capabilities [#105](https://github.com/Floating-Dartists/matomo-tracker/pull/105)
+  * feat: More campaigns, path, pvId [#109](https://github.com/Floating-Dartists/matomo-tracker/pull/109)
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
+  * chore: Updated `LICENSE` with major contributors [#100](https://github.com/Floating-Dartists/matomo-tracker/pull/100)
+  * chore: Added a contribution guide [#101](https://github.com/Floating-Dartists/matomo-tracker/pull/101)
+  * refacto: Added default values to `TrackingOrderItem` [#102](https://github.com/Floating-Dartists/matomo-tracker/pull/102)
+  * refacto: Uniformized the "track" methods parameters [#106](https://github.com/Floating-Dartists/matomo-tracker/pull/106)
+
+_Special thanks to [Eric Prokop](https://github.com/EPNW-Eric) who greatly contributed to this release._
+
+## [4.0.0-dev.2]
+
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
+
+* Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
+  * feat: Added content tracking [#86](https://github.com/Floating-Dartists/matomo-tracker/pull/86)
+  * feat: Added performance tracking [#87](https://github.com/Floating-Dartists/matomo-tracker/pull/87)
+  * feat: Ability to drop the dispatch queue [#89](https://github.com/Floating-Dartists/matomo-tracker/pull/89)
+  * feat: Serialize `MatomoAction` immediately [#94](https://github.com/Floating-Dartists/matomo-tracker/pull/94)
+  * feat: Attach the last `pvId` automatically [#96](https://github.com/Floating-Dartists/matomo-tracker/pull/96)
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
+  * chore: Upgraded dependencies (Dart 3 support) [#99](https://github.com/Floating-Dartists/matomo-tracker/pull/99)
+
+## [4.0.0-dev.1]
+
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
+
+* Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
+  * feat: Improved documentation and added verification on dimension keys [#63](https://github.com/Floating-Dartists/matomo-tracker/pull/63)
+  * feat: Ping logic to measure accurately the time spent on the last page [#79](https://github.com/Floating-Dartists/matomo-tracker/pull/79)
+  * feat: New app launches start a new visit [#77](https://github.com/Floating-Dartists/matomo-tracker/pull/77)
+  * feat: Reentry logic to detect a pop navigation on a previous page [#74](https://github.com/Floating-Dartists/matomo-tracker/pull/74)
+  * feat: Added a `Campaign` object to manage campaign tracking [#72](https://github.com/Floating-Dartists/matomo-tracker/pull/72) 
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
+  * fix: Added test cases for dimension key validation [#67](https://github.com/Floating-Dartists/matomo-tracker/pull/67)
+  * fix: URLs have double slashs in the dashboard [#81](https://github.com/Floating-Dartists/matomo-tracker/pull/81)
+  * feat: Added an `EventInfo` class to manage accurately additional data send with an event, added support for custom dimensions to `TraceableMixin` and `TraceableWidget` [#68](https://github.com/Floating-Dartists/matomo-tracker/pull/68)
+
 ## [3.1.0]
 
 * Contributions from [Eric Prokop](https://github.com/EPNW-Eric)
   * feat: Allow to set custom http headers [#59](https://github.com/Floating-Dartists/matomo-tracker/pull/59)
-* Contribution from [TesteurManiak](https://github.com/TesteurManiak)
+* Contributions from [TesteurManiak](https://github.com/TesteurManiak)
   * fix: Added custom headers to `sendBatch` and added test cases [#60](https://github.com/Floating-Dartists/matomo-tracker/pull/60)
 
 ## [3.0.0]

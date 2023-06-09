@@ -7,24 +7,36 @@ class TraceableWidget extends StatefulWidget {
   const TraceableWidget({
     super.key,
     required this.child,
-    required this.traceTitle,
-    this.traceName,
-    this.widgetId,
+    this.actionName,
+    this.pvId,
+    this.updatePvIdAfterPop,
     this.path,
+    this.dimensions,
+    this.campaign,
     this.tracker,
+    this.performanceInfo,
   });
 
-  /// {@macro traceableClientMixin.traceName}
-  final String? traceName;
+  /// {@macro traceableClientMixin.actionName}
+  final String? actionName;
 
-  /// {@macro traceableClientMixin.traceTitle}
-  final String traceTitle;
+  /// {@macro traceableClientMixin.pvId}
+  final String? pvId;
 
-  /// {@macro traceableClientMixin.widgetId}
-  final String? widgetId;
+  /// {@macro traceableClientMixin.updatePvIdAfterPop}
+  final bool? updatePvIdAfterPop;
 
   /// {@macro traceableClientMixin.path}
   final String? path;
+
+  /// {@macro traceableClientMixin.campaign}
+  final Campaign? campaign;
+
+  /// {@macro traceableClientMixin.dimensions}
+  final Map<String, String>? dimensions;
+
+  /// {@macro traceableClientMixin.performanceInfo}
+  final PerformanceInfo? performanceInfo;
 
   /// {@macro traceableClientMixin.tracker}
   final MatomoTracker? tracker;
@@ -43,16 +55,26 @@ class _TraceableWidgetState extends State<TraceableWidget>
   }
 
   @override
-  String get traceName => widget.traceName ?? super.traceName;
+  String get actionName => widget.actionName ?? super.actionName;
 
   @override
-  String get traceTitle => widget.traceTitle;
+  String get pvId => widget.pvId ?? super.pvId;
 
   @override
-  String? get widgetId => widget.widgetId;
+  bool get updatePvIdAfterPop =>
+      widget.updatePvIdAfterPop ?? super.updatePvIdAfterPop;
 
   @override
   String? get path => widget.path;
+
+  @override
+  Campaign? get campaign => widget.campaign;
+
+  @override
+  Map<String, String>? get dimensions => widget.dimensions;
+
+  @override
+  PerformanceInfo? get performanceInfo => widget.performanceInfo;
 
   @override
   MatomoTracker get tracker => widget.tracker ?? super.tracker;

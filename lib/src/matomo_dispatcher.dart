@@ -2,60 +2,52 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:matomo_tracker/src/matomo_event.dart';
+import 'package:matomo_tracker/src/logger/logger.dart';
 
 class MatomoDispatcher {
-  MatomoDispatcher(
-    String baseUrl,
-    this.tokenAuth, {
+  MatomoDispatcher({
+    required String baseUrl,
+    required this.log,
+    this.userAgent,
+    this.tokenAuth,
     http.Client? httpClient,
   })  : baseUri = Uri.parse(baseUrl),
         httpClient = httpClient ?? http.Client();
+
   final String? tokenAuth;
   final http.Client httpClient;
-
   final Uri baseUri;
+  final String? userAgent;
+  final Logger log;
 
   static const tokenAuthUriKey = 'token_auth';
   static const userAgentHeaderKeys = 'User-Agent';
 
-  Future<void> send(MatomoEvent event) async {
-    final headers = <String, String>{
-      if (!kIsWeb) 'User-Agent': 'Dart Matomo Tracker',
-      ...event.tracker.customHeaders,
-    };
-
-    final uri = buildUriForEvent(event);
-    event.tracker.log.fine(' -> $uri');
-    try {
-      final response = await httpClient.post(uri, headers: headers);
-      final statusCode = response.statusCode;
-      event.tracker.log.fine(' <- $statusCode');
-    } catch (e) {
-      event.tracker.log.severe(message: ' <- $e', error: e);
-    }
-  }
-
-  /// Sends a batch of events to the Matomo server.
+  /// Sends a batch of actions to the Matomo server.
   ///
-  /// The events are sent in a single request.
+  /// The actions are sent in a single request.
   ///
   /// Returns `true` if the batch was sent successfully.
-  Future<bool> sendBatch(List<MatomoEvent> events) async {
-    if (events.isEmpty) return true;
+  /// Note that this is based on the http return code of the
+  /// response, not its body.
+  Future<bool> sendBatch({
+    required List<Map<String, String>> actions,
+    Map<String, String> customHeaders = const {},
+  }) async {
+    if (actions.isEmpty) return true;
 
-    final userAgent = events.first.tracker.userAgent;
+    final userAgent = this.userAgent;
     final headers = <String, String>{
       if (!kIsWeb && userAgent != null) userAgentHeaderKeys: userAgent,
-      ...events.first.tracker.customHeaders,
+      ...customHeaders,
     };
 
     final batch = {
-      "requests": [
-        for (final event in events) "?${buildUriForEvent(event).query}",
+      'requests': [
+        for (final action in actions) '?${buildUriForAction(action).query}',
       ],
     };
-    events.first.tracker.log.fine(' -> $batch');
+    log.fine(' -> $batch');
     try {
       final response = await httpClient.post(
         baseUri,
@@ -63,11 +55,11 @@ class MatomoDispatcher {
         body: jsonEncode(batch),
       );
       final statusCode = response.statusCode;
-      events.first.tracker.log.fine(' <- $statusCode');
+      log.fine(' <- $statusCode');
 
       return true;
     } catch (e) {
-      events.first.tracker.log.severe(
+      log.severe(
         message: ' <- $e',
         error: e,
       );
@@ -76,9 +68,9 @@ class MatomoDispatcher {
   }
 
   @visibleForTesting
-  Uri buildUriForEvent(MatomoEvent event) {
+  Uri buildUriForAction(Map<String, String> action) {
     final queryParameters = Map<String, String>.from(baseUri.queryParameters)
-      ..addAll(event.toMap());
+      ..addAll(action);
     final aTokenAuth = tokenAuth;
     if (aTokenAuth != null) {
       queryParameters.addEntries([MapEntry(tokenAuthUriKey, aTokenAuth)]);

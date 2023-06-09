@@ -10,7 +10,7 @@ class Lock {
   bool get locked => last != null;
 
   Future<T> synchronized<T>(
-    FutureOr<T> Function() func,
+    Future<T> Function() func,
   ) async {
     final prev = last;
     final completer = Completer<void>.sync();
