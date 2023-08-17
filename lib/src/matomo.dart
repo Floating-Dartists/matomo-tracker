@@ -61,7 +61,20 @@ class MatomoTracker {
   /// Should not be confused with the `url` tracking parameter
   /// which is constructed by combining [contentBase] with a `path`
   /// (e.g. in [trackPageViewWithName]).
-  late final String url;
+  String get url {
+    if (_url case final url?) {
+      return url;
+    }
+    throw const UninitializedMatomoInstanceException();
+  }
+
+  String? _url;
+
+  void setUrl(String newUrl) {
+    _url = newUrl;
+    _dispatcher = _dispatcher.copyWith(baseUrl: newUrl);
+  }
+
   late final Session session;
 
   Visitor get visitor => _visitor;
@@ -223,7 +236,7 @@ class MatomoTracker {
     log.setLogging(level: verbosityLevel);
 
     this.siteId = siteId;
-    this.url = url;
+    _url = url;
     this.customHeaders = customHeaders;
     _pingInterval = pingInterval;
     _lock = sync.Lock();
