@@ -58,6 +58,17 @@ await MatomoTracker.instance.initialize(
 ```
 Note that this Visitor ID should not be confused with the User ID which is explained below!
 
+Then, for `TraceableClientMixin` and `TraceableWidget` to work, you will have to add `matomoObserver` to your navigatorObservers:
+
+```dart
+MaterialApp(
+    // ...
+    navigatorObservers: [
+        matomoObserver,
+    ],
+);
+```
+
 To track views simply add `TraceableClientMixin` on your `State`:
 
 ```dart
@@ -229,7 +240,7 @@ await MatomoTracker.instance.initialize(
 MaterialApp(
     // ...
     navigatorObservers: [
-        MatomoTracker.matomoObserver,
+        matomoObserver,
     ],
 );
 ```
