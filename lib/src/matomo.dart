@@ -71,6 +71,8 @@ class MatomoTracker {
   String? _url;
 
   void setUrl(String newUrl) {
+    _initializationCheck();
+
     _url = newUrl;
     _dispatcher = _dispatcher.copyWith(baseUrl: newUrl);
   }

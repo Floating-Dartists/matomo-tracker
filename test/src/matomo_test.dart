@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/content.dart';
 import 'package:matomo_tracker/src/event_info.dart';
+import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/matomo.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -473,5 +474,27 @@ void main() {
         );
       },
     );
+  });
+
+  group('url getter', () {
+    test('should throw if not initialized', () {
+      final tracker = MatomoTracker();
+
+      expect(
+        () => tracker.url,
+        throwsA(isA<UninitializedMatomoInstanceException>()),
+      );
+    });
+  });
+
+  group('setUrl', () {
+    test('should throw if not initialized', () {
+      final tracker = MatomoTracker();
+
+      expect(
+        () => tracker.setUrl(''),
+        throwsA(isA<UninitializedMatomoInstanceException>()),
+      );
+    });
   });
 }

@@ -207,4 +207,44 @@ void main() {
       ),
     );
   });
+
+  group('copyWith', () {
+    test('should copy with new url', () {
+      const newUrl = 'https://test.com';
+
+      final initialDispatcher = MatomoDispatcher(
+        baseUrl: matomoDispatcherBaseUrl,
+        userAgent: matomoTrackerUserAgent,
+        tokenAuth: matomoDispatcherToken,
+        httpClient: mockHttpClient,
+        log: mockLogger,
+      );
+
+      final newDispatcher = initialDispatcher.copyWith(baseUrl: newUrl);
+
+      expect(newDispatcher.baseUri.toString(), newUrl);
+      expect(newDispatcher.userAgent, matomoTrackerUserAgent);
+      expect(newDispatcher.tokenAuth, matomoDispatcherToken);
+      expect(newDispatcher.httpClient, mockHttpClient);
+      expect(newDispatcher.log, mockLogger);
+    });
+
+    test('should do nothing', () {
+      final initialDispatcher = MatomoDispatcher(
+        baseUrl: matomoDispatcherBaseUrl,
+        userAgent: matomoTrackerUserAgent,
+        tokenAuth: matomoDispatcherToken,
+        httpClient: mockHttpClient,
+        log: mockLogger,
+      );
+
+      final newDispatcher = initialDispatcher.copyWith();
+
+      expect(newDispatcher.baseUri.toString(), matomoDispatcherBaseUrl);
+      expect(newDispatcher.userAgent, matomoTrackerUserAgent);
+      expect(newDispatcher.tokenAuth, matomoDispatcherToken);
+      expect(newDispatcher.httpClient, mockHttpClient);
+      expect(newDispatcher.log, mockLogger);
+    });
+  });
 }
