@@ -478,10 +478,8 @@ void main() {
 
   group('url getter', () {
     test('should throw if not initialized', () {
-      final tracker = MatomoTracker();
-
       expect(
-        () => tracker.url,
+        () => MatomoTracker().url,
         throwsA(isA<UninitializedMatomoInstanceException>()),
       );
     });
@@ -489,12 +487,20 @@ void main() {
 
   group('setUrl', () {
     test('should throw if not initialized', () {
-      final tracker = MatomoTracker();
-
       expect(
-        () => tracker.setUrl(''),
+        () => MatomoTracker().setUrl(''),
         throwsA(isA<UninitializedMatomoInstanceException>()),
       );
+    });
+
+    test('should set the new url and dispatcher', () async {
+      const newUrl = 'https://test.com';
+      final tracker = await getInitializedMatomoTracker();
+
+      tracker.setUrl(newUrl);
+
+      expect(tracker.url, newUrl);
+      expect(tracker.dispatcher.baseUri.toString(), newUrl);
     });
   });
 }
