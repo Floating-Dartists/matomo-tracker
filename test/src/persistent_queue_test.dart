@@ -25,7 +25,7 @@ const _nonEmptyJsonElementCount = 2;
 const _action = <String, String>{'action3': 'value3'};
 const _actions = [
   _action,
-  <String, String>{'action4': 'value4'}
+  <String, String>{'action4': 'value4'},
 ];
 
 void main() {

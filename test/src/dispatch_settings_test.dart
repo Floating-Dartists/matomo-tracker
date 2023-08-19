@@ -127,7 +127,7 @@ void main() {
           // will filter out recent
           DispatchSettings.whereUserId(_uid2),
           // will filter out old
-          DispatchSettings.whereNotOlderThanADay
+          DispatchSettings.whereNotOlderThanADay,
         ],
       );
       final after = [old, recent]..retainWhere(chained);

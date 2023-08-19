@@ -191,7 +191,7 @@ const wantedContentMap = <String, String>{
 const wantedContentMapFull = <String, String>{
   'c_n': matomoContentName,
   'c_p': matomoContentPiece,
-  'c_t': matomoContentTarget
+  'c_t': matomoContentTarget,
 };
 
 // PerformanceInfo

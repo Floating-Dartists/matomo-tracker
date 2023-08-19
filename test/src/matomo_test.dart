@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/content.dart';
 import 'package:matomo_tracker/src/event_info.dart';
+import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/matomo.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -473,5 +474,33 @@ void main() {
         );
       },
     );
+  });
+
+  group('url getter', () {
+    test('should throw if not initialized', () {
+      expect(
+        () => MatomoTracker().url,
+        throwsA(isA<UninitializedMatomoInstanceException>()),
+      );
+    });
+  });
+
+  group('setUrl', () {
+    test('should throw if not initialized', () {
+      expect(
+        () => MatomoTracker().setUrl(''),
+        throwsA(isA<UninitializedMatomoInstanceException>()),
+      );
+    });
+
+    test('should set the new url and dispatcher', () async {
+      const newUrl = 'https://test.com';
+      final tracker = await getInitializedMatomoTracker();
+
+      tracker.setUrl(newUrl);
+
+      expect(tracker.url, newUrl);
+      expect(tracker.dispatcher.baseUri.toString(), newUrl);
+    });
   });
 }
