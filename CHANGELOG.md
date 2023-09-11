@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.1.0]
+
+* Bump custom_lint from 0.4.0 to 0.5.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/114
+* Bump mocktail from 0.3.0 to 1.0.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/116
+* feat: fixed README and bumped dependencies by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/118
+* Feat: Change url on the fly by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/120
+
+
+**Full Changelog**: https://github.com/Floating-Dartists/matomo-tracker/compare/4.0.0...4.1.0
+
 ## [4.0.0]
 
 **Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v400) to learn about breaking changes in this version**
