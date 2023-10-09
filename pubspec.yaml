@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.1.0
-  package_info_plus: ^4.1.0
+  package_info_plus: ">=4.1.0 <6.0.0"
   shared_preferences: ^2.2.1
   uuid: ^3.0.7
 
