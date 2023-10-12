@@ -45,6 +45,9 @@ class MatomoTracker {
 
   late final PlatformInfo _platformInfo;
 
+  @visibleForTesting
+  MatomoDispatcher get dispatcher => _dispatcher;
+
   late MatomoDispatcher _dispatcher;
 
   static final instance = MatomoTracker._internal();
@@ -61,7 +64,28 @@ class MatomoTracker {
   /// Should not be confused with the `url` tracking parameter
   /// which is constructed by combining [contentBase] with a `path`
   /// (e.g. in [trackPageViewWithName]).
-  late final String url;
+  ///
+  /// You can use [setUrl] to change this value after initialization.
+  String get url {
+    if (_url case final url?) {
+      return url;
+    }
+    throw const UninitializedMatomoInstanceException();
+  }
+
+  String? _url;
+
+  /// Sets the url of the Matomo endpoint and updates the dispatcher.
+  ///
+  /// Note that this will change the url used by the request that are still
+  /// in the queue.
+  void setUrl(String newUrl) {
+    _initializationCheck();
+
+    _url = newUrl;
+    _dispatcher = _dispatcher.copyWith(baseUrl: newUrl);
+  }
+
   late final Session session;
 
   Visitor get visitor => _visitor;
@@ -223,7 +247,7 @@ class MatomoTracker {
     log.setLogging(level: verbosityLevel);
 
     this.siteId = siteId;
-    this.url = url;
+    _url = url;
     this.customHeaders = customHeaders;
     _pingInterval = pingInterval;
     _lock = sync.Lock();

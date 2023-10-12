@@ -3,7 +3,7 @@ import 'package:matomo_tracker/src/assert.dart';
 /// Describes a campaign.
 ///
 /// Multiple `track...` methods in [MatomoTracker] can take a campaign as argument.
-/// 
+///
 /// When using campaigns, it should be noted that each visit can only have at most
 /// one campaign associated with it. It does not matter if the first `track...`
 /// call or a subsequent `track...` call has the campaign attached, it will be treated

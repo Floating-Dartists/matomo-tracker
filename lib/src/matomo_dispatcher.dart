@@ -78,4 +78,20 @@ class MatomoDispatcher {
 
     return baseUri.replace(queryParameters: queryParameters);
   }
+
+  MatomoDispatcher copyWith({
+    String? baseUrl,
+    String? tokenAuth,
+    String? userAgent,
+    Logger? log,
+    http.Client? httpClient,
+  }) {
+    return MatomoDispatcher(
+      baseUrl: baseUrl ?? baseUri.toString(),
+      tokenAuth: tokenAuth ?? this.tokenAuth,
+      userAgent: userAgent ?? this.userAgent,
+      log: log ?? this.log,
+      httpClient: httpClient ?? this.httpClient,
+    );
+  }
 }
