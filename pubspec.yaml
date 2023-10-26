@@ -16,16 +16,16 @@ environment:
 dependencies:
   clock: ^1.1.1
   collection: ^1.17.2
-  device_info_plus: ">=9.0.3 <11.0.0"
+  device_info_plus: ^9.1.0
   flutter:
     sdk: flutter
   http: ^1.1.0
-  package_info_plus: ">=4.1.0 <6.0.0"
+  package_info_plus: ^4.2.0
   shared_preferences: ^2.2.2
-  uuid: ">=3.0.7 <5.0.0"
+  uuid: ^4.1.0
 
 dev_dependencies:
-  custom_lint: ^0.5.3
+  custom_lint: ^0.5.4
   fd_lints: ^2.2.0
   flutter_test:
     sdk: flutter
