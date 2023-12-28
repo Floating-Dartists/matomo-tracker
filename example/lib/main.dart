@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 // See the docker folder for instructions on how to get a
 // test Matomo instance running
 const _matomoEndpoint = 'http://localhost:8765/matomo.php';
-const _sideId = 1;
+const _sideId = "1";
 const _testUserId = 'Nelson Pandela';
 
 // Use this as dispatchSettings in MatomoTracker.instance.initialize()
