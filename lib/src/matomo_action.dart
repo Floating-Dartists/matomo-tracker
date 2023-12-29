@@ -206,7 +206,7 @@ class MatomoAction {
 
     return {
       // Required parameters
-      'idsite': tracker.siteId.toString(),
+      'idsite': tracker.siteId,
       'rec': '1',
 
       if (nV != null && nV) 'new_visit': '1',
