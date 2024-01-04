@@ -55,7 +55,7 @@ class MatomoTracker {
   /// The ID of the website we're tracking a visit/action for.
   ///
   /// Corresponds with `idsite`.
-  late final int siteId;
+  late final String siteId;
 
   /// The url of the Matomo endpoint.
   ///
@@ -205,7 +205,7 @@ class MatomoTracker {
   /// It is recommended to leave [userAgent] to `null` so it will be detected
   /// automatically.
   Future<void> initialize({
-    required int siteId,
+    required String siteId,
     required String url,
     bool newVisit = true,
     String? visitorId,

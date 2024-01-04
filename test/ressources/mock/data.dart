@@ -119,7 +119,7 @@ const matomoDispatcherToken = 'token';
 
 // MatomoTracker
 const matomoTrackerContentBase = 'contentBase';
-const matomoTrackerSiteId = 1;
+const matomoTrackerSiteId = "1";
 const matomoTrackerScreenResolution = Size(200, 200);
 const matomoTrackerUrl = 'https://example.com';
 const matomoTrackerContentBaseUrl = 'https://example.com';

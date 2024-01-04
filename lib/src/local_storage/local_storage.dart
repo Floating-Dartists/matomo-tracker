@@ -1,4 +1,4 @@
-abstract class LocalStorage {
+abstract interface class LocalStorage {
   Future<String?> getVisitorId();
   Future<void> setVisitorId(String visitorId);
   Future<DateTime?> getFirstVisit();
