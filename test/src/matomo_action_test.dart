@@ -12,9 +12,12 @@ import '../ressources/mock/data.dart';
 import '../ressources/mock/mock.dart';
 
 void main() {
-  MatomoAction getCompleteMatomoAction() {
+  MatomoAction getCompleteMatomoAction({
+    String path = matomoActionPath,
+    bool withCampaign = true,
+  }) {
     return MatomoAction(
-      path: matomoActionPath,
+      path: path,
       action: matomoActionName,
       dimensions: matomoEventDimension,
       discountAmount: matomoDiscountAmount,
@@ -24,16 +27,18 @@ void main() {
         name: matomoEventName,
         value: matomoEventValue,
       ),
-      campaign: Campaign(
-        name: matomoCampaignName,
-        keyword: matomoCampaignKeyword,
-        source: matomoCampaignSource,
-        medium: matomoCampaignMedium,
-        content: matomoCampaignContent,
-        id: matomoCampaignId,
-        group: matomoCampaignGroup,
-        placement: matomoCampaignPlacement,
-      ),
+      campaign: withCampaign
+          ? Campaign(
+              name: matomoCampaignName,
+              keyword: matomoCampaignKeyword,
+              source: matomoCampaignSource,
+              medium: matomoCampaignMedium,
+              content: matomoCampaignContent,
+              id: matomoCampaignId,
+              group: matomoCampaignGroup,
+              placement: matomoCampaignPlacement,
+            )
+          : null,
       content: Content(
         name: matomoContentName,
         piece: matomoContentPiece,
@@ -245,6 +250,25 @@ void main() {
         wantedEvent.remove('rand');
 
         expect(mapEquals(wantedEvent, eventMap), isTrue);
+      });
+    });
+
+    test('Issue #132: bad url encoding', () {
+      final fixedDate = DateTime(2022).toUtc();
+      const contentBase = 'https://app.articlett.schule/#/';
+      const localPath = 'sherlock';
+      const expectedUrl = "https%3A%2F%2Fapp.articlett.schule%2F%23%2Fsherlock";
+
+      when(() => mockMatomoTracker.contentBase).thenReturn(contentBase);
+
+      withClock(Clock.fixed(fixedDate), () {
+        final matomoAction = getCompleteMatomoAction(
+          path: localPath,
+          withCampaign: false,
+        );
+        final eventMap = matomoAction.toMap(mockMatomoTracker);
+
+        expect(eventMap['url'], expectedUrl);
       });
     });
   });
