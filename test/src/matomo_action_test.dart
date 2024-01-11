@@ -267,8 +267,7 @@ void main() {
           withCampaign: false,
         );
         final eventMap = matomoAction.toMap(mockMatomoTracker);
-
-        expect(eventMap['url'], expectedUrl);
+        expect(Uri.encodeQueryComponent(eventMap['url'] ?? ''), expectedUrl);
       });
     });
   });
