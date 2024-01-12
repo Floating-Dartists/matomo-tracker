@@ -167,17 +167,23 @@ class MatomoAction {
     final camp = campaign;
     final campKeyword = camp?.keyword;
     final localPath = path;
-    final uri = Uri.parse(
-      localPath != null
-          ? '${tracker.contentBase}${localPath.prefixWithSlash()}'
-          : tracker.contentBase,
-    );
-    final url = uri.replace(
-      queryParameters: {
-        if (camp != null) ...camp.toMap(),
-        ...uri.queryParameters,
-      },
-    ).toString();
+
+    final baseUrl = (localPath != null
+            ? '${tracker.contentBase.removeTrailingSlash()}${localPath.prefixWithSlash()}'
+            : tracker.contentBase)
+        .replaceHashtags();
+    final uri = Uri.parse(baseUrl);
+    final url = uri
+        .replace(
+          queryParameters: camp != null || uri.queryParameters.isNotEmpty
+              ? {
+                  if (camp != null) ...camp.toMap(),
+                  ...uri.queryParameters,
+                }
+              : null,
+        )
+        .toString()
+        .restoreHashtags();
     final idgoal = goalId;
     final aRevenue = revenue;
     final event = eventInfo;
@@ -271,4 +277,15 @@ class MatomoAction {
       if (dims != null) ...dims,
     };
   }
+}
+
+extension on String {
+  String removeTrailingSlash() {
+    if (endsWith('/')) return substring(0, length - 1);
+    return this;
+  }
+
+  static const _placeholder = 'HASHTAG_PLACEHOLDER';
+  String replaceHashtags() => replaceAll('/#/', '/$_placeholder/');
+  String restoreHashtags() => replaceAll('/$_placeholder/', '/#/');
 }
