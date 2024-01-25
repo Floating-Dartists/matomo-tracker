@@ -353,6 +353,15 @@ class MatomoTracker {
   Future<String?> getUserAgent({
     DeviceInfoPlugin? deviceInfoPlugin,
   }) async {
+    String? result =
+        await _getUserAgentInner(deviceInfoPlugin: deviceInfoPlugin);
+    return result != null ? Uri.encodeComponent(result) : null;
+  }
+
+  @visibleForTesting
+  Future<String?> _getUserAgentInner({
+    DeviceInfoPlugin? deviceInfoPlugin,
+  }) async {
     try {
       final effectiveDeviceInfo = deviceInfoPlugin ?? DeviceInfoPlugin();
       if (_platformInfo.isWeb) {
