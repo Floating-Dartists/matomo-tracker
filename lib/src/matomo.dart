@@ -706,6 +706,7 @@ class MatomoTracker {
     num? taxAmount,
     num? shippingCost,
     num? discountAmount,
+    num? grandTotal,
     String? pvId,
     String? path,
     Campaign? campaign,
@@ -724,6 +725,7 @@ class MatomoTracker {
         taxAmount: taxAmount,
         shippingCost: shippingCost,
         discountAmount: discountAmount,
+        revenue: grandTotal
         pvId: _inferPvId(pvId),
         path: _inferPath(path),
         campaign: campaign,
