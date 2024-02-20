@@ -360,15 +360,15 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/KawachenCofinpro">
-            <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
+        <a href="https://github.com/stefan01">
+            <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/stefan01">
-            <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
+        <a href="https://github.com/KawachenCofinpro">
+            <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
@@ -381,13 +381,20 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/CleverUnderDog">
+            <img src="https://avatars.githubusercontent.com/u/37074703?v=4" width="100;" alt="CleverUnderDog"/>
+            <br />
+            <sub><b>Null</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
         <a href="https://github.com/luckyrat">
             <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
             <br />
             <sub><b>Chris Tomlinson</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/JohannSchramm">
             <img src="https://avatars.githubusercontent.com/u/43448334?v=4" width="100;" alt="JohannSchramm"/>
@@ -422,15 +429,15 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Hitesh C</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/lukaslihotzki">
             <img src="https://avatars.githubusercontent.com/u/10326063?v=4" width="100;" alt="lukaslihotzki"/>
             <br />
             <sub><b>Lukas Lihotzki</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/svprdga">
             <img src="https://avatars.githubusercontent.com/u/43069276?v=4" width="100;" alt="svprdga"/>
