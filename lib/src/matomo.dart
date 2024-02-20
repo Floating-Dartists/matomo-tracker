@@ -706,7 +706,7 @@ class MatomoTracker {
     num? taxAmount,
     num? shippingCost,
     num? discountAmount,
-    num? grandTotal,
+    double? grandTotal,
     String? pvId,
     String? path,
     Campaign? campaign,
