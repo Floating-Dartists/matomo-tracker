@@ -147,7 +147,23 @@ class MatomoTracker {
   bool _cookieless = false;
   bool get cookieless => _cookieless;
 
-  late final LocalStorage _localStorage;
+  void setCookieless({
+    required bool cookieless,
+    LocalStorage? localStorage,
+  }) {
+    if (_cookieless == cookieless) return;
+    _cookieless = cookieless;
+    _setLocalStorage(localStorage);
+  }
+
+  void _setLocalStorage(LocalStorage? localStorage) {
+    final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
+    _localStorage = cookieless
+        ? CookielessStorage(storage: effectiveLocalStorage)
+        : effectiveLocalStorage;
+  }
+
+  late LocalStorage _localStorage;
 
   @visibleForTesting
   late final Queue<Map<String, String>> queue;
@@ -258,10 +274,7 @@ class MatomoTracker {
     this.attachLastScreenInfo = attachLastScreenInfo;
     _dispatchSettings = dispatchSettings;
 
-    final effectiveLocalStorage = localStorage ?? SharedPrefsStorage();
-    _localStorage = cookieless
-        ? CookielessStorage(storage: effectiveLocalStorage)
-        : effectiveLocalStorage;
+    _setLocalStorage(localStorage);
 
     final onLoad = _dispatchSettings.onLoad;
     queue = _dispatchSettings.persistentQueue && onLoad != null
@@ -301,7 +314,7 @@ class MatomoTracker {
       firstVisit = localFirstVisit;
     } else {
       unawaited(_localStorage.setFirstVisit(now));
-
+      
       // Save the visitorId for future visits.
       unawaited(_saveVisitorId(localVisitorId));
     }
