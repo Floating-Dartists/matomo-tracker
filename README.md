@@ -360,15 +360,15 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/KawachenCofinpro">
-            <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
+        <a href="https://github.com/stefan01">
+            <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/stefan01">
-            <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
+        <a href="https://github.com/KawachenCofinpro">
+            <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
@@ -381,13 +381,20 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/CleverUnderDog">
+            <img src="https://avatars.githubusercontent.com/u/37074703?v=4" width="100;" alt="CleverUnderDog"/>
+            <br />
+            <sub><b>Null</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
         <a href="https://github.com/luckyrat">
             <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
             <br />
             <sub><b>Chris Tomlinson</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/JohannSchramm">
             <img src="https://avatars.githubusercontent.com/u/43448334?v=4" width="100;" alt="JohannSchramm"/>
@@ -403,12 +410,27 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/zvikarp">
+            <img src="https://avatars.githubusercontent.com/u/13397207?v=4" width="100;" alt="zvikarp"/>
+            <br />
+            <sub><b>Zvi Karp</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/Bendix20">
             <img src="https://avatars.githubusercontent.com/u/52244034?v=4" width="100;" alt="Bendix20"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
     </td>
+    <td align="center">
+        <a href="https://github.com/hpoul">
+            <img src="https://avatars.githubusercontent.com/u/313066?v=4" width="100;" alt="hpoul"/>
+            <br />
+            <sub><b>Herbert Poul</b></sub>
+        </a>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/jainhitesh9998">
             <img src="https://avatars.githubusercontent.com/u/16622965?v=4" width="100;" alt="jainhitesh9998"/>
