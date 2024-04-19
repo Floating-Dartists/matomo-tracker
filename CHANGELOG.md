@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.0.0-dev.2]
+
+* build(deps): bump device_info_plus from 9.1.2 to 10.0.1 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/146
+* build(deps): bump package_info_plus from 6.0.0 to 7.0.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/148
+* Prepare v5.0.0-dev.2 by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/150
+
+
+**Full Changelog**: https://github.com/Floating-Dartists/matomo-tracker/compare/5.0.0-dev.1...5.0.0-dev.2
+
 ## [5.0.0-dev.1]
 
 * build(deps): bump uuid from 3.0.7 to 4.1.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/125
