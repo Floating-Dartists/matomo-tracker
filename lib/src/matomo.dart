@@ -314,7 +314,7 @@ class MatomoTracker {
       firstVisit = localFirstVisit;
     } else {
       unawaited(_localStorage.setFirstVisit(now));
-      
+
       // Save the visitorId for future visits.
       unawaited(_saveVisitorId(localVisitorId));
     }

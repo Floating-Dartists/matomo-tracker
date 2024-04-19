@@ -1,5 +1,29 @@
 # Changelog
 
+## [5.0.0-dev.1]
+
+* build(deps): bump uuid from 3.0.7 to 4.1.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/125
+* Chore/bump dependencies by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/126
+* build(deps): bump package_info_plus from 4.2.0 to 5.0.1 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/128
+* [FEAT] [#129] by @jainhitesh9998 in https://github.com/Floating-Dartists/matomo-tracker/pull/130
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/131
+* 132 contentbaseurl not working with hash sign by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/133
+* Allow uuid 5.x by @hpoul in https://github.com/Floating-Dartists/matomo-tracker/pull/136
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/137
+* Add grandTotal/revenue to trackCartUpdate by @CleverUnderDog in https://github.com/Floating-Dartists/matomo-tracker/pull/138
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/139
+* build(deps): bump package_info_plus from 5.0.1 to 6.0.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/142
+* feat: added option to toggle off cookieless by @zvikarp in https://github.com/Floating-Dartists/matomo-tracker/pull/143
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/145
+
+### New Contributors
+* @jainhitesh9998 made their first contribution in https://github.com/Floating-Dartists/matomo-tracker/pull/130
+* @hpoul made their first contribution in https://github.com/Floating-Dartists/matomo-tracker/pull/136
+* @CleverUnderDog made their first contribution in https://github.com/Floating-Dartists/matomo-tracker/pull/138
+* @zvikarp made their first contribution in https://github.com/Floating-Dartists/matomo-tracker/pull/143
+
+**Full Changelog**: https://github.com/Floating-Dartists/matomo-tracker/compare/4.1.1...5.0.0-dev.1
+
 ## [4.1.1]
 
 * Bump device_info_plus from 9.0.3 to 10.0.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/123
