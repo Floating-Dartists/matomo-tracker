@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.0.0-dev.3]
+
+* build(deps): bump package_info_plus from 7.0.0 to 8.0.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/151
+* build(deps): bump custom_lint from 0.5.11 to 0.6.4 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/152
+* Bumping up versions and min SDK to 3.4.1 by @Hyla96 in https://github.com/Floating-Dartists/matomo-tracker/pull/153
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/154
+
+## New Contributors
+* @Hyla96 made their first contribution in https://github.com/Floating-Dartists/matomo-tracker/pull/153
+
+**Full Changelog**: https://github.com/Floating-Dartists/matomo-tracker/compare/5.0.0-dev.2...5.0.0-dev.3
+
 ## [5.0.0-dev.2]
 
 * build(deps): bump device_info_plus from 9.1.2 to 10.0.1 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/146
