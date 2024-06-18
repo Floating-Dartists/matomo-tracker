@@ -150,6 +150,7 @@ const androidModel = 'androidModel';
 const iosSystemName = 'iosSystemName';
 const iosSystemVersion = 'iosSystemVersion';
 const iosModel = 'iosModel';
+const iosMachine = 'iosMachine';
 const windowsReleaseId = 'windowsReleaseId';
 const windowsBuildNumber = 1;
 const macOsModel = 'macOsModel';
