@@ -42,6 +42,8 @@ class MockAndroidBuildVersion extends Mock implements AndroidBuildVersion {}
 
 class MockIosDeviceInfo extends Mock implements IosDeviceInfo {}
 
+class MockIosDeviceUtsname extends Mock implements IosUtsname {}
+
 class MockWindowsDeviceInfo extends Mock implements WindowsDeviceInfo {}
 
 class MockMacOsDeviceInfo extends Mock implements MacOsDeviceInfo {}
@@ -76,6 +78,7 @@ final mockWebBrowserInfo = MockWebBrowserInfo();
 final mockAndroidDeviceInfo = MockAndroidDeviceInfo();
 final mockAndroidBuildVersion = MockAndroidBuildVersion();
 final mockIosDeviceInfo = MockIosDeviceInfo();
+final mockIosUtsname = MockIosDeviceUtsname();
 final mockWindowsDeviceInfo = MockWindowsDeviceInfo();
 final mockMacOsDeviceInfo = MockMacOsDeviceInfo();
 final mockLinuxDeviceInfo = MockLinuxDeviceInfo();
