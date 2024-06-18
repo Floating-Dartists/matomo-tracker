@@ -410,6 +410,13 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/kuhnroyal">
+            <img src="https://avatars.githubusercontent.com/u/1260818?v=4" width="100;" alt="kuhnroyal"/>
+            <br />
+            <sub><b>Peter Leibiger</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/zvikarp">
             <img src="https://avatars.githubusercontent.com/u/13397207?v=4" width="100;" alt="zvikarp"/>
             <br />
@@ -422,15 +429,15 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/Hyla96">
             <img src="https://avatars.githubusercontent.com/u/16517737?v=4" width="100;" alt="Hyla96"/>
             <br />
             <sub><b>Gabriel Costache</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/hpoul">
             <img src="https://avatars.githubusercontent.com/u/313066?v=4" width="100;" alt="hpoul"/>
