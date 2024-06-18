@@ -385,8 +385,9 @@ class MatomoTracker {
         final systemName = iosInfo.systemName;
         final version = iosInfo.systemVersion;
         final model = iosInfo.model;
+        final machine = iosInfo.utsname.machine;
 
-        return '$systemName $version, $model';
+        return '$systemName $version, $model $machine';
       } else if (_platformInfo.isWindows) {
         final windowsInfo = await effectiveDeviceInfo.windowsInfo;
         final releaseId = windowsInfo.releaseId;
