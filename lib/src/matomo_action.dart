@@ -200,7 +200,7 @@ class MatomoAction {
     final ua = tracker.userAgent;
     final dims = dimensions;
     final locale = PlatformDispatcher.instance.locale;
-    final country = locale.countryCode;
+    final country = locale.countryCode?.toLowerCase();
     final nV = newVisit;
     final p = ping;
     final cont = content;
