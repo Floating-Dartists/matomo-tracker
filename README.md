@@ -360,15 +360,15 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/stefan01">
-            <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
+        <a href="https://github.com/KawachenCofinpro">
+            <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/KawachenCofinpro">
-            <img src="https://avatars.githubusercontent.com/u/56601057?v=4" width="100;" alt="KawachenCofinpro"/>
+        <a href="https://github.com/stefan01">
+            <img src="https://avatars.githubusercontent.com/u/1234184?v=4" width="100;" alt="stefan01"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
@@ -410,6 +410,13 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/kuhnroyal">
+            <img src="https://avatars.githubusercontent.com/u/1260818?v=4" width="100;" alt="kuhnroyal"/>
+            <br />
+            <sub><b>Peter Leibiger</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/zvikarp">
             <img src="https://avatars.githubusercontent.com/u/13397207?v=4" width="100;" alt="zvikarp"/>
             <br />
@@ -422,6 +429,14 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Null</b></sub>
         </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/Hyla96">
+            <img src="https://avatars.githubusercontent.com/u/16517737?v=4" width="100;" alt="Hyla96"/>
+            <br />
+            <sub><b>Gabriel Costache</b></sub>
+        </a>
     </td>
     <td align="center">
         <a href="https://github.com/hpoul">
@@ -429,8 +444,7 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Herbert Poul</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/jainhitesh9998">
             <img src="https://avatars.githubusercontent.com/u/16622965?v=4" width="100;" alt="jainhitesh9998"/>

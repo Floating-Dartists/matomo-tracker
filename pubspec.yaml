@@ -1,7 +1,7 @@
 name: matomo_tracker
 description: A fully cross-platform wrap of the Matomo tracking client for
   Flutter, using the Matomo API.
-version: 5.0.0-dev.2
+version: 5.0.0-dev.3
 homepage: https://github.com/Floating-Dartists/matomo-tracker
 repository: https://github.com/Floating-Dartists/matomo-tracker
 issue_tracker: https://github.com/Floating-Dartists/matomo-tracker/issues
@@ -10,26 +10,26 @@ topics:
   - analytics
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.4.1 <4.0.0"
   flutter: ">=3.3.0"
 
 dependencies:
   clock: ^1.1.1
-  collection: ^1.17.2
+  collection: ^1.18.0
   device_info_plus: ">=9.1.0 <11.0.0"
   flutter:
     sdk: flutter
-  http: ^1.1.0
-  package_info_plus: ">=4.2.0 <8.0.0"
-  shared_preferences: ^2.2.2
+  http: ^1.2.1
+  package_info_plus: ">=4.2.0 <9.0.0"
+  shared_preferences: ^2.2.3
   uuid: ">=4.1.0 <6.0.0"
 
 dev_dependencies:
-  custom_lint: ^0.5.4
-  fd_lints: ^2.2.0
+  custom_lint: ">=0.5.4 <0.7.0"
+  fd_lints: ^2.2.1
   flutter_test:
     sdk: flutter
-  meta: ^1.9.1
-  mocktail: ^1.0.2
+  meta: ^1.12.0
+  mocktail: ^1.0.3
 
 flutter: null

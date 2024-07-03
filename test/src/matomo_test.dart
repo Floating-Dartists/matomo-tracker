@@ -303,6 +303,8 @@ void main() {
       when(() => mockIosDeviceInfo.systemName).thenReturn(iosSystemName);
       when(() => mockIosDeviceInfo.systemVersion).thenReturn(iosSystemVersion);
       when(() => mockIosDeviceInfo.model).thenReturn(iosModel);
+      when(() => mockIosDeviceInfo.utsname).thenReturn(mockIosUtsname);
+      when(() => mockIosUtsname.machine).thenReturn(iosMachine);
 
       // Windows
       when(() => mockDeviceInfoPlugin.windowsInfo)
@@ -373,7 +375,7 @@ void main() {
 
       expect(
         userAgent,
-        '$iosSystemName $iosSystemVersion, $iosModel',
+        '$iosSystemName $iosSystemVersion, $iosModel $iosMachine',
       );
     });
 
