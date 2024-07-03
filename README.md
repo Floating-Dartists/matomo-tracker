@@ -211,7 +211,7 @@ await MatomoTracker.instance.initialize(
 );
 ```
 
-When using cookieless tracking, neither the user_id nor the first_visit will be sent or saved locally.
+When using cookieless tracking, the user_id won't be sent or saved locally.
 
 ## Dispatching
 
