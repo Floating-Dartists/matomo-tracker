@@ -1,22 +1,11 @@
 class Visitor {
-  factory Visitor({
-    String? id,
-    String? uid,
-  }) {
-    if (uid != null && uid.isEmpty) {
-      throw ArgumentError('Must not be empty', 'uid');
-    }
-
-    return Visitor._(
-      id: id,
-      uid: uid,
-    );
-  }
-
-  Visitor._({
+  const Visitor({
     this.id,
     this.uid,
-  });
+  }) : assert(
+          uid == null || uid.length != 0,
+          'uid must not be empty',
+        );
 
   /// The unique visitor ID, must be a 16 characters hexadecimal string.
   ///
