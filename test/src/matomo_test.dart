@@ -49,26 +49,6 @@ void main() {
         (tracker, _) => expect(tracker.initialized, true),
         (tracker, _) => expect(tracker.dequeueTimer.isActive, true),
         (tracker, _) => expect(tracker.pingTimer?.isActive, true),
-        (tracker, fixedDateTime) =>
-            expect(tracker.session.firstVisit, fixedDateTime.toUtc()),
-        (tracker, fixedDateTime) =>
-            expect(tracker.session.lastVisit, fixedDateTime.toUtc()),
-        (tracker, _) => expect(tracker.session.visitCount, 1),
-      ],
-    );
-
-    testInitialization(
-      'it should be able to get localFirstVisit from local storage',
-      init: () {
-        when(
-          mockLocalStorage.getFirstVisit,
-        ).thenAnswer((_) async => matomoTrackerLocalFirstVisist);
-      },
-      [
-        (tracker, _) => expect(
-              tracker.session.firstVisit,
-              matomoTrackerLocalFirstVisist,
-            ),
       ],
     );
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.0.0]
+
+**Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v500) to learn about breaking changes in this version**
+
 ## [5.0.0-dev.3]
 
 * build(deps): bump package_info_plus from 7.0.0 to 8.0.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/151

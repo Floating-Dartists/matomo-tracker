@@ -26,6 +26,7 @@ A fully cross-platform wrap of the Matomo tracking client for Flutter, using the
   - [Cookieless Tracking](#cookieless-tracking)
   - [Dispatching](#dispatching)
 - [Migration Guide](#migration-guide)
+    - [v5.0.0](#v500)
     - [v4.0.0](#v400)
     - [v3.0.0](#v300)
 - [Contributors](#contributors)
@@ -225,6 +226,11 @@ await MatomoTracker.instance.initialize(
 ```
 
 # Migration Guide
+
+## v5.0.0
+
+* `Session` class and its related properties `firstVisit`, `lastVisit` and `visitCount` have been removed as they were not used since Matomo 4.0.0.
+* `LocalStorage` methods `getFirstVisit`, `setFirstVisit`, `getVisitCount` and `setVisitCount` have been removed accordingly.
 
 ## v4.0.0
 

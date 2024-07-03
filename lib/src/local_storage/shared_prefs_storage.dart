@@ -3,8 +3,6 @@ import 'package:matomo_tracker/src/local_storage/local_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsStorage implements LocalStorage {
-  static const kFirstVisit = 'matomo_first_visit';
-  static const kVisitCount = 'matomo_visit_count';
   static const kVisitorId = 'matomo_visitor_id';
   static const kOptOut = 'matomo_opt_out';
   static const kPersistentQueue = 'matomo_persistent_queue';
@@ -19,45 +17,15 @@ class SharedPrefsStorage implements LocalStorage {
   }
 
   @override
-  Future<DateTime?> getFirstVisit() async {
-    final prefs = await _getSharedPrefs();
-    final firstVisit = prefs.getInt(kFirstVisit);
-
-    if (firstVisit == null) {
-      return null;
-    }
-
-    return DateTime.fromMillisecondsSinceEpoch(firstVisit, isUtc: true);
-  }
-
-  @override
   Future<String?> getVisitorId() async {
     final prefs = await _getSharedPrefs();
     return prefs.getString(kVisitorId);
   }
 
   @override
-  Future<void> setFirstVisit(DateTime firstVisit) async {
-    final prefs = await _getSharedPrefs();
-    await prefs.setInt(kFirstVisit, firstVisit.millisecondsSinceEpoch);
-  }
-
-  @override
   Future<void> setVisitorId(String visitorId) async {
     final prefs = await _getSharedPrefs();
     await prefs.setString(kVisitorId, visitorId);
-  }
-
-  @override
-  Future<int> getVisitCount() async {
-    final prefs = await _getSharedPrefs();
-    return prefs.getInt(kVisitCount) ?? 0;
-  }
-
-  @override
-  Future<void> setVisitCount(int visitCount) async {
-    final prefs = await _getSharedPrefs();
-    await prefs.setInt(kVisitCount, visitCount);
   }
 
   @override
@@ -76,8 +44,6 @@ class SharedPrefsStorage implements LocalStorage {
   Future<void> clear() async {
     final prefs = await _getSharedPrefs();
     await Future.wait([
-      prefs.remove(kFirstVisit),
-      prefs.remove(kVisitCount),
       prefs.remove(kVisitorId),
       prefs.remove(kPersistentQueue),
     ]);

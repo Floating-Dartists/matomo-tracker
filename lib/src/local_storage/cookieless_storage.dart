@@ -15,28 +15,14 @@ class CookielessStorage implements LocalStorage {
   Future<void> clear() => storage.clear();
 
   @override
-  Future<DateTime?> getFirstVisit() => Future.value();
-
-  @override
   Future<bool> getOptOut() => storage.getOptOut();
-
-  @override
-  Future<int> getVisitCount() => storage.getVisitCount();
 
   @override
   Future<String?> getVisitorId() => Future.value();
 
   @override
-  Future<void> setFirstVisit(DateTime _) => Future.value();
-
-  @override
   Future<void> setOptOut({required bool optOut}) {
     return storage.setOptOut(optOut: optOut);
-  }
-
-  @override
-  Future<void> setVisitCount(int visitCount) {
-    return storage.setVisitCount(visitCount);
   }
 
   @override

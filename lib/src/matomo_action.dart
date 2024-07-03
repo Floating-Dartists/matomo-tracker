@@ -205,9 +205,6 @@ class MatomoAction {
       'apiv': '1',
 
       // Optional User info
-      '_idvc': tracker.session.visitCount.toString(),
-      '_viewts': '${tracker.session.lastVisit.millisecondsSinceEpoch ~/ 1000}',
-      '_idts': '${tracker.session.firstVisit.millisecondsSinceEpoch ~/ 1000}',
       'res':
           '${tracker.screenResolution.width.toInt()}x${tracker.screenResolution.height.toInt()}',
       'h': _date.hour.toString(),

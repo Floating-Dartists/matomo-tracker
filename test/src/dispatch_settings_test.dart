@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/dispatch_settings.dart';
 import 'package:matomo_tracker/src/matomo_action.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../ressources/mock/data.dart';
 import '../ressources/mock/mock.dart';
 
@@ -31,7 +32,6 @@ void main() {
   group('PersistenceFilter', () {
     setUpAll(() {
       when(() => mockMatomoTracker.visitor).thenReturn(mockVisitor);
-      when(() => mockMatomoTracker.session).thenReturn(mockSession);
       when(() => mockMatomoTracker.screenResolution)
           .thenReturn(matomoTrackerScreenResolution);
       when(() => mockMatomoTracker.contentBase)
@@ -40,9 +40,6 @@ void main() {
       when(() => mockVisitor.id).thenReturn(visitorId);
       when(() => mockVisitor.uid).thenReturn(uid);
       when(mockTrackingOrderItem.toArray).thenReturn([]);
-      when(() => mockSession.visitCount).thenReturn(sessionVisitCount);
-      when(() => mockSession.lastVisit).thenReturn(sessionLastVisite);
-      when(() => mockSession.firstVisit).thenReturn(sessionFirstVisite);
     });
 
     Map<String, String> recentUser1(DateTime now) =>

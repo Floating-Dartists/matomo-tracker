@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:clock/clock.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,6 @@ import 'package:matomo_tracker/src/matomo_dispatcher.dart';
 import 'package:matomo_tracker/src/performance_info.dart';
 import 'package:matomo_tracker/src/persistent_queue.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
-import 'package:matomo_tracker/src/session.dart';
 import 'package:matomo_tracker/src/tracking_order_item.dart';
 import 'package:matomo_tracker/src/visitor.dart';
 import 'package:matomo_tracker/utils/lock.dart' as sync;
@@ -85,8 +83,6 @@ class MatomoTracker {
     _url = newUrl;
     _dispatcher = _dispatcher.copyWith(baseUrl: newUrl);
   }
-
-  late final Session session;
 
   Visitor get visitor => _visitor;
   late Visitor _visitor;
@@ -304,30 +300,10 @@ class MatomoTracker {
       physicalSize.height,
     );
 
-    // Initialize Session Information
-    final now = clock.now().toUtc();
-    DateTime firstVisit = now;
-    int visitCount = 1;
-
-    final localFirstVisit = await _localStorage.getFirstVisit();
-    if (localFirstVisit != null) {
-      firstVisit = localFirstVisit;
-    } else {
-      unawaited(_localStorage.setFirstVisit(now));
-
+    if (localVisitorId != null) {
       // Save the visitorId for future visits.
       unawaited(_saveVisitorId(localVisitorId));
     }
-
-    final localVisitorCount = await _localStorage.getVisitCount();
-    visitCount += localVisitorCount;
-    unawaited(_localStorage.setVisitCount(visitCount));
-
-    session = Session(
-      firstVisit: firstVisit,
-      lastVisit: now,
-      visitCount: visitCount,
-    );
 
     if (contentBaseUrl != null) {
       contentBase = contentBaseUrl;
@@ -343,7 +319,7 @@ class MatomoTracker {
     unawaited(_localStorage.setOptOut(optOut: _optOut));
 
     log.fine(
-      'Matomo Initialized: firstVisit=$firstVisit; lastVisit=$now; visitCount=$visitCount; visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=${this.userAgent}',
+      'Matomo Initialized: visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=${this.userAgent}',
     );
     _initialized = true;
 
