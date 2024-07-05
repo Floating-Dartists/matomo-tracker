@@ -6,7 +6,6 @@ import 'package:matomo_tracker/src/logger/logger.dart';
 import 'package:matomo_tracker/src/matomo.dart';
 import 'package:matomo_tracker/src/matomo_action.dart';
 import 'package:matomo_tracker/src/platform_info/platform_info.dart';
-import 'package:matomo_tracker/src/session.dart';
 import 'package:matomo_tracker/src/tracking_order_item.dart';
 import 'package:matomo_tracker/src/visitor.dart';
 import 'package:mocktail/mocktail.dart';
@@ -23,8 +22,6 @@ class MockHttpResponse extends Mock implements http.Response {}
 class MockMatomoAction extends Mock implements MatomoAction {}
 
 class MockVisitor extends Mock implements Visitor {}
-
-class MockSession extends Mock implements Session {}
 
 class MockLocalStorage extends Mock implements LocalStorage {}
 
@@ -70,7 +67,6 @@ final mockHttpClient = MockHttpClient();
 final mockMatomoAction = MockMatomoAction();
 final mockHttpResponse = MockHttpResponse();
 final mockVisitor = MockVisitor();
-final mockSession = MockSession();
 final mockLocalStorage = MockLocalStorage();
 final mockPlatformInfo = MockPlatformInfo();
 final mockDeviceInfoPlugin = MockDeviceInfoPlugin();

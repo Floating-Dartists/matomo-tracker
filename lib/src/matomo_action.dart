@@ -160,12 +160,7 @@ class MatomoAction {
       );
 
   Map<String, String> toMap(MatomoTracker tracker) {
-    final id = tracker.visitor.id;
-    final uid = tracker.visitor.uid;
-    final pvId = this.pvId;
-    final actionName = action;
     final camp = campaign;
-    final campKeyword = camp?.keyword;
     final localPath = path;
 
     final baseUrl = (localPath != null
@@ -184,97 +179,77 @@ class MatomoAction {
         )
         .toString()
         .restoreHashtags();
-    final idgoal = goalId;
-    final aRevenue = revenue;
-    final event = eventInfo;
-    final ecId = orderId;
-    final ecItems = trackingOrderItems;
-    final ecSt = subTotal;
-    final ecTx = taxAmount;
-    final ecSh = shippingCost;
-    final ecDt = discountAmount;
-    final search = searchKeyword;
-    final searchCat = searchCategory;
-    final searchCount = this.searchCount;
-    final link = this.link;
-    final ua = tracker.userAgent;
-    final dims = dimensions;
     final locale = PlatformDispatcher.instance.locale;
     final country = locale.countryCode?.toLowerCase();
-    final nV = newVisit;
-    final p = ping;
-    final cont = content;
-    final contInteraction = contentInteraction;
-    // According to documentation, pings should not have the ca parameter
-    final ca = (event != null || content != null) && !(p ?? false);
-    // We don't need to send the performance info again if this is a ping
-    final perfInfo = (p ?? false) ? null : performanceInfo;
+    final ping = this.ping ?? false;
 
     return {
       // Required parameters
       'idsite': tracker.siteId,
       'rec': '1',
 
-      if (nV != null && nV) 'new_visit': '1',
+      if (newVisit case true) 'new_visit': '1',
 
-      if (p != null && p) 'ping': '1',
+      if (ping) 'ping': '1',
 
-      if (ca) 'ca': '1',
+      // According to documentation, pings should not have the ca parameter
+      if ((eventInfo != null || content != null) && !ping) 'ca': '1',
 
       // Recommended parameters
-      if (actionName != null) 'action_name': actionName,
+      if (action case final action?) 'action_name': action,
       'url': url,
-      if (camp != null) '_rcn': camp.name,
-      if (campKeyword != null) '_rck': campKeyword,
-      if (id != null) '_id': id,
+      if (campaign?.name case final name?) '_rcn': name,
+      if (campaign?.keyword case final keyword?) '_rck': keyword,
+      if (tracker.visitor.id case final id?) '_id': id,
       'rand': '${Random().nextInt(1000000000)}',
       'apiv': '1',
 
       // Optional User info
-      '_idvc': tracker.session.visitCount.toString(),
-      '_viewts': '${tracker.session.lastVisit.millisecondsSinceEpoch ~/ 1000}',
-      '_idts': '${tracker.session.firstVisit.millisecondsSinceEpoch ~/ 1000}',
       'res':
           '${tracker.screenResolution.width.toInt()}x${tracker.screenResolution.height.toInt()}',
       'h': _date.hour.toString(),
       'm': _date.minute.toString(),
       's': _date.second.toString(),
       'cookie': '1',
-      if (ua != null) 'ua': ua,
+      if (tracker.userAgent case final ua?) 'ua': ua,
       'lang': locale.toString(),
       if (country != null && tracker.authToken != null) 'country': country,
-      if (uid != null) 'uid': uid,
+      if (tracker.visitor.uid case final uid?) 'uid': uid,
 
       // Optional Action info (measure Page view, Outlink, Download, Site search)
-      if (pvId != null) 'pv_id': pvId,
-      if (idgoal != null) 'idgoal': idgoal.toString(),
+      if (pvId case final pvId?) 'pv_id': pvId,
+      if (goalId case final goalId?) 'idgoal': goalId.toString(),
 
       // Optional Event Tracking info
-      if (event != null) ...event.toMap(),
+      if (eventInfo case final event?) ...event.toMap(),
 
       // Optional Ecommerce info
-      if (ecId != null) 'ec_id': ecId,
-      if (ecItems != null)
+      if (orderId case final ecId?) 'ec_id': ecId,
+      if (trackingOrderItems case final ecItems?)
         'ec_items': jsonEncode(ecItems.map((i) => i.toArray()).toList()),
-      if (aRevenue != null && aRevenue > 0) 'revenue': aRevenue.toString(),
-      if (ecSt != null) 'ec_st': ecSt.toString(),
-      if (ecTx != null) 'ec_tx': ecTx.toString(),
-      if (ecSh != null) 'ec_sh': ecSh.toString(),
-      if (ecDt != null) 'ec_dt': ecDt.toString(),
-      if (search != null) 'search': search,
-      if (searchCat != null) 'search_cat': searchCat,
-      if (searchCount != null) 'search_count': searchCount.toString(),
-      if (link != null) 'link': link,
+      if (revenue case final revenue? when revenue > 0)
+        'revenue': revenue.toString(),
+      if (subTotal case final ecSt?) 'ec_st': ecSt.toString(),
+      if (taxAmount case final ecTx?) 'ec_tx': ecTx.toString(),
+      if (shippingCost case final ecSh?) 'ec_sh': ecSh.toString(),
+      if (discountAmount case final ecDt?) 'ec_dt': ecDt.toString(),
+      if (searchKeyword case final search?) 'search': search,
+      if (searchCategory case final searchCat?) 'search_cat': searchCat,
+      if (searchCount case final searchCount?)
+        'search_count': searchCount.toString(),
+      if (link case final link?) 'link': link,
 
       // Other parameters (require authentication via `token_auth`)
       'cdt': _date.toIso8601String(),
 
-      if (cont != null) ...cont.toMap(),
-      if (contInteraction != null) 'c_i': contInteraction,
+      if (content case final cont?) ...cont.toMap(),
+      if (contentInteraction case final contInteraction?)
+        'c_i': contInteraction,
 
-      if (perfInfo != null) ...perfInfo.toMap(),
+      // We don't need to send the performance info again if this is a ping
+      if (performanceInfo case final perfInfo? when !ping) ...perfInfo.toMap(),
 
-      if (dims != null) ...dims,
+      if (dimensions case final dims?) ...dims,
     };
   }
 }

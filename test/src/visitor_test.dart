@@ -5,7 +5,7 @@ import '../ressources/mock/data.dart';
 
 void main() {
   test('it should be able to create Visitor', () {
-    final visitor = Visitor(
+    const visitor = Visitor(
       id: visitorId,
       uid: uid,
     );
@@ -22,6 +22,6 @@ void main() {
       );
     }
 
-    expect(getVisitorWithEmptyUserId, throwsArgumentError);
+    expect(getVisitorWithEmptyUserId, throwsAssertionError);
   });
 }

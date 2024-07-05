@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'mock.dart';
 
-// Session
-final sessionLastVisite = DateTime(2022, 1, 2).toUtc();
-final sessionFirstVisite = DateTime(2022).toUtc();
-const sessionVisitCount = 1;
-
 // Visitor
 const visitorId = 'visitorId';
 const uid = 'userId';
@@ -70,9 +65,6 @@ Map<String, String> getWantedEventMap(DateTime now, {String? userAgent}) => {
       "_rck": "keyword",
       "_id": "visitorId",
       "apiv": "1",
-      "_idvc": "1",
-      "_viewts": '${sessionLastVisite.millisecondsSinceEpoch ~/ 1000}',
-      "_idts": '${sessionFirstVisite.millisecondsSinceEpoch ~/ 1000}',
       "res": "200x200",
       "h": now.hour.toString(),
       "m": now.minute.toString(),
@@ -135,10 +127,6 @@ const matomoTrackerSearchKeyword = 'searchKeyword';
 const matomoTrackerVisitorId = '1234567890123456'; // 16 characters
 const matomoTrackerUserAgent = 'userAgent';
 const matomoTrackerTokenAuth = 'tokenAuth';
-final matomoTrackerLocalFirstVisist = DateTime.fromMillisecondsSinceEpoch(
-  1640979000000,
-  isUtc: true,
-);
 const matomoTrackerCurrentPvId = '123456'; // 6 characters
 
 // DeviceInfoPlugin

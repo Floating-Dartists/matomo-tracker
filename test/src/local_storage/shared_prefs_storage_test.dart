@@ -26,38 +26,9 @@ void main() {
       sharedPrefsStorage = SharedPrefsStorage()..prefs = mockPrefs;
     });
 
-    group('getFirstVisit', () {
-      test('should call getInt on kFirstVisit', () async {
-        await sharedPrefsStorage.getFirstVisit();
-        verify(() => mockPrefs.getInt(SharedPrefsStorage.kFirstVisit));
-      });
-
-      test('should return null if getInt returns null', () async {
-        final firstVisit = await sharedPrefsStorage.getFirstVisit();
-        expect(firstVisit, isNull);
-      });
-
-      test('should return a DateTime if getInt returns a value', () async {
-        when(() => mockPrefs.getInt(any()))
-            .thenReturn(matomoTrackerLocalFirstVisist.millisecondsSinceEpoch);
-        final firstVisit = await sharedPrefsStorage.getFirstVisit();
-        expect(firstVisit, matomoTrackerLocalFirstVisist);
-      });
-    });
-
     test('getVisitorId should call getString on kVisitorId', () async {
       await sharedPrefsStorage.getVisitorId();
       verify(() => mockPrefs.getString(SharedPrefsStorage.kVisitorId));
-    });
-
-    test('setFirstVisit should call setInt on kFirstVisit', () async {
-      await sharedPrefsStorage.setFirstVisit(matomoTrackerLocalFirstVisist);
-      verify(
-        () => mockPrefs.setInt(
-          SharedPrefsStorage.kFirstVisit,
-          matomoTrackerLocalFirstVisist.millisecondsSinceEpoch,
-        ),
-      );
     });
 
     test('setVisitorId should call setString', () async {
@@ -68,16 +39,6 @@ void main() {
           matomoTrackerVisitorId,
         ),
       );
-    });
-
-    test('getVisitCount should call getInt', () async {
-      await sharedPrefsStorage.getVisitCount();
-      verify(() => mockPrefs.getInt(SharedPrefsStorage.kVisitCount));
-    });
-
-    test('setVisitCount should call setInt', () async {
-      await sharedPrefsStorage.setVisitCount(0);
-      verify(() => mockPrefs.setInt(SharedPrefsStorage.kVisitCount, 0));
     });
 
     test('getOptOut should call getBool', () async {
@@ -91,11 +52,9 @@ void main() {
     });
 
     test(
-      'clear should call remove on kFirstVisit, kVisitCount, kVisitorId and kPersistentQueue',
+      'clear should call remove on kVisitorId and kPersistentQueue',
       () async {
         await sharedPrefsStorage.clear();
-        verify(() => mockPrefs.remove(SharedPrefsStorage.kFirstVisit));
-        verify(() => mockPrefs.remove(SharedPrefsStorage.kVisitCount));
         verify(() => mockPrefs.remove(SharedPrefsStorage.kVisitorId));
         verify(() => mockPrefs.remove(SharedPrefsStorage.kPersistentQueue));
       },
