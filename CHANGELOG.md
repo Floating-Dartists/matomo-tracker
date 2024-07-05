@@ -4,7 +4,17 @@
 
 **Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v500) to learn about breaking changes in this version**
 
-<!-- PUT GITHUB GENERATED CHANGELOGS HERE -->
+* Fix country code case by @kuhnroyal in https://github.com/Floating-Dartists/matomo-tracker/pull/157
+* Add iOS machine name to user agent by @kuhnroyal in https://github.com/Floating-Dartists/matomo-tracker/pull/158
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/159
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/160
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/162
+* Remove unused query parameters by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/164
+
+## New Contributors
+* @kuhnroyal made their first contribution in https://github.com/Floating-Dartists/matomo-tracker/pull/157
+
+**Full Changelog**: https://github.com/Floating-Dartists/matomo-tracker/compare/5.0.0-dev.3...5.0.0
 
 ## [5.0.0-dev.3]
 
