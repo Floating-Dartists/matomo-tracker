@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.0.0+1]
+
+* Updated `README.md` with supported Matomo versions.
+
 ## [5.0.0]
 
 **Check the [Migration Guide](https://github.com/Floating-Dartists/matomo-tracker#v500) to learn about breaking changes in this version**
