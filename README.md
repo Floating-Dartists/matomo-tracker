@@ -387,18 +387,18 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/CleverUnderDog">
-            <img src="https://avatars.githubusercontent.com/u/37074703?v=4" width="100;" alt="CleverUnderDog"/>
-            <br />
-            <sub><b>Null</b></sub>
-        </a>
-    </td></tr>
-<tr>
-    <td align="center">
         <a href="https://github.com/luckyrat">
             <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
             <br />
             <sub><b>Chris Tomlinson</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/CleverUnderDog">
+            <img src="https://avatars.githubusercontent.com/u/37074703?v=4" width="100;" alt="CleverUnderDog"/>
+            <br />
+            <sub><b>Null</b></sub>
         </a>
     </td>
     <td align="center">
@@ -456,6 +456,13 @@ await MatomoTracker.instance.initialize(
             <img src="https://avatars.githubusercontent.com/u/16622965?v=4" width="100;" alt="jainhitesh9998"/>
             <br />
             <sub><b>Hitesh C</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/JulianBissekkou">
+            <img src="https://avatars.githubusercontent.com/u/36447137?v=4" width="100;" alt="JulianBissekkou"/>
+            <br />
+            <sub><b>Julian Bissekkou</b></sub>
         </a>
     </td>
     <td align="center">
