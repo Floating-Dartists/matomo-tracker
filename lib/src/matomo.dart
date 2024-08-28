@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:matomo_tracker/src/assert.dart';
 import 'package:matomo_tracker/src/campaign.dart';
 import 'package:matomo_tracker/src/content.dart';
@@ -226,6 +227,7 @@ class MatomoTracker {
     DispatchSettings dispatchSettings = const DispatchSettings.nonPersistent(),
     Duration? pingInterval = const Duration(seconds: 30),
     String? tokenAuth,
+    http.Client? httpClient,
     LocalStorage? localStorage,
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
@@ -290,6 +292,7 @@ class MatomoTracker {
       baseUrl: url,
       tokenAuth: tokenAuth,
       userAgent: this.userAgent,
+      httpClient: httpClient,
       log: log,
     );
 
