@@ -430,13 +430,20 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/tfreebern2">
+            <img src="https://avatars.githubusercontent.com/u/20588863?v=4" width="100;" alt="tfreebern2"/>
+            <br />
+            <sub><b>Timothy Freebern II</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
         <a href="https://github.com/Bendix20">
             <img src="https://avatars.githubusercontent.com/u/52244034?v=4" width="100;" alt="Bendix20"/>
             <br />
             <sub><b>Null</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/Hyla96">
             <img src="https://avatars.githubusercontent.com/u/16517737?v=4" width="100;" alt="Hyla96"/>
@@ -471,7 +478,8 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Lukas Lihotzki</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/svprdga">
             <img src="https://avatars.githubusercontent.com/u/43069276?v=4" width="100;" alt="svprdga"/>
