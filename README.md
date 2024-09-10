@@ -231,6 +231,7 @@ await MatomoTracker.instance.initialize(
 
 * `Session` class and its related properties `firstVisit`, `lastVisit` and `visitCount` have been removed as they were not used since Matomo 4.0.0.
 * `LocalStorage` methods `getFirstVisit`, `setFirstVisit`, `getVisitCount` and `setVisitCount` have been removed accordingly.
+* `siteId` is now a `String` instead of an `int`
 
 ## v4.0.0
 
