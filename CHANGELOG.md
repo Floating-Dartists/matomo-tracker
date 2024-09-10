@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.1.0]
+
+* build(deps): bump device_info_plus from 9.1.2 to 10.1.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/166
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/167
+* build(deps): bump device_info_plus from 9.1.2 to 10.1.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/168
+* Adding `http.Client` argument to the MatomoDispatcher class by @tfreebern2 in https://github.com/Floating-Dartists/matomo-tracker/pull/171
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/172
+
+## New Contributors
+* @tfreebern2 made their first contribution in https://github.com/Floating-Dartists/matomo-tracker/pull/171
+
+**Full Changelog**: https://github.com/Floating-Dartists/matomo-tracker/compare/5.0.0...5.0.1
+
 ## [5.0.0+1]
 
 * Updated `README.md` with supported Matomo versions.
