@@ -26,6 +26,7 @@ A fully cross-platform wrap of the Matomo tracking client for Flutter, using the
   - [Cookieless Tracking](#cookieless-tracking)
   - [Dispatching](#dispatching)
 - [Migration Guide](#migration-guide)
+    - [v6.0.0](#v600)
     - [v5.0.0](#v500)
     - [v4.0.0](#v400)
     - [v3.0.0](#v300)
@@ -59,18 +60,39 @@ await MatomoTracker.instance.initialize(
 ```
 Note that this Visitor ID should not be confused with the User ID which is explained below!
 
-Then, for `TraceableClientMixin` and `TraceableWidget` to work, you will have to add `matomoObserver` to your navigatorObservers:
+## Navigator Observers
+
+The package provides you with two ways to track views:
+
+### `MatomoGlobalObserver`
+
+To track views globally, you can add the `MatomoGlobalObserver` to your `navigatorObservers`:
 
 ```dart
 MaterialApp(
     // ...
     navigatorObservers: [
-        matomoObserver,
+        MatomoGlobalObserver(),
     ],
 );
 ```
 
-To track views simply add `TraceableClientMixin` on your `State`:
+And your views will be tracked automatically for each route change.
+
+### `TraceableClientMixin` & `TraceableWidget`
+
+Those are used if you want to only track some specific widgets. First, you will have to add `matomoLocalObserver` to your `navigatorObservers`:
+
+```dart
+MaterialApp(
+    // ...
+    navigatorObservers: [
+        matomoLocalObserver,
+    ],
+);
+```
+
+To track views on a `StatefulWidget` simply add `TraceableClientMixin` on your `State`:
 
 ```dart
 class MyHomePage extends StatefulWidget {
@@ -226,6 +248,32 @@ await MatomoTracker.instance.initialize(
 ```
 
 # Migration Guide
+
+## v6.0.0
+
+* `matomoObserver` has been deprecated and will be removed in the next major version. You should now use `matomoLocalObserver`.
+
+### Before
+
+```dart
+MaterialApp(
+    // ...
+    navigatorObservers: [
+        matomoObserver,
+    ],
+);
+```
+
+### After
+
+```dart
+MaterialApp(
+    // ...
+    navigatorObservers: [
+        matomoLocalObserver,
+    ],
+);
+```
 
 ## v5.0.0
 

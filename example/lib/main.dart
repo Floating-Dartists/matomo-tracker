@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Matomo Example'),
       navigatorObservers: [
-        MatomoGlobalObserver(),
         matomoLocalObserver,
+        MatomoGlobalObserver(),
       ],
     );
   }
