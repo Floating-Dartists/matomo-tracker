@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matomo_tracker/src/traceable_widget_mixin.dart';
+import 'package:matomo_tracker/src/observers/matomo_local_observer.dart';
 
 class TestableApp extends StatelessWidget {
   const TestableApp({
@@ -13,7 +13,7 @@ class TestableApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: child,
-      navigatorObservers: [matomoObserver],
+      navigatorObservers: [matomoLocalObserver],
     );
   }
 }

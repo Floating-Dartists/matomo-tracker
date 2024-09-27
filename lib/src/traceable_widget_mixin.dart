@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:matomo_tracker/matomo_tracker.dart';
+import 'package:matomo_tracker/src/campaign.dart';
+import 'package:matomo_tracker/src/matomo.dart';
+import 'package:matomo_tracker/src/observers/matomo_local_observer.dart';
+import 'package:matomo_tracker/src/performance_info.dart';
 import 'package:matomo_tracker/utils/random_alpha_numeric.dart';
-
-final matomoObserver = RouteObserver<ModalRoute<void>>();
 
 /// Register a [MatomoTracker.trackPageViewWithName] on this widget.
 @optionalTypeArgs
@@ -95,13 +96,13 @@ mixin TraceableClientMixin<T extends StatefulWidget> on State<T>
 
     final route = ModalRoute.of(context);
     if (route != null) {
-      matomoObserver.subscribe(this, route);
+      matomoLocalObserver.subscribe(this, route);
     }
   }
 
   @override
   void dispose() {
-    matomoObserver.unsubscribe(this);
+    matomoLocalObserver.unsubscribe(this);
     super.dispose();
   }
 

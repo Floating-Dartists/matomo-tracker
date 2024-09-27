@@ -42,7 +42,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Matomo Example'),
-      navigatorObservers: [matomoObserver],
+      navigatorObservers: [
+        matomoLocalObserver,
+        MatomoGlobalObserver(),
+      ],
     );
   }
 }
