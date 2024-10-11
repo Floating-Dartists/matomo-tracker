@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.0-dev.1]
+
+* 173 feat improve matomoobserver to dispense with traceableclientmixin by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/174
+* chore: bump dependencies by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/177
+
+**Full Changelog**: https://github.com/Floating-Dartists/matomo-tracker/compare/5.1.0...6.0.0-dev.1
+
 ## [5.1.0]
 
 * build(deps): bump device_info_plus from 9.1.2 to 10.1.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/166
