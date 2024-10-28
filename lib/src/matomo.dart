@@ -101,6 +101,17 @@ class MatomoTracker {
     );
   }
 
+  /// The active locale (language & country code) for the current user.
+  /// This can be different from the system-reported default locale of the device.
+  Locale? _userLocale;
+  Locale? get userLocale => _userLocale;
+
+  /// Set userLocale to override the `lang` parameter sent to matomo.
+  // ignore: use_setters_to_change_properties
+  void setUserLocale(Locale locale) {
+    _userLocale = locale;
+  }
+
   /// Whether to attach `pvId` and `path` to `track...` calls automatically.
   ///
   /// There most actions can be associated with page views by setting a `pvId`
@@ -536,6 +547,7 @@ class MatomoTracker {
       path: path,
       campaign: campaign,
       dimensions: dimensions,
+      userLocale: userLocale,
       pvId: pvId ?? randomAlphaNumeric(6),
       performanceInfo: performanceInfo,
       newVisit: _inferNewVisit(newVisit),
@@ -580,6 +592,7 @@ class MatomoTracker {
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
+        userLocale: userLocale,
         newVisit: _inferNewVisit(newVisit),
       ),
     );
@@ -610,6 +623,7 @@ class MatomoTracker {
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
+        userLocale: userLocale,
         newVisit: _inferNewVisit(newVisit),
       ),
     );
@@ -650,6 +664,7 @@ class MatomoTracker {
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
+        userLocale: userLocale,
         newVisit: _inferNewVisit(newVisit),
       ),
     );
@@ -687,6 +702,7 @@ class MatomoTracker {
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
+        userLocale: userLocale,
         newVisit: _inferNewVisit(newVisit),
       ),
     );
@@ -731,6 +747,7 @@ class MatomoTracker {
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
+        userLocale: userLocale,
         newVisit: _inferNewVisit(newVisit),
       ),
     );
@@ -781,6 +798,7 @@ class MatomoTracker {
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
+        userLocale: userLocale,
         newVisit: _inferNewVisit(newVisit),
       ),
     );
@@ -815,6 +833,7 @@ class MatomoTracker {
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
+        userLocale: userLocale,
         newVisit: _inferNewVisit(newVisit),
       ),
     );
@@ -847,6 +866,7 @@ class MatomoTracker {
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
+        userLocale: userLocale,
         newVisit: _inferNewVisit(newVisit),
       ),
     );
@@ -885,6 +905,7 @@ class MatomoTracker {
         path: _inferPath(path),
         campaign: campaign,
         dimensions: dimensions,
+        userLocale: userLocale,
       ),
     );
   }
