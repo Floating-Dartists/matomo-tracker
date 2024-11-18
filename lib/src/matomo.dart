@@ -337,7 +337,7 @@ class MatomoTracker {
     }
 
     if (queue.isNotEmpty) {
-      await dispatchActions();
+      unawaited(dispatchActions());
     }
   }
 
