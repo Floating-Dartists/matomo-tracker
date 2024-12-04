@@ -210,6 +210,9 @@ class MatomoTracker {
   /// used. This means that the first_visit and the user_id will be stored in
   /// memory and will be lost when the app is closed.
   ///
+  /// If [verbosityLevel] is not specified, it will default to [Level.all] in
+  /// debug mode and [Level.off] otherwise.
+  ///
   /// The [pingInterval] is used to set the interval in which pings are
   /// send to Matomo to circumvent the [last page viewtime issue](https://github.com/Floating-Dartists/matomo-tracker/issues/78).
   /// To deactivate pings, set this to `null`. The default value is a good
@@ -232,7 +235,7 @@ class MatomoTracker {
     PackageInfo? packageInfo,
     PlatformInfo? platformInfo,
     bool cookieless = false,
-    Level verbosityLevel = Level.off,
+    Level? verbosityLevel,
     Map<String, String> customHeaders = const {},
     String? userAgent,
     bool attachLastScreenInfo = true,
@@ -258,7 +261,9 @@ class MatomoTracker {
       name: 'pingInterval',
     );
 
-    log.setLogging(level: verbosityLevel);
+    log.setLogging(
+      level: verbosityLevel ?? (kDebugMode ? Level.all : Level.off),
+    );
 
     this.siteId = siteId;
     _url = url;
