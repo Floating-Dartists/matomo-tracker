@@ -1,3 +1,4 @@
+// Ignore this warning for test files.
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:flutter/material.dart';
