@@ -1,5 +1,15 @@
 # Changelog
 
+## [6.0.0]
+
+* Change dispatchActions during initialization to unawaited by @skiluk in https://github.com/Floating-Dartists/matomo-tracker/pull/179
+* docs(contributor): contributors readme action update by @github-actions in https://github.com/Floating-Dartists/matomo-tracker/pull/180
+* build(deps): bump custom_lint from 0.6.10 to 0.7.0 by @dependabot in https://github.com/Floating-Dartists/matomo-tracker/pull/182
+* chore: supersed #183 and bump dependencies by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/185
+
+## New Contributors
+* @skiluk made their first contribution in https://github.com/Floating-Dartists/matomo-tracker/pull/179
+
 ## [6.0.0-dev.1]
 
 * 173 feat improve matomoobserver to dispense with traceableclientmixin by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/174
