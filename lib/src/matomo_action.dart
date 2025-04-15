@@ -33,7 +33,7 @@ class MatomoAction {
     this.performanceInfo,
   })  :
         // we use clock.now instead of DateTime.now to make testing easier
-        _date = clock.now().toUtc(),
+        _date = clock.now(),
         assert(
           pvId == null || pvId.length == 6,
           'pvId has to be six characters long',
@@ -240,7 +240,7 @@ class MatomoAction {
       if (link case final link?) 'link': link,
 
       // Other parameters (require authentication via `token_auth`)
-      'cdt': _date.toIso8601String(),
+      'cdt': _date.toUtc().toIso8601String(),
 
       if (content case final cont?) ...cont.toMap(),
       if (contentInteraction case final contInteraction?)
