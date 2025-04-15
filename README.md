@@ -522,13 +522,20 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/krozett">
+            <img src="https://avatars.githubusercontent.com/u/1661295?v=4" width="100;" alt="krozett"/>
+            <br />
+            <sub><b>Keith Rozett</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
         <a href="https://github.com/lukaslihotzki">
             <img src="https://avatars.githubusercontent.com/u/10326063?v=4" width="100;" alt="lukaslihotzki"/>
             <br />
             <sub><b>Lukas Lihotzki</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/skiluk">
             <img src="https://avatars.githubusercontent.com/u/1120578?v=4" width="100;" alt="skiluk"/>
