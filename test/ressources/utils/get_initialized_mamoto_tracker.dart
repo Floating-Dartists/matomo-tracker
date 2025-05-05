@@ -17,6 +17,7 @@ Future<MatomoTracker> getInitializedMatomoTracker({
   String? tokenAuth,
   PlatformInfo? platformInfo,
   bool shouldForceCreation = true,
+  bool cookieless = false,
 }) async {
   final matomoTracker =
       shouldForceCreation ? MatomoTracker() : MatomoTracker.instance;
@@ -34,6 +35,7 @@ Future<MatomoTracker> getInitializedMatomoTracker({
     contentBaseUrl: contentBaseUrl,
     tokenAuth: tokenAuth,
     platformInfo: platformInfo,
+    cookieless: cookieless,
   );
 
   return matomoTracker;
