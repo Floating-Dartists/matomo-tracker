@@ -15,5 +15,4 @@ void matomoTrackerSetup() {
       .thenAnswer((_) => Future.value());
   when(mockLocalStorage.clear).thenAnswer((_) => Future.value());
   when(() => mockPackageInfo.packageName).thenReturn(matomoTrackerPackageName);
-  when(() => mockPackageInfo.packageName).thenReturn(matomoTrackerPackageName);
 }

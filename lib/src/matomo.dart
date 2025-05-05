@@ -136,6 +136,7 @@ class MatomoTracker {
 
   bool _optOut = false;
   bool get optOut => _optOut;
+
   Future<void> setOptOut({required bool optOut}) async {
     _optOut = optOut;
     await _localStorage.setOptOut(optOut: optOut);
@@ -144,13 +145,20 @@ class MatomoTracker {
   bool _cookieless = false;
   bool get cookieless => _cookieless;
 
-  void setCookieless({
+  Future<void> setCookieless({
     required bool cookieless,
     LocalStorage? localStorage,
-  }) {
+  }) async {
     if (_cookieless == cookieless) return;
     _cookieless = cookieless;
     _setLocalStorage(localStorage);
+
+    if (cookieless) {
+      _visitor = const Visitor();
+    } else {
+      final visitorId = await _getVisitorId();
+      _visitor = Visitor(id: visitorId);
+    }
   }
 
   void _setLocalStorage(LocalStorage? localStorage) {
