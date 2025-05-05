@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
+import '../ressources/mock/data.dart';
 import '../ressources/mock/mock.dart';
 import '../ressources/utils/get_initialized_mamoto_tracker.dart';
 import '../ressources/utils/matomo_tracker_setup.dart';
 
 void main() {
   group('Cookieless', () {
-    setUp(() {
-      matomoTrackerSetup(visitorId: 'someRandomVisitorId');
-    });
+    setUp(matomoTrackerSetup);
 
     test('activate cookieless clears VisitorId', () async {
       // cookieless is off by default
@@ -20,6 +20,9 @@ void main() {
     });
 
     test('deactivate cookieless initializes VisitorId', () async {
+      when(mockLocalStorage.getVisitorId)
+          .thenAnswer((_) async => matomoTrackerVisitorId);
+
       final tracker = await getInitializedMatomoTracker(
         cookieless: true,
       );
