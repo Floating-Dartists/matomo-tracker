@@ -436,13 +436,20 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/stefangaller">
+            <img src="https://avatars.githubusercontent.com/u/1914504?v=4" width="100;" alt="stefangaller"/>
+            <br />
+            <sub><b>Stefan Galler</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
         <a href="https://github.com/luckyrat">
             <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
             <br />
             <sub><b>Chris Tomlinson</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/CleverUnderDog">
             <img src="https://avatars.githubusercontent.com/u/37074703?v=4" width="100;" alt="CleverUnderDog"/>
@@ -477,15 +484,15 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Zvi Karp</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/tfreebern2">
             <img src="https://avatars.githubusercontent.com/u/20588863?v=4" width="100;" alt="tfreebern2"/>
             <br />
             <sub><b>Timothy Freebern II</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/Bendix20">
             <img src="https://avatars.githubusercontent.com/u/52244034?v=4" width="100;" alt="Bendix20"/>
@@ -520,15 +527,15 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Julian Bissekkou</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/krozett">
             <img src="https://avatars.githubusercontent.com/u/1661295?v=4" width="100;" alt="krozett"/>
             <br />
             <sub><b>Keith Rozett</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/lukaslihotzki">
             <img src="https://avatars.githubusercontent.com/u/10326063?v=4" width="100;" alt="lukaslihotzki"/>
