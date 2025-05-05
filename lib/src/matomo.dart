@@ -132,11 +132,9 @@ class MatomoTracker {
   late final Size screenResolution;
 
   bool _initialized = false;
-
   bool get initialized => _initialized;
 
   bool _optOut = false;
-
   bool get optOut => _optOut;
 
   Future<void> setOptOut({required bool optOut}) async {
@@ -145,7 +143,6 @@ class MatomoTracker {
   }
 
   bool _cookieless = false;
-
   bool get cookieless => _cookieless;
 
   Future<void> setCookieless({
