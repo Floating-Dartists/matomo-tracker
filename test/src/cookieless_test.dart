@@ -12,7 +12,9 @@ void main() {
 
     test('activate cookieless clears VisitorId', () async {
       // cookieless is off by default
-      final tracker = await getInitializedMatomoTracker();
+      final tracker = await getInitializedMatomoTracker(
+        visitorId: matomoTrackerVisitorId,
+      );
       expect(tracker.visitor.id, isNotNull);
 
       await tracker.setCookieless(cookieless: true);
