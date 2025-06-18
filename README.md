@@ -479,13 +479,20 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/streinhard">
+            <img src="https://avatars.githubusercontent.com/u/12693991?v=4" width="100;" alt="streinhard"/>
+            <br />
+            <sub><b>Stefan Reinhard</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
         <a href="https://github.com/zvikarp">
             <img src="https://avatars.githubusercontent.com/u/13397207?v=4" width="100;" alt="zvikarp"/>
             <br />
             <sub><b>Zvi Karp</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/tfreebern2">
             <img src="https://avatars.githubusercontent.com/u/20588863?v=4" width="100;" alt="tfreebern2"/>
@@ -520,15 +527,15 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Hitesh C</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/JulianBissekkou">
             <img src="https://avatars.githubusercontent.com/u/36447137?v=4" width="100;" alt="JulianBissekkou"/>
             <br />
             <sub><b>Julian Bissekkou</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/krozett">
             <img src="https://avatars.githubusercontent.com/u/1661295?v=4" width="100;" alt="krozett"/>
