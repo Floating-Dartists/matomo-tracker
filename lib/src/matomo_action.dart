@@ -26,6 +26,7 @@ class MatomoAction {
     this.link,
     this.campaign,
     this.dimensions,
+    this.userLocale,
     this.newVisit,
     this.ping,
     this.content,
@@ -99,6 +100,9 @@ class MatomoAction {
   // The dimensions associated with the action
   final Map<String, String>? dimensions;
 
+  // User defined locale
+  final Locale? userLocale;
+
   final bool? newVisit;
 
   final bool? ping;
@@ -127,6 +131,7 @@ class MatomoAction {
     String? link,
     Campaign? campaign,
     Map<String, String>? dimensions,
+    Locale? userLocale,
     bool? newVisit,
     bool? ping,
     Content? content,
@@ -152,6 +157,7 @@ class MatomoAction {
         link: link ?? this.link,
         campaign: campaign ?? this.campaign,
         dimensions: dimensions ?? this.dimensions,
+        userLocale: userLocale ?? this.userLocale,
         newVisit: newVisit ?? this.newVisit,
         ping: ping ?? this.ping,
         content: content ?? this.content,
@@ -179,7 +185,7 @@ class MatomoAction {
         )
         .toString()
         .restoreHashtags();
-    final locale = PlatformDispatcher.instance.locale;
+    final locale = userLocale ?? PlatformDispatcher.instance.locale;
     final country = locale.countryCode?.toLowerCase();
     final ping = this.ping ?? false;
 
