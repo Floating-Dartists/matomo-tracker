@@ -102,15 +102,11 @@ class MatomoTracker {
   }
 
   /// The active locale (language & country code) for the current user.
-  /// This can be different from the system-reported default locale of the device.
-  Locale? _userLocale;
-  Locale? get userLocale => _userLocale;
-
-  /// Set userLocale to override the `lang` parameter sent to matomo.
-  // ignore: use_setters_to_change_properties
-  void setUserLocale(Locale locale) {
-    _userLocale = locale;
-  }
+  /// Set this to override the language reported the system-reported default locale of the device.
+  /// Attention: Changing the user locale might override visitor country if GeoIP is not enabled.
+  /// If you don't want this behavior, consider saving the user locale as a custom dimension:
+  /// https://matomo.org/guide/reporting-tools/custom-dimensions/
+  Locale? userLocale;
 
   /// Whether to attach `pvId` and `path` to `track...` calls automatically.
   ///
