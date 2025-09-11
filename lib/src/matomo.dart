@@ -251,6 +251,7 @@ class MatomoTracker {
     Map<String, String> customHeaders = const {},
     String? userAgent,
     bool attachLastScreenInfo = true,
+    MatomoSerializer? serializer,
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -309,6 +310,7 @@ class MatomoTracker {
       userAgent: this.userAgent,
       httpClient: httpClient,
       log: log,
+      serializer: serializer,
     );
 
     // Screen Resolution
