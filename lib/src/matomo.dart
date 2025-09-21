@@ -251,6 +251,7 @@ class MatomoTracker {
     Map<String, String> customHeaders = const {},
     String? userAgent,
     bool attachLastScreenInfo = true,
+    bool optOut = false,
   }) async {
     if (_initialized) {
       throw const AlreadyInitializedMatomoInstanceException();
@@ -333,7 +334,7 @@ class MatomoTracker {
       contentBase = 'https://${effectivePackageInfo.packageName}';
     }
 
-    _optOut = await _localStorage.getOptOut();
+    _optOut = (await _localStorage.getOptOut()) ?? optOut;
     unawaited(_localStorage.setOptOut(optOut: _optOut));
 
     log.fine(

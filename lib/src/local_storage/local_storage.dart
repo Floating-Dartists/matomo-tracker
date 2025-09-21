@@ -1,7 +1,7 @@
 abstract interface class LocalStorage {
   Future<String?> getVisitorId();
   Future<void> setVisitorId(String visitorId);
-  Future<bool> getOptOut();
+  Future<bool?> getOptOut();
   Future<void> setOptOut({required bool optOut});
   Future<void> storeActions(String serializedActions);
   Future<String?> loadActions();

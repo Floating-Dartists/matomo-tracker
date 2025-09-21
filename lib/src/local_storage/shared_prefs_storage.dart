@@ -29,9 +29,9 @@ class SharedPrefsStorage implements LocalStorage {
   }
 
   @override
-  Future<bool> getOptOut() async {
+  Future<bool?> getOptOut() async {
     final prefs = await _getSharedPrefs();
-    return prefs.getBool(kOptOut) ?? false;
+    return prefs.getBool(kOptOut);
   }
 
   @override
