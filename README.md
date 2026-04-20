@@ -501,13 +501,6 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/Bendix20">
-            <img src="https://avatars.githubusercontent.com/u/52244034?v=4" width="100;" alt="Bendix20"/>
-            <br />
-            <sub><b>Null</b></sub>
-        </a>
-    </td>
-    <td align="center">
         <a href="https://github.com/Hyla96">
             <img src="https://avatars.githubusercontent.com/u/16517737?v=4" width="100;" alt="Hyla96"/>
             <br />
@@ -527,15 +520,15 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Hitesh C</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/JulianBissekkou">
             <img src="https://avatars.githubusercontent.com/u/36447137?v=4" width="100;" alt="JulianBissekkou"/>
             <br />
             <sub><b>Julian Bissekkou</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/krozett">
             <img src="https://avatars.githubusercontent.com/u/1661295?v=4" width="100;" alt="krozett"/>
