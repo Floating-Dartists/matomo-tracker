@@ -1,6 +1,6 @@
 /// A fully cross-platform wrap of the Matomo [Tracking HTTP API](https://developer.matomo.org/api-reference/tracking-api)
 /// for Flutter.
-library matomo_tracker;
+library;
 
 export 'src/campaign.dart';
 export 'src/content.dart';

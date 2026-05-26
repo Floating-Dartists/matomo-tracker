@@ -26,6 +26,7 @@ dependencies:
 
 dev_dependencies:
   fd_lints: ^3.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   meta: ^1.18.0
