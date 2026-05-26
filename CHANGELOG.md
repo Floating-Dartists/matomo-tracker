@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.1.1]
+
+* feat: handle optOut in initialization by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/203
+* build(deps): bump device_info_plus and package_info_plus by @dependabot[bot] in https://github.com/Floating-Dartists/matomo-tracker/pull/205
+* deps: bump dependencies and prepare v6.1.1 by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/208
+
+**Full Changelog**: https://github.com/Floating-Dartists/matomo-tracker/compare/6.1.0...6.1.1
+
 ## [6.1.0]
 
 * Issue #186 - Correctly report the device's local time by @krozett in https://github.com/Floating-Dartists/matomo-tracker/pull/187
