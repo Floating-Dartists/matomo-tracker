@@ -1,22 +1,23 @@
 name: example
 description: Demonstrates how to use the matomo_tracker package.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.5 <4.0.0'
+  sdk: ">=3.4.1 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   matomo_tracker:
     path: ..
-  url_launcher: ^6.1.11
+  share_plus: ^13.1.0
+  url_launcher: ^6.3.2
 
 dev_dependencies:
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
