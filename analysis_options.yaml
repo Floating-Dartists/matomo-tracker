@@ -1,4 +1,1 @@
 include: package:flutter_lints/flutter.yaml
-
-plugins:
-  fd_lints: ^3.0.0
