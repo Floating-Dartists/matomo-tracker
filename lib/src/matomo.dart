@@ -88,6 +88,14 @@ class MatomoTracker {
   Visitor get visitor => _visitor;
   late Visitor _visitor;
 
+  /// The Matomo request parameter used for [visitor.id].
+  ///
+  /// This defaults to [VisitorIdParameter.id], which sends the ID as `_id`.
+  /// Set it to [VisitorIdParameter.cid] during [initialize] only when the
+  /// application has a stable, valid Matomo visitor ID and needs to explicitly
+  /// control Matomo's visitor matching for each request.
+  late final VisitorIdParameter visitorIdParameter;
+
   /// Sets the [User ID](https://matomo.org/guide/reports/user-ids/).
   ///
   /// This should not be confused with the [visitorId] of the [initialize]
@@ -164,6 +172,10 @@ class MatomoTracker {
       _visitor = const Visitor();
     } else {
       final visitorId = await _getVisitorId();
+      _validateVisitorIdParameter(
+        visitorId: visitorId,
+        visitorIdParameter: visitorIdParameter,
+      );
       _visitor = Visitor(id: visitorId);
     }
   }
@@ -217,9 +229,14 @@ class MatomoTracker {
   ///
   /// The [visitorId] should have a length of 16 characters otherwise an
   /// [ArgumentError] will be thrown. This parameter corresponds with the
-  /// `_id` and should not be confused with the user id `uid`. See the
-  /// [Visitor] class for additional remarks. It is recommended to leave this
-  /// to `null` to use an automatically generated id.
+  /// `_id` by default and should not be confused with the user id `uid`. See
+  /// the [Visitor] class for additional remarks. It is recommended to leave
+  /// this to `null` to use an automatically generated id.
+  ///
+  /// Set [visitorIdParameter] to [VisitorIdParameter.cid] to send the visitor
+  /// ID as Matomo's `cid` parameter instead. In that mode, the effective
+  /// visitor ID must be exactly 16 hexadecimal characters. The default is
+  /// [VisitorIdParameter.id], preserving the package's existing behavior.
   ///
   /// If [cookieless] is set to true, a [CookielessStorage] instance will be
   /// used. This means that the first_visit and the user_id will be stored in
@@ -237,6 +254,7 @@ class MatomoTracker {
     required String url,
     bool newVisit = true,
     String? visitorId,
+    VisitorIdParameter visitorIdParameter = VisitorIdParameter.id,
     String? uid,
     String? contentBaseUrl,
     DispatchSettings dispatchSettings = const DispatchSettings.nonPersistent(),
@@ -265,6 +283,11 @@ class MatomoTracker {
       );
     }
 
+    _validateVisitorIdParameter(
+      visitorId: visitorId,
+      visitorIdParameter: visitorIdParameter,
+    );
+
     assertDurationNotNegative(
       value: dispatchSettings.dequeueInterval,
       name: 'dequeueInterval',
@@ -286,6 +309,7 @@ class MatomoTracker {
     _tokenAuth = tokenAuth;
     _newVisit = newVisit;
     this.attachLastScreenInfo = attachLastScreenInfo;
+    this.visitorIdParameter = visitorIdParameter;
     _dispatchSettings = dispatchSettings;
 
     _setLocalStorage(localStorage);
@@ -299,6 +323,10 @@ class MatomoTracker {
         : Queue();
 
     final localVisitorId = visitorId ?? await _getVisitorId();
+    _validateVisitorIdParameter(
+      visitorId: localVisitorId,
+      visitorIdParameter: visitorIdParameter,
+    );
     _visitor = Visitor(id: localVisitorId, uid: uid);
 
     // User agent
@@ -965,6 +993,26 @@ class MatomoTracker {
 
     final localId = await _localStorage.getVisitorId();
     return localId ?? const Uuid().v4().replaceAll('-', '').substring(0, 16);
+  }
+
+  void _validateVisitorIdParameter({
+    required String? visitorId,
+    required VisitorIdParameter visitorIdParameter,
+  }) {
+    if (visitorIdParameter != VisitorIdParameter.cid || visitorId == null) {
+      return;
+    }
+
+    final isHexadecimalVisitorId =
+        RegExp(r'^[0-9a-fA-F]{16}$').hasMatch(visitorId);
+    if (!isHexadecimalVisitorId) {
+      throw ArgumentError.value(
+        visitorId,
+        'visitorId',
+        'The visitorId must be exactly 16 hexadecimal characters when '
+        'visitorIdParameter is VisitorIdParameter.cid',
+      );
+    }
   }
 
   @visibleForTesting
