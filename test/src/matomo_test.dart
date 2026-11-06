@@ -98,8 +98,7 @@ void main() {
       when(mockLocalStorage.getOptOut).thenAnswer((_) async => true);
       when(mockLocalStorage.loadActions)
           .thenAnswer((_) async => '[{"action_name":"stored"}]');
-      when(() => mockLocalStorage.storeActions(any()))
-          .thenAnswer((_) async {});
+      when(() => mockLocalStorage.storeActions(any())).thenAnswer((_) async {});
       final matomoTracker = MatomoTracker();
       await matomoTracker.initialize(
         siteId: matomoTrackerSiteId,
@@ -523,5 +522,29 @@ void main() {
       expect(tracker.url, newUrl);
       expect(tracker.dispatcher.baseUri.toString(), newUrl);
     });
+  });
+
+  group('uninitialized', () {
+    final event = EventInfo(
+      category: matomoTrackerEventCategory,
+      action: matomoTrackerAction,
+    );
+    final content = Content(name: matomoContentName);
+    final calls = <String, TrackerCallback>{
+      'trackPageView': (t) async => t.trackPageView(context: mockBuildContext),
+      'trackEvent': (t) async => t.trackEvent(eventInfo: event),
+      'trackDimensions': (t) async =>
+          t.trackDimensions(dimensions: matomoTrackerDimensions),
+      'trackSearch': (t) async => t.trackSearch(searchKeyword: 'keyword'),
+      'trackContentImpression': (t) async =>
+          t.trackContentImpression(content: content),
+      'trackContentInteraction': (t) async => t.trackContentInteraction(
+            content: content,
+            interaction: matomoContentInteraction,
+          ),
+    };
+    for (final MapEntry(key: name, value: call) in calls.entries) {
+      group(name, () => uninitializedTest(call));
+    }
   });
 }

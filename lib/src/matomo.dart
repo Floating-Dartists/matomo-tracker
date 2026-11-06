@@ -498,6 +498,8 @@ class MatomoTracker {
     PerformanceInfo? performanceInfo,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     final actionName = context.widget.toStringShort();
 
     trackPageViewWithName(
@@ -616,6 +618,8 @@ class MatomoTracker {
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     validateDimension(dimensions);
     return _track(
       MatomoAction(
@@ -658,6 +662,8 @@ class MatomoTracker {
     Campaign? campaign,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     validateDimension(dimensions);
     return _track(
       MatomoAction(
@@ -693,6 +699,8 @@ class MatomoTracker {
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     validateDimension(dimensions);
     return _track(
       MatomoAction(
@@ -860,6 +868,8 @@ class MatomoTracker {
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     return _track(
       MatomoAction(
         content: content,
@@ -898,6 +908,8 @@ class MatomoTracker {
     Campaign? campaign,
     Map<String, String>? dimensions,
   }) {
+    _initializationCheck();
+
     return _track(
       MatomoAction(
         content: content,
