@@ -87,6 +87,42 @@ void main() {
       );
     });
 
+    test('it should ask for a retry only on transient http errors', () async {
+      when(() => mockHttpResponse.body).thenReturn('');
+      final matomoDispatcher = MatomoDispatcher(
+        baseUrl: matomoDispatcherBaseUrl,
+        userAgent: matomoTrackerUserAgent,
+        httpClient: mockHttpClient,
+        log: mockLogger,
+      );
+      const expected = {
+        200: true,
+        204: true,
+        400: true,
+        404: true,
+        408: false,
+        429: false,
+        500: false,
+        503: false,
+      };
+
+      for (final MapEntry(key: statusCode, value: sent) in expected.entries) {
+        when(() => mockHttpResponse.statusCode).thenReturn(statusCode);
+        final result = await matomoDispatcher.sendBatch(
+          actions: [mockMatomoAction.toMap(mockMatomoTracker)],
+        );
+        expect(result, sent, reason: 'status $statusCode');
+      }
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).called(expected.length);
+      when(() => mockHttpResponse.statusCode).thenReturn(200);
+    });
+
     test(
         'it should send nothing in sendBatch if the list of MatomoAction is empty',
         () async {

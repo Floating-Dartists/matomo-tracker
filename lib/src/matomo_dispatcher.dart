@@ -27,7 +27,9 @@ class MatomoDispatcher {
   ///
   /// The actions are sent in a single request.
   ///
-  /// Returns `true` if the batch was sent successfully.
+  /// Returns `false` if the batch should be retried: on network errors and
+  /// on transient http errors (5xx, 408, 429). Other status codes return
+  /// `true`, so a batch the server rejects is not retried forever.
   /// Note that this is based on the http return code of the
   /// response, not its body.
   Future<bool> sendBatch({
@@ -57,7 +59,12 @@ class MatomoDispatcher {
       final statusCode = response.statusCode;
       log.fine(' <- $statusCode');
 
-      return true;
+      final isTransient =
+          statusCode >= 500 || statusCode == 408 || statusCode == 429;
+      if (statusCode >= 300 && !isTransient) {
+        log.severe(message: ' <- $statusCode, batch dropped: ${response.body}');
+      }
+      return !isTransient;
     } catch (e) {
       log.severe(
         message: ' <- $e',
