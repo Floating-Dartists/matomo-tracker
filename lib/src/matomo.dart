@@ -315,12 +315,10 @@ class MatomoTracker {
       log: log,
     );
 
-    // Screen Resolution
-    final physicalSize = PlatformDispatcher.instance.views.first.physicalSize;
-    screenResolution = Size(
-      physicalSize.width,
-      physicalSize.height,
-    );
+    // Screen Resolution. There is no view in a background isolate.
+    screenResolution =
+        PlatformDispatcher.instance.views.firstOrNull?.physicalSize ??
+            Size.zero;
 
     if (localVisitorId != null) {
       // Save the visitorId for future visits.
