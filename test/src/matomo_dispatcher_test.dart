@@ -55,6 +55,34 @@ void main() {
       );
     });
 
+    test('it should not log the token_auth', () async {
+      const secret = 'secret-token-value';
+      final matomoDispatcher = MatomoDispatcher(
+        baseUrl: matomoDispatcherBaseUrl,
+        tokenAuth: secret,
+        httpClient: mockHttpClient,
+        log: mockLogger,
+      );
+      clearInteractions(mockLogger);
+
+      await matomoDispatcher.sendBatch(
+        actions: [
+          {'action_name': 'test'},
+        ],
+      );
+
+      final logged = verify(() => mockLogger.fine(captureAny())).captured;
+      expect(logged, isNotEmpty);
+      expect(logged.join(), isNot(contains(secret)));
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body', that: contains(secret)),
+        ),
+      );
+    });
+
     test('it should set user agent in http request', () async {
       final actions = [mockMatomoAction, mockMatomoAction];
 

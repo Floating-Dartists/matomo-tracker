@@ -340,7 +340,7 @@ class MatomoTracker {
     if (_optOut) dropActions();
 
     log.fine(
-      'Matomo Initialized: visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=${this.userAgent}',
+      'Matomo Initialized: visitorId=$localVisitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=${this.userAgent}',
     );
     _initialized = true;
 

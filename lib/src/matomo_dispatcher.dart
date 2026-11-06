@@ -49,7 +49,8 @@ class MatomoDispatcher {
         for (final action in actions) '?${buildUriForAction(action).query}',
       ],
     };
-    log.fine(' -> $batch');
+    // Not the batch itself: its queries contain the token_auth.
+    log.fine(' -> $actions');
     try {
       final response = await httpClient.post(
         baseUri,
