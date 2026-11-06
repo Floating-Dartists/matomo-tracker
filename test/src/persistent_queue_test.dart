@@ -44,6 +44,18 @@ void main() {
       final decoded = PersistentQueue.decode(_nonEmptyJson);
       expect(decoded.length, _nonEmptyJsonElementCount);
     });
+
+    test('it should drop unreadable data instead of throwing', () {
+      expect(PersistentQueue.decode('not json'), isEmpty);
+      expect(PersistentQueue.decode('{"action1":"value1"}'), isEmpty);
+      expect(
+        PersistentQueue.decode('[{"a":"1"},"text",{"b":2},{"c":"3"}]'),
+        [
+          {'a': '1'},
+          {'c': '3'},
+        ],
+      );
+    });
   });
 
   group('load', () {
@@ -62,6 +74,18 @@ void main() {
         onLoadFilter: DispatchSettings.dropAll,
       );
       expect(dropAllQueue, isEmpty);
+    });
+
+    test('load should drop actions with an unparsable cdt', () async {
+      SharedPreferences.setMockInitialValues({
+        SharedPrefsStorage.kPersistentQueue:
+            '[{"cdt":"not a date"},{"cdt":"${DateTime.now().toUtc().toIso8601String()}"}]',
+      });
+      final persistentQueue = await PersistentQueue.load(
+        storage: SharedPrefsStorage(),
+        onLoadFilter: DispatchSettings.whereNotOlderThanADay,
+      );
+      expect(persistentQueue, hasLength(1));
     });
 
     test('load should create an empty queue if no data was stored', () async {
