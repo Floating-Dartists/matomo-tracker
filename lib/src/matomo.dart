@@ -144,8 +144,11 @@ class MatomoTracker {
   bool _optOut = false;
   bool get optOut => _optOut;
 
+  /// While opted out, actions are not recorded. Opting out also drops the
+  /// actions that are still in the queue.
   Future<void> setOptOut({required bool optOut}) async {
     _optOut = optOut;
+    if (optOut) dropActions();
     await _localStorage.setOptOut(optOut: optOut);
   }
 
@@ -336,6 +339,7 @@ class MatomoTracker {
 
     _optOut = (await _localStorage.getOptOut()) ?? optOut;
     unawaited(_localStorage.setOptOut(optOut: _optOut));
+    if (_optOut) dropActions();
 
     log.fine(
       'Matomo Initialized: visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=${this.userAgent}',
@@ -907,7 +911,10 @@ class MatomoTracker {
     );
   }
 
-  void _track(MatomoAction action) => queue.add(action.toMap(this));
+  void _track(MatomoAction action) {
+    if (_optOut) return;
+    queue.add(action.toMap(this));
+  }
 
   void _ping() {
     final lastPageView = _lastPageView;
