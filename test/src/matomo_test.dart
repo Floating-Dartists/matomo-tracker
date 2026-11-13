@@ -4,6 +4,7 @@ import 'package:matomo_tracker/src/dispatch_settings.dart';
 import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/matomo.dart';
+import 'package:matomo_tracker/src/visitor.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../ressources/mock/data.dart';
@@ -67,6 +68,38 @@ void main() {
       [(tracker, _) => expect(tracker.authToken, matomoTrackerTokenAuth)],
       tokenAuth: matomoTrackerTokenAuth,
     );
+
+    test('it should initialize with the cid visitor ID parameter', () async {
+      final tracker = await getInitializedMatomoTracker(
+        visitorId: matomoTrackerVisitorId,
+        visitorIdParameter: VisitorIdParameter.cid,
+      );
+
+      expect(tracker.visitorIdParameter, VisitorIdParameter.cid);
+      expect(tracker.visitor.id, matomoTrackerVisitorId);
+    });
+
+    test('it should reject a non-hexadecimal cid visitor ID', () async {
+      await expectLater(
+        () => getInitializedMatomoTracker(
+          visitorId: 'abcdefghijklmnop',
+          visitorIdParameter: VisitorIdParameter.cid,
+        ),
+        throwsArgumentError,
+      );
+    });
+
+    test('it should reject a non-hexadecimal stored cid visitor ID', () async {
+      when(mockLocalStorage.getVisitorId)
+          .thenAnswer((_) async => 'abcdefghijklmnop');
+
+      await expectLater(
+        () => getInitializedMatomoTracker(
+          visitorIdParameter: VisitorIdParameter.cid,
+        ),
+        throwsArgumentError,
+      );
+    });
   });
 
   group('OptOut', () {
