@@ -408,6 +408,13 @@ await MatomoTracker.instance.initialize(
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/nikitachicherindev">
+            <img src="https://avatars.githubusercontent.com/u/260088337?v=4" width="100;" alt="nikitachicherindev"/>
+            <br />
+            <sub><b>Nikita Chicherin</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/MeixDev">
             <img src="https://avatars.githubusercontent.com/u/14351291?v=4" width="100;" alt="MeixDev"/>
             <br />
@@ -434,15 +441,15 @@ await MatomoTracker.instance.initialize(
             <br />
             <sub><b>Paula Petcu</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/stefangaller">
             <img src="https://avatars.githubusercontent.com/u/1914504?v=4" width="100;" alt="stefangaller"/>
             <br />
             <sub><b>Stefan Galler</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/luckyrat">
             <img src="https://avatars.githubusercontent.com/u/1211375?v=4" width="100;" alt="luckyrat"/>
@@ -476,13 +483,6 @@ await MatomoTracker.instance.initialize(
             <img src="https://avatars.githubusercontent.com/u/1260818?v=4" width="100;" alt="kuhnroyal"/>
             <br />
             <sub><b>Peter Leibiger</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/streinhard">
-            <img src="https://avatars.githubusercontent.com/u/12693991?v=4" width="100;" alt="streinhard"/>
-            <br />
-            <sub><b>Stefan Reinhard</b></sub>
         </a>
     </td></tr>
 <tr>
