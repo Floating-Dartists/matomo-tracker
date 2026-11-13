@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/content.dart';
+import 'package:matomo_tracker/src/dispatch_settings.dart';
 import 'package:matomo_tracker/src/event_info.dart';
 import 'package:matomo_tracker/src/exceptions.dart';
 import 'package:matomo_tracker/src/matomo.dart';
@@ -75,6 +76,43 @@ void main() {
 
       verify(() => mockLocalStorage.setOptOut(optOut: true));
       expect(matomoTracker.optOut, true);
+    });
+
+    test('it should drop queued actions and record nothing while opted out',
+        () async {
+      final matomoTracker = await getInitializedMatomoTracker();
+      matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
+      expect(matomoTracker.queue, isNotEmpty);
+
+      await matomoTracker.setOptOut(optOut: true);
+      matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
+      expect(matomoTracker.queue, isEmpty);
+
+      await matomoTracker.setOptOut(optOut: false);
+      matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
+      expect(matomoTracker.queue, hasLength(1));
+    });
+
+    test('it should drop restored actions if opted out at initialization',
+        () async {
+      when(mockLocalStorage.getOptOut).thenAnswer((_) async => true);
+      when(mockLocalStorage.loadActions)
+          .thenAnswer((_) async => '[{"action_name":"stored"}]');
+      when(() => mockLocalStorage.storeActions(any())).thenAnswer((_) async {});
+      final matomoTracker = MatomoTracker();
+      await matomoTracker.initialize(
+        siteId: matomoTrackerSiteId,
+        url: matomoTrackerUrl,
+        localStorage: mockLocalStorage,
+        packageInfo: mockPackageInfo,
+        dispatchSettings: const DispatchSettings.persistent(
+          onLoad: DispatchSettings.takeAll,
+        ),
+      );
+
+      expect(matomoTracker.queue, isEmpty);
+      matomoTracker.trackDimensions(dimensions: matomoTrackerDimensions);
+      expect(matomoTracker.queue, isEmpty);
     });
 
     test('it should be able to get optOut from local db', () async {
@@ -484,5 +522,29 @@ void main() {
       expect(tracker.url, newUrl);
       expect(tracker.dispatcher.baseUri.toString(), newUrl);
     });
+  });
+
+  group('uninitialized', () {
+    final event = EventInfo(
+      category: matomoTrackerEventCategory,
+      action: matomoTrackerAction,
+    );
+    final content = Content(name: matomoContentName);
+    final calls = <String, TrackerCallback>{
+      'trackPageView': (t) async => t.trackPageView(context: mockBuildContext),
+      'trackEvent': (t) async => t.trackEvent(eventInfo: event),
+      'trackDimensions': (t) async =>
+          t.trackDimensions(dimensions: matomoTrackerDimensions),
+      'trackSearch': (t) async => t.trackSearch(searchKeyword: 'keyword'),
+      'trackContentImpression': (t) async =>
+          t.trackContentImpression(content: content),
+      'trackContentInteraction': (t) async => t.trackContentInteraction(
+            content: content,
+            interaction: matomoContentInteraction,
+          ),
+    };
+    for (final MapEntry(key: name, value: call) in calls.entries) {
+      group(name, () => uninitializedTest(call));
+    }
   });
 }

@@ -144,8 +144,11 @@ class MatomoTracker {
   bool _optOut = false;
   bool get optOut => _optOut;
 
+  /// While opted out, actions are not recorded. Opting out also drops the
+  /// actions that are still in the queue.
   Future<void> setOptOut({required bool optOut}) async {
     _optOut = optOut;
+    if (optOut) dropActions();
     await _localStorage.setOptOut(optOut: optOut);
   }
 
@@ -312,12 +315,10 @@ class MatomoTracker {
       log: log,
     );
 
-    // Screen Resolution
-    final physicalSize = PlatformDispatcher.instance.views.first.physicalSize;
-    screenResolution = Size(
-      physicalSize.width,
-      physicalSize.height,
-    );
+    // Screen Resolution. There is no view in a background isolate.
+    screenResolution =
+        PlatformDispatcher.instance.views.firstOrNull?.physicalSize ??
+            Size.zero;
 
     if (localVisitorId != null) {
       // Save the visitorId for future visits.
@@ -336,9 +337,10 @@ class MatomoTracker {
 
     _optOut = (await _localStorage.getOptOut()) ?? optOut;
     unawaited(_localStorage.setOptOut(optOut: _optOut));
+    if (_optOut) dropActions();
 
     log.fine(
-      'Matomo Initialized: visitorId=$visitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=${this.userAgent}',
+      'Matomo Initialized: visitorId=$localVisitorId; contentBase=$contentBase; resolution=${screenResolution.width}x${screenResolution.height}; userAgent=${this.userAgent}',
     );
     _initialized = true;
 
@@ -494,6 +496,8 @@ class MatomoTracker {
     PerformanceInfo? performanceInfo,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     final actionName = context.widget.toStringShort();
 
     trackPageViewWithName(
@@ -612,6 +616,8 @@ class MatomoTracker {
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     validateDimension(dimensions);
     return _track(
       MatomoAction(
@@ -654,6 +660,8 @@ class MatomoTracker {
     Campaign? campaign,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     validateDimension(dimensions);
     return _track(
       MatomoAction(
@@ -689,6 +697,8 @@ class MatomoTracker {
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     validateDimension(dimensions);
     return _track(
       MatomoAction(
@@ -856,6 +866,8 @@ class MatomoTracker {
     Map<String, String>? dimensions,
     bool? newVisit,
   }) {
+    _initializationCheck();
+
     return _track(
       MatomoAction(
         content: content,
@@ -894,6 +906,8 @@ class MatomoTracker {
     Campaign? campaign,
     Map<String, String>? dimensions,
   }) {
+    _initializationCheck();
+
     return _track(
       MatomoAction(
         content: content,
@@ -907,7 +921,10 @@ class MatomoTracker {
     );
   }
 
-  void _track(MatomoAction action) => queue.add(action.toMap(this));
+  void _track(MatomoAction action) {
+    if (_optOut) return;
+    queue.add(action.toMap(this));
+  }
 
   void _ping() {
     final lastPageView = _lastPageView;

@@ -20,7 +20,7 @@ class Lock {
         await prev;
       }
 
-      final result = func();
+      final result = await func();
       return result;
     } finally {
       if (identical(last, completer.future)) {

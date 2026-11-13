@@ -55,6 +55,34 @@ void main() {
       );
     });
 
+    test('it should not log the token_auth', () async {
+      const secret = 'secret-token-value';
+      final matomoDispatcher = MatomoDispatcher(
+        baseUrl: matomoDispatcherBaseUrl,
+        tokenAuth: secret,
+        httpClient: mockHttpClient,
+        log: mockLogger,
+      );
+      clearInteractions(mockLogger);
+
+      await matomoDispatcher.sendBatch(
+        actions: [
+          {'action_name': 'test'},
+        ],
+      );
+
+      final logged = verify(() => mockLogger.fine(captureAny())).captured;
+      expect(logged, isNotEmpty);
+      expect(logged.join(), isNot(contains(secret)));
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body', that: contains(secret)),
+        ),
+      );
+    });
+
     test('it should set user agent in http request', () async {
       final actions = [mockMatomoAction, mockMatomoAction];
 
@@ -85,6 +113,42 @@ void main() {
           body: any(named: 'body'),
         ),
       );
+    });
+
+    test('it should ask for a retry only on transient http errors', () async {
+      when(() => mockHttpResponse.body).thenReturn('');
+      final matomoDispatcher = MatomoDispatcher(
+        baseUrl: matomoDispatcherBaseUrl,
+        userAgent: matomoTrackerUserAgent,
+        httpClient: mockHttpClient,
+        log: mockLogger,
+      );
+      const expected = {
+        200: true,
+        204: true,
+        400: true,
+        404: true,
+        408: false,
+        429: false,
+        500: false,
+        503: false,
+      };
+
+      for (final MapEntry(key: statusCode, value: sent) in expected.entries) {
+        when(() => mockHttpResponse.statusCode).thenReturn(statusCode);
+        final result = await matomoDispatcher.sendBatch(
+          actions: [mockMatomoAction.toMap(mockMatomoTracker)],
+        );
+        expect(result, sent, reason: 'status $statusCode');
+      }
+      verify(
+        () => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: any(named: 'body'),
+        ),
+      ).called(expected.length);
+      when(() => mockHttpResponse.statusCode).thenReturn(200);
     });
 
     test(

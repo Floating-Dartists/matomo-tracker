@@ -17,26 +17,36 @@ class PersistentQueue extends DelegatingQueue<Map<String, String>> {
     required PersistenceFilter onLoadFilter,
   }) async {
     final actionsData = await storage.loadActions();
-    final actions = decode(actionsData)..retainWhere(onLoadFilter);
+    final actions = decode(actionsData)
+      ..retainWhere((action) {
+        try {
+          return onLoadFilter(action);
+        } on FormatException {
+          // e.g. a `cdt` that cannot be parsed: drop it instead of failing.
+          return false;
+        }
+      });
     final queue = PersistentQueue._(storage, Queue.of(actions));
     await queue.save();
     return queue;
   }
 
+  /// Unreadable data is dropped: failing here would fail every launch.
   @visibleForTesting
   static List<Map<String, String>> decode(String? actionsData) {
-    if (actionsData != null) {
-      final actions = jsonDecode(actionsData);
-      if (actions is! List) {
-        throw FormatException('Expected a list of actions, but got: $actions');
-      }
-      return actions
-          .cast<Map<String, dynamic>>()
-          .map<Map<String, String>>((element) => element.cast())
-          .toList();
-    } else {
+    if (actionsData == null) return [];
+    final Object? actions;
+    try {
+      actions = jsonDecode(actionsData);
+    } on FormatException {
       return [];
     }
+    if (actions is! List) return [];
+    return [
+      for (final action in actions)
+        if (action is Map && action.values.every((value) => value is String))
+          Map<String, String>.from(action),
+    ];
   }
 
   final LocalStorage _storage;
