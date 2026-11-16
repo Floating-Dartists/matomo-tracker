@@ -188,6 +188,8 @@ class MatomoAction {
     final locale = userLocale ?? PlatformDispatcher.instance.locale;
     final country = locale.countryCode?.toLowerCase();
     final ping = this.ping ?? false;
+    final visitorIdParameter =
+        tracker.visitorIdParameter == VisitorIdParameter.cid ? 'cid' : '_id';
 
     return {
       // Required parameters
@@ -206,7 +208,7 @@ class MatomoAction {
       'url': url,
       if (campaign?.name case final name?) '_rcn': name,
       if (campaign?.keyword case final keyword?) '_rck': keyword,
-      if (tracker.visitor.id case final id?) '_id': id,
+      if (tracker.visitor.id case final id?) visitorIdParameter: id,
       'rand': '${Random().nextInt(1000000000)}',
       'apiv': '1',
 

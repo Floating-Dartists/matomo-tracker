@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+* Add opt-in support for sending the configured visitor ID as Matomo's `cid`
+  parameter.
+
 ## [6.1.1]
 
 * feat: handle optOut in initialization by @TesteurManiak in https://github.com/Floating-Dartists/matomo-tracker/pull/203

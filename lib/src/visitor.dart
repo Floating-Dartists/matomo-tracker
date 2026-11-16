@@ -1,3 +1,14 @@
+/// The Matomo request parameter used for the configured visitor ID.
+enum VisitorIdParameter {
+  /// Send the visitor ID as Matomo's recommended `_id` parameter.
+  id,
+
+  /// Send the visitor ID as Matomo's explicit `cid` parameter.
+  ///
+  /// Matomo requires this value to be exactly 16 hexadecimal characters.
+  cid,
+}
+
 class Visitor {
   const Visitor({
     this.id,
@@ -9,7 +20,8 @@ class Visitor {
 
   /// The unique visitor ID, must be a 16 characters hexadecimal string.
   ///
-  /// Corresponds with `_id`.
+  /// Corresponds with `_id` by default. See `MatomoTracker.visitorIdParameter`
+  /// for opting in to `cid`.
   ///
   /// Every unique visitor must be assigned a different ID and this ID must not
   /// change after it is assigned. If this value is not set Matomo will still

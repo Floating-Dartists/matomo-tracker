@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:matomo_tracker/src/dispatch_settings.dart';
 import 'package:matomo_tracker/src/matomo_action.dart';
+import 'package:matomo_tracker/src/visitor.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../ressources/mock/data.dart';
@@ -37,6 +38,8 @@ void main() {
       when(() => mockMatomoTracker.contentBase)
           .thenReturn(matomoTrackerContentBase);
       when(() => mockMatomoTracker.siteId).thenReturn(matomoTrackerSiteId);
+      when(() => mockMatomoTracker.visitorIdParameter)
+          .thenReturn(VisitorIdParameter.id);
       when(() => mockVisitor.id).thenReturn(visitorId);
       when(() => mockVisitor.uid).thenReturn(uid);
       when(mockTrackingOrderItem.toArray).thenReturn([]);

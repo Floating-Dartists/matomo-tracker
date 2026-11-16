@@ -18,6 +18,7 @@ Future<MatomoTracker> getInitializedMatomoTracker({
   PlatformInfo? platformInfo,
   bool shouldForceCreation = true,
   bool cookieless = false,
+  VisitorIdParameter visitorIdParameter = VisitorIdParameter.id,
 }) async {
   final matomoTracker =
       shouldForceCreation ? MatomoTracker() : MatomoTracker.instance;
@@ -31,6 +32,7 @@ Future<MatomoTracker> getInitializedMatomoTracker({
     localStorage: mockLocalStorage,
     packageInfo: mockPackageInfo,
     visitorId: visitorId,
+    visitorIdParameter: visitorIdParameter,
     uid: uid,
     contentBaseUrl: contentBaseUrl,
     tokenAuth: tokenAuth,

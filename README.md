@@ -20,6 +20,7 @@ A fully cross-platform wrap of the Matomo tracking client for Flutter, using the
 - [Documentation](#documentation)
   - [Supported Matomo Versions](#supported-matomo-versions)
   - [Getting Started](#getting-started)
+  - [Using the Matomo `cid` parameter](#using-the-matomo-cid-parameter)
   - [Using userId](#using-userid)
   - [Opting Out](#opting-out)
   - [Using Dimensions](#using-dimensions)
@@ -59,6 +60,31 @@ await MatomoTracker.instance.initialize(
 );
 ```
 Note that this Visitor ID should not be confused with the User ID which is explained below!
+
+## Using the Matomo `cid` parameter
+
+By default, the package sends `visitorId` as Matomo's recommended `_id`
+parameter. If you need to explicitly control Matomo's visitor matching, you
+can opt in to the Tracking API's `cid` parameter:
+
+```dart
+await MatomoTracker.instance.initialize(
+    siteId: siteId,
+    url: 'https://example.com/matomo.php',
+    visitorId: '0123456789abcdef',
+    visitorIdParameter: VisitorIdParameter.cid,
+);
+```
+
+The `cid` value must be exactly 16 hexadecimal characters and should remain
+stable for the visitor. With this option, the package sends `cid` instead of
+`_id` on every tracking request. The default remains `_id` for backwards
+compatibility.
+
+`cid` is a request parameter, not a value returned by Matomo. It makes the
+visitor ID used for new requests explicit; it does not recover or change the
+visitor ID of previously tracked requests. For authenticated users, Matomo's
+`uid` remains the recommended way to associate activity with a user identity.
 
 ## Navigator Observers
 
